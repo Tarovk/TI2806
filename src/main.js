@@ -1,4 +1,4 @@
-/* globals define, octopeerHelper, createSVG, RSVP, modules : true, ajax */
+/* globals define, octopeerHelper, svgCreator, RSVP, modules : true, ajax */
 /* exported ajax */
 
 //http://stackoverflow.com/questions/17446844/dynamic-require-in-requirejs-getting-module-name-has-not-been-loaded-yet-for-c
@@ -44,8 +44,7 @@ define(['modules/moduleList'], function (dynModules) {
             d3.select(module.svg).select("."+axisname+"Axis")
                 .selectAll("text")
                 .attr("transform", 
-                    "rotate("+octopeerHelper.getSafeModuleValue(module,axisname+"AxisLabelRotation")+")"
-            );
+                    "rotate("+octopeerHelper.getSafeModuleValue(module,axisname+"AxisLabelRotation")+")");
         }
     }
 
@@ -156,7 +155,7 @@ define(['modules/moduleList'], function (dynModules) {
                 .addClass("errorBadge")
                 .html("error")
                 .appendTo(outerdiv);
-            var svg = createSVG(arguments[i]);
+            var svg = svgCreator.createSVG(arguments[i]);
             svg.append('g')
                 .attr("class","content");
             arguments[i].svg = svg.node();
