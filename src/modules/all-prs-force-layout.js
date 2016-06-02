@@ -1,4 +1,4 @@
-/* globals define, Graph1Aggregator */
+/* globals define */
 define(function () {
     var graph = {
         "nodes" : 
@@ -85,14 +85,14 @@ define(function () {
             var nodes = g.selectAll(".node")
                 .data(graph.nodes)
                 .enter().append("g")
-                    .attr("class", function(d) { return "node "+d.type })
+                    .attr("class", function(d) { return "node "+d.type; })
                     .call(force.drag);
 
             g.selectAll(".pr")
                 .append("circle")
                     .attr("cx", 0)
                     .attr("cy", 0)
-                    .attr("r",function(d) { return d.size })
+                    .attr("r",function(d) { return d.size; })
                     .style("fill", function(d) { 
                         if(d.status === 0) {
                             return "orange";
@@ -118,11 +118,11 @@ define(function () {
                     .attr("text-anchor", "middle")
                     .style("font-size","10px")
                     .style("fill", "white")
-                    .text(function(d) { return d.title });
+                    .text(function(d) { return d.title; });
 
             g.selectAll(".user")
                 .append("image")
-                    .attr("xlink:href", function(d) { return d.src })
+                    .attr("xlink:href", function(d) { return d.src; })
                     .attr("x", -16)
                     .attr("y", -16)
                     .attr("width", 32)
