@@ -61,7 +61,7 @@ define(['modules/moduleList'], function (dynModules) {
         }
     }
 
-    function performDataRequests(data, module) {
+    function performDataRequests(data, module, outerdiv) {
         var promises = [];
         for(var i = 0 ; i < data.length ; i++){
             var promise = data[i].serviceCall();
@@ -71,6 +71,7 @@ define(['modules/moduleList'], function (dynModules) {
         RSVP.all(promises).then(function (objects) {
             $(module.body(objects).node()).appendTo($(module.svg).find('g.content'));
             scaleAxes(module, objects);
+            outerdiv.find(".spinner").addClass("hidden");
             /* TODO if (singleFail(objects) && module.failBody) {
                 $(module.failBody()).appendTo(outerdiv);
             }
@@ -162,13 +163,16 @@ define(['modules/moduleList'], function (dynModules) {
         }
         $(arguments[i].svg).appendTo(outerdiv);
         drawLegend(arguments[i]);
+        $(outerdiv).append($('#spinner-template').html());
         if(arguments[i].data) {
-            performDataRequests(arguments[i].data, arguments[i]);
+            performDataRequests(arguments[i].data, arguments[i], outerdiv);
         } else {
             //Expects the modules to return a d3 encapsulated element
             $(arguments[i].body().node()).appendTo($(arguments[i].svg).find('g.content'));
             scaleAxes(arguments[i], null);
+            outerdiv.find(".spinner").addClass("hidden");
         }
+
     }
 
 });
