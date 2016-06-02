@@ -95,38 +95,84 @@ define(function () {
                     .attr("r",function(d) { return d.size; })
                     .style("fill", function(d) { 
                         if(d.status === 0) {
-                            return "orange";
+                            return "#F5E661";
                         } else if(d.status === 1) {
-                            return "green";
+                            return "#61B361";
                         } else {
-                            return "red";
+                            return "#E44A4A";
                         }
-                    });
+                    })
+                    .style("cursor", "pointer");
+
+
+            g.selectAll(".pr")
+                    .append("text")
+                        .attr("x", 0)
+                        .attr("y", 4)
+                        .attr("text-anchor", "middle")
+                        .style("font-size", "10px")
+                        .style("-webkit-user-select", "none")
+                        .style("cursor", "pointer")
+                        .style("pointer-events", "none")
+                        .style("font-weight","300")
+                        .text(function(d) { return d.size; });
 
             g.selectAll(".repo")
+                .append("a")
+                    .attr("xlink:href", function(d) { return "http://www.github.com/"+d.title; })
                 .append("rect")
-                    .attr("x", -32)
-                    .attr("y", -8)
-                    .attr("width", 64)
-                    .attr("height", 16)
-                    .style("fill", "purple");
+                    .attr("x", -40)
+                    .attr("y", -14)
+                    .attr("width", 80)
+                    .attr("height", 28)
+                    .attr("rx","8")
+                    .style("fill", "rgba(116, 77, 162, 0.85)")
+                    .style("cursor","pointer");
 
             g.selectAll(".repo")
-                .append("text")
-                    .attr("x", 0)
-                    .attr("y", 4)
-                    .attr("text-anchor", "middle")
-                    .style("font-size","10px")
-                    .style("fill", "white")
-                    .text(function(d) { return d.title; });
+                    .append("text")
+                        .attr("x", 0)
+                        .attr("y", 4)
+                        .attr("text-anchor", "middle")
+                        .style("font-size", "10px")
+                        .style("fill", "white")
+                        .style("-webkit-user-select", "none")
+                        .style("cursor", "pointer")
+                        .style("pointer-events", "none")
+                        .text(function(d) { return d.title; });
+
+            var def = g.append("defs"); 
+                    
+            def.append("rect")
+                .attr("id","all-prs-force-layout-user-rect")
+                .attr("x",-16)
+                .attr("y",-16)
+                .attr("width",32)
+                .attr("height",32)
+                .attr("rx",16);
+
+            def.append("clipPath")
+                .attr("id","all-prs-force-layout-user-clip")
+                    .append("use")
+                        .attr("xlink:href","#all-prs-force-layout-user-rect");
+            
+            g.selectAll(".user")
+                .append("use")
+                    .attr("xlink:href","#all-prs-force-layout-user-rect")
+                    .style("stroke-width","4")
+                    .style("stroke","#A2A2A2");
 
             g.selectAll(".user")
+                .append("a")
+                    .attr("xlink:href", "http://www.github.com/agudek" )
                 .append("image")
                     .attr("xlink:href", function(d) { return d.src; })
                     .attr("x", -16)
                     .attr("y", -16)
                     .attr("width", 32)
-                    .attr("height", 32);
+                    .attr("height", 32)
+                    .attr("clip-path","url(#all-prs-force-layout-user-clip")
+                    .style("cursor", "pointer");
 
             force.on("tick", function() {
                 links.attr("x1", function(d) { return d.source.x; })
