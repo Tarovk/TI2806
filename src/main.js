@@ -45,7 +45,7 @@ define(['modules/moduleList'], function (dynModules) {
                 .selectAll("text")
                 .attr("transform", 
                     "rotate("+octopeerHelper.getSafeModuleValue(module,axisname+"AxisLabelRotation")+")"
-                );
+            );
         }
     }
 
@@ -118,7 +118,6 @@ define(['modules/moduleList'], function (dynModules) {
             }
         }
     }
-
 
     //For each module, read its arguments, set up divs to append to, execute the Ajax calls 
     //if available and append it to the DOM.

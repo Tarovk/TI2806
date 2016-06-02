@@ -8,6 +8,7 @@
 function OctopeerAPI() {
     "use strict";
 
+    //this.apiUrl = "http://10.0.22.6/api";
     this.apiUrl = "http://146.185.128.124/api";
     this.endpoints = {
         'repositories' : "/repositories",
@@ -37,9 +38,13 @@ function OctopeerAPI() {
     */
     this.urlBuilder = function (endpoint, parameters) {
         var url, firstParameter, attribute;
-        url = this.apiUrl + endpoint;
+        if (endpoint.charAt(0) === '/') {
+            url = this.apiUrl + endpoint;
+        } else {
+            throw "endpoints must start with a slash (\'/\')";
+        }
+        
         firstParameter = true;
-
         for (attribute in parameters) {
             if (parameters[attribute] !== undefined) {
                 if (firstParameter) {

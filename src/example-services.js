@@ -1,9 +1,6 @@
-/*globals DataAggregator, console*/
-
-var data = new DataAggregator();
-data.graphCommentAmountPerPullRequests("borek2").then(function (result) {
-    console.log(result);
-});
+//new Graph2Aggregator("mboom", 5).then(function (result) {
+//    //console.log(result);
+//});
 
 //var githubService = new GithubService();
 //githubService.getPullRequests('mboom', 'TI2806', function (pullrequest) {

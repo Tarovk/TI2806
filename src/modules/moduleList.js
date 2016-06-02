@@ -13,9 +13,13 @@ define([// Array of non-visualisation modules
         'services/GitHubAPI',
         'services/GitHubService',
         'services/BitbucketAPI',
-        'services/BitbucketService',
+	    'services/BitbucketService',
+        'resolvers/pullRequestResolver',
         'svgCreator',
-        'services/DataAggregator',
+        'aggregators/graph1aggregator.js',
+        'aggregators/graph2aggregator.js',
+        'aggregators/graph3aggregator.js',
+        'aggregators/graph4aggregator.js',
         'example-services',
         'globals'
         ], function () {
