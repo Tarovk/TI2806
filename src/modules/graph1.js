@@ -1,4 +1,4 @@
-/* globals define, dataAggregator */
+/* globals define, Graph1Aggregator */
 define(function () {
     return {
         name: 'graph1',
@@ -63,7 +63,7 @@ define(function () {
             }
         ],
         data: [{
-            "serviceCall": function () { return dataAggregator.graphCommentAmountPerPullRequests(); },
+            "serviceCall": function () { return new Graph1Aggregator("borek2"); },
             "required": true
         }],
         body: function (res) {

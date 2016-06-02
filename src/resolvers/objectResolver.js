@@ -1,5 +1,5 @@
 /*exported ObjectResolver*/
-/*globals get*/
+/*globals get, getJSON*/
 /*jshint -W083*/
 /**
 * This object will create a resolver object. This object contains functions which returns promises
@@ -66,5 +66,15 @@ function ObjectResolver(attributes) {
             resolveObject(objects[object]);
         }
         return objects;
+    };
+    
+    this.resolveArrayOfUrls = function (urls) {
+        var resolved = [], url;
+        for (url in urls) {
+            getJSON(urls[url], function (obj) {
+                resolved.push(obj);
+            });
+        }
+        return resolved;
     };
 }
