@@ -130,7 +130,7 @@ define(['modules/moduleList'], function (dynModules) {
             var outerdiv = $(document.createElement('div'));
             outerdiv.attr('id', arguments[i].name).appendTo(parentContainer);
             if (!arguments[i].customContainer) {
-                outerdiv.addClass('col s12 m6');
+                outerdiv.addClass('col s12 '+octopeerHelper.getSafeModuleValue(arguments[i],"size"));
                 outerdiv = $(document.createElement('div'))
 	        		.addClass('card')
                     .addClass("hoverable")

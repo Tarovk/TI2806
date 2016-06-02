@@ -4,7 +4,6 @@ define(function () {
     return {
         name: "scatter",
         title: "Time spent on pr",
-        size: 1,
         parentSelector: "#bodyrow",
         body: function () {
             var w = 720,

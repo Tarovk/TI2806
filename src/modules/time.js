@@ -30,7 +30,6 @@ define(function () {
     return {
     	name: "time",
         title: "Time spent on pr",
-    	size: 1,
         parentSelector: "#personal-modules",
         xAxisLabel: "Pull request",
         yAxisLabel: "Time spent on pr",

@@ -37,7 +37,8 @@ define([], function () {
     	'modules/average-comment-size-compared',
     	'modules/average-comment-size-yours',
     	'modules/average-comment-size-total',
-        'modules/graph1.js'
+        'modules/graph1.js',
+        'modules/all-prs-force-layout'
     	]
     ]; 
 });
