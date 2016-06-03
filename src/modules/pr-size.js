@@ -3,7 +3,6 @@ define(function () {
     return {
     	name: "pr-size",
         title: "Size of pr",
-    	size: 1,
         parentSelector: "#project-modules",
         xAxisLabel: "Pull request",
         yAxisLabel: "Number of lines changed",

@@ -1,11 +1,12 @@
 /*exported Graph4Aggregator*/
-/*globals OctopeerService, RSVP*/
+/*globals OctopeerService, RSVP, PullRequestResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: vars*/
 function Graph4Aggregator(owner, reponame, pullRequestNumber) {
     "use strict";
-    var promise, opService;
+    var promise, opService, prResolver;
     opService = new OctopeerService();
+    prResolver = new PullRequestResolver();
     
     function setSemanticEvents(sessions) {
         return opService.getSemanticEvents()
@@ -37,13 +38,13 @@ function Graph4Aggregator(owner, reponame, pullRequestNumber) {
         var matrix = {};
         pullRequest.sessions.forEach(function (session) {
             session.events.forEach(function (event) {
-                if (!matrix.hasOwnProperty(event.element_type)) {
-                    matrix[event.element_type] = {};
-                    matrix[event.element_type][event.event_type] = 1;
-                } else if (!matrix[event.element_type].hasOwnProperty([event.event_type])) {
-                    matrix[event.element_type][event.event_type] = 1;
+                if (!matrix.hasOwnProperty(event.element_type.url)) {
+                    matrix[event.element_type.url] = {};
+                    matrix[event.element_type.url][event.event_type.url] = 1;
+                } else if (!matrix[event.element_type.url].hasOwnProperty([event.event_type.url])) {
+                    matrix[event.element_type.url][event.event_type.url] = 1;
                 } else {
-                    matrix[event.element_type][event.event_type] += 1;
+                    matrix[event.element_type.url][event.event_type.url] += 1;
                 }
             });
         });
@@ -56,6 +57,7 @@ function Graph4Aggregator(owner, reponame, pullRequestNumber) {
             .then(setSemanticEvents) //Set semantic events for sessions
             .then(filterForPullRequest)
             .then(createPullRequestObjectFromSessions) //Create pullrequests object
+            .then(prResolver.resolveSinglePullRequest)
             .then(createMatrix)
             .then(fulfill);
     });

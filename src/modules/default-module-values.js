@@ -3,7 +3,7 @@ define(function () {
     return {
     	name: "no-name",
         title: "No title",
-    	size: 1,
+    	size: "m6",
         parentSelector: "#bodyrow",
         xAxisLabel: "",
         yAxisLabel: "",

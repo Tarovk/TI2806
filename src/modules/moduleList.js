@@ -1,27 +1,31 @@
 /* globals define */
-define([], function () {
-    "use strict";
-    
-    return [
-	    [// Array of non-visualisation modules
-	    'settings',
+define([// Array of non-visualisation modules
+        // These must be loaded in before the visualisation modules
+        // Keep in mind that there should be a corresponding module_test.js in the /test folder
+        'settings',
         'cache',
-	    'apicallers',
-	    'pullrequestTransformer',
+        'apicallers',
+        'pullrequestTransformer',
         'OctopeerHelper',
         'resolvers/objectResolver',
-	    'services/OctopeerAPI',
-	    'services/OctopeerService',
+        'services/OctopeerAPI',
+        'services/OctopeerService',
         'services/GitHubAPI',
-	    'services/GitHubService',
+        'services/GitHubService',
         'services/BitbucketAPI',
 	    'services/BitbucketService',
+        'resolvers/pullRequestResolver',
         'svgCreator',
         'aggregators/graph1aggregator.js',
+        'aggregators/graph2aggregator.js',
+        'aggregators/graph3aggregator.js',
         'aggregators/graph4aggregator.js',
         'example-services',
         'globals'
-	    ],
+        ], function () {
+    "use strict";
+    
+    return [
         //Module with default values. Needs to be loaded in seperately 
         //so that they can be used in the visualistaion modules without problems
         ['modules/default-module-values'],
@@ -33,7 +37,8 @@ define([], function () {
     	'modules/average-comment-size-compared',
     	'modules/average-comment-size-yours',
     	'modules/average-comment-size-total',
-        'modules/graph1.js'
+        'modules/graph1.js',
+        'modules/all-prs-force-layout'
     	]
     ]; 
 });

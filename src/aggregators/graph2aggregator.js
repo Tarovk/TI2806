@@ -1,14 +1,15 @@
 /*exported Graph2Aggregator*/
-/*globals OctopeerService, RSVP*/
+/*globals OctopeerService, RSVP, PullRequestResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: vars*/
 function Graph2Aggregator(userName, amountOfPr) {
     "use strict";
-    var promise, opService;
+    var promise, opService, prResolver;
     opService = new OctopeerService();
+    prResolver = new PullRequestResolver();
     
     function setSemanticEvents(sessions) {
-        opService.getSemanticEvents()
+        return opService.getSemanticEvents()
             .then(function (events) {
                 sessions.forEach(function (session) {
                     session.events = events.filter(function (event) {
@@ -77,12 +78,16 @@ function Graph2Aggregator(userName, amountOfPr) {
     }
     
     promise = new RSVP.Promise(function (fulfill) {
-        opService.getSessionsFromUser(userName) //Gets sessions from user
+        opService
+            //.getSessionsFromUser(userName) //Gets sessions from user
+            .getSessions()
             .then(setSemanticEvents) //Set semantic events for sessions
             .then(createPullRequestsObjectFromSessions) //Create pullrequests object
+            .then(prResolver.resolvePullRequests)
             .then(function (pullRequests) { //Filter to amount of wanted Prs
                 return pullRequests.splice(0, amountOfPr);
             })
+            .then(prResolver.resolvePullRequests)
             .then(filterSessionStartFromSessionsFromPullRequests)
             .then(sumDurationOfSessionsFromPullRequests)
             .then(graphObject)

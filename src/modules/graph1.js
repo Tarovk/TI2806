@@ -3,7 +3,6 @@ define(function () {
     return {
         name: 'graph1',
         title: 'Number of pull-request per number of comments',
-        size: 1,
         parentSelector: '#project-modules',
         xAxisLabel: "Number of comments",
         yAxisLabel: "Number of pull-requests",
