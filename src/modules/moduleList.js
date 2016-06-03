@@ -4,7 +4,6 @@ define([], function () {
     
     return [
 	    [// Array of non-visualisation modules
-         // Keep in mind that there should be a corresponding module_test.js in the /test folder
 	    'settings',
         'cache',
 	    'apicallers',
