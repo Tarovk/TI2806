@@ -85,7 +85,7 @@ module.exports = function (config) {
             dir: 'coverage/'
         },
 
-        plugings: [
+        plugins: [
             'karma-coverage',
             'karma-chrome-launcher',
             'karma-jasmine',

@@ -52,6 +52,15 @@ module.exports = function(grunt) {
         unit: {
             configFile: 'karma.conf.js'
         }
+    },
+    coveralls: {
+      options: {
+        debug: true,
+        coverageDir: './coverage',
+        dryRun: true,
+        force: true,
+        recursive: true
+      }
     }
   });
 
@@ -66,6 +75,6 @@ module.exports = function(grunt) {
 
   // Default task.=
   grunt.registerTask('default', ['jshint', 'clean', 'concat', 'uglify', 'karma']);
-  grunt.registerTask('travis', ['jshint', 'karma']);
+  grunt.registerTask('travis', ['jshint', 'karma', 'coveralls']);
 
 };
