@@ -5,7 +5,8 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt travis --verbose"
+    "test": "grunt travis --verbose",
+    "coverage": "istanbul cover jasmine-node --captureExceptions spec/ && cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "devDependencies": {
     "chai": "3.5.0",

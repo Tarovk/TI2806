@@ -18,9 +18,10 @@ require.config({
   
   paths: {
       'jquery': 'libs/jquery/jquery.min.js',
-      'd3': 'libs/d3/d3.min.js'
-  },
+      'd3': 'libs/d3/d3.min.js',
+      'test': 'test'
 
+  },
   // dynamically load all test files
   deps: allTestFiles,
 
