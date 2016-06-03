@@ -5,7 +5,7 @@ module.exports = function (config) {
 
     var cfg = {
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '',
+        baseUrl: '/base',
 
 
         // frameworks to use
@@ -15,7 +15,8 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-          'test-main.js',
+          'test/test-main.js',
+          
           { pattern: 'libs/**/*.js', included: false },
           { pattern: 'src/**/*.js', included: false },
           { pattern: 'spec/**/*.js', included: false }
@@ -24,6 +25,7 @@ module.exports = function (config) {
 
         // list of files to exclude
         exclude: [
+            'src/main.js'
         ],
 
 
@@ -78,6 +80,7 @@ module.exports = function (config) {
         concurrency: Infinity,
 
         coverageReporter: {
+            includeAllSources: true,
             type: 'lcov',
             dir: 'coverage/'
         },

@@ -6,9 +6,9 @@ define(function () {
     	size: 1,
         parentSelector: "#personal-modules",
         yRightAxis: true,
-        xAxisLabel: "Number of lines changed",
-        yAxisLabel: "Pull request",
-        yRightAxisLabel: "Time spent on pr",
+        xAxisLabel: "Pull request",
+        yAxisLabel: "Time spent on pr",
+        yRightAxisLabel: "Number of lines changed",
         xAxisTicks: false,
         xAxisLabelRotation: 65,
         xAxisScale: function() { 
@@ -21,7 +21,7 @@ define(function () {
                     "pr16", "pr17", "pr18", "pr19"
                 ])
                 .rangePoints([0.35*50, 720-2.3*50]);
-            return axisScale;
+            return d3.svg.axis().scale(axisScale);
         },
         yAxisFitFunction: function() {
             var timeData = [
@@ -46,7 +46,10 @@ define(function () {
                     {"x":18, "y":57},
                     {"x":19, "y":90}
                 ];
-            return [0,Math.max.apply(Math,timeData.map(function(o){return o.y;}))];
+            return d3.svg.axis()
+                .scale(d3.scale.linear()
+                    .domain([0,Math.max.apply(Math,timeData.map(function(o){return o.y;}))])
+            );
         },
         yRightAxisFitFunction: function() {
             var sizeData = [
@@ -71,8 +74,23 @@ define(function () {
                     {"x":18, "y":717},
                     {"x":19, "y":4772}
                 ];
-            return [0,Math.max.apply(Math,sizeData.map(function(o){return o.y;}))];
+            return d3.svg.axis().scale(
+                d3.scale.linear()
+                .domain([0,Math.max.apply(Math,sizeData.map(function(o){return o.y;}))])
+            );
         },
+        legend: [
+            {
+                "type":"rect",
+                "style":"fill:rgb(77, 136, 255);",
+                "text":"Time spent on pull request"
+            },
+            {
+                "type":"line",
+                "style":"stroke:rgb(212, 51, 51);stroke-width:3px;",
+                "text":"Number of lines changed"
+            }
+        ],
         body: function () {
             var w = 720,
                 h = 350,

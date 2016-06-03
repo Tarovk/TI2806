@@ -18,7 +18,8 @@ define([], function () {
         'services/BitbucketAPI',
 	    'services/BitbucketService',
         'svgCreator',
-        'services/DataAggregator',
+        'aggregators/graph1aggregator.js',
+        'aggregators/graph4aggregator.js',
         'example-services',
         'globals'
 	    ],

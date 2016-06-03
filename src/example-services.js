@@ -1,7 +1,6 @@
-/*globals DataAggregator, console*/
+/*globals Graph4Aggregator, console*/
 
-var data = new DataAggregator();
-data.graphCommentAmountPerPullRequests("borek2").then(function (result) {
+new Graph4Aggregator("mboom", "TI2806", 1).then(function (result) {
     console.log(result);
 });
 

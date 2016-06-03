@@ -5,8 +5,8 @@ define(function () {
         title: "Size of pr",
     	size: 1,
         parentSelector: "#project-modules",
-        xAxisLabel: "Number of lines changed",
-        yAxisLabel: "Pull request",
+        xAxisLabel: "Pull request",
+        yAxisLabel: "Number of lines changed",
         xAxisLine: true,
         yAxisLine: true,
         xAxisTicks: false,
@@ -22,7 +22,7 @@ define(function () {
                     "pr16", "pr17", "pr18", "pr19"
                 ])
                 .rangePoints([0.35*50, 720-2.3*50]);
-            return axisScale;
+            return d3.svg.axis().scale(axisScale);
         },
         yAxisFitFunction: function() {
             var sizeData = [
@@ -47,8 +47,18 @@ define(function () {
                     {"x":18, "y":717},
                     {"x":19, "y":4772}
                 ];
-            return [0,Math.max.apply(Math,sizeData.map(function(o){return o.y;}))];
+            return d3.svg.axis().scale(
+                d3.scale.linear()
+                    .domain([0,Math.max.apply(Math,sizeData.map(function(o){return o.y;}))])
+            );
         },
+        legend: [
+            {
+                "type":"line",
+                "style":"stroke:rgb(212, 51, 51);stroke-width:3px;",
+                "text":"Number of lines changed"
+            }
+        ],
         body: function () {
             var w = 720,
                 h = 350,

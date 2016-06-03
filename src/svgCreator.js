@@ -19,14 +19,13 @@ function d3append(parent, child) {
 }
 
 function createLeftYAxis(module) {
-	var scale;
-	if ((scale = octopeerHelper.getSafeModuleValue(module,"yAxisScale")()) === "fit") {
-		scale = d3.scale.linear().domain([0,100]).range([350-50-10,0]).nice();
+	var axis;
+	if ((axis = octopeerHelper.getSafeModuleValue(module,"yAxisScale")()) === "fit") {
+		axis = d3.svg.axis().scale(d3.scale.linear().domain([0,100]).nice());
 	}
 
-	var axis = d3.svg.axis()
-        .scale(scale)
-        .orient("left");
+	axis.orient("left")
+        .scale().range([350-50-10,0]);
 
     if(octopeerHelper.getSafeModuleValue(module,"yAxisTicks")) {
         axis.tickSize(-720+50+50);
@@ -44,7 +43,7 @@ function createLeftYAxis(module) {
             .attr("y", 0)
             .attr("x", 9)
             .attr("dy", ".35em")
-            .attr("transform", "rotate("+degrees+")")
+            .attr("transform", "rotate("+octopeerHelper.getSafeModuleValue(module,"yAxisLabelRotation")+")")
             .style("text-anchor", "start");
     }
 
@@ -58,14 +57,13 @@ function createLeftYAxis(module) {
 }
 
 function createRightYAxis(module) {
-	var scale;
-	if ((scale = octopeerHelper.getSafeModuleValue(module,"yRightAxisScale")()) === "fit") {
-		scale = d3.scale.linear().domain([0,100]).range([350-50-10,0]).nice();
-	}
+	var axis;
+    if ((axis = octopeerHelper.getSafeModuleValue(module,"yRightAxisScale")()) === "fit") {
+        axis = d3.svg.axis().scale(d3.scale.linear().domain([0,100]).nice());
+    }
 
-	var axis = d3.svg.axis()
-        .scale(scale)
-        .orient("right");
+    axis.orient("right")
+        .scale().range([350-50-10,0]);
 
     if(octopeerHelper.getSafeModuleValue(module,"yRightAxisTicks")) {
         axis.tickSize(720-50-10);
@@ -96,14 +94,19 @@ function createRightYAxis(module) {
     return g;
 }
 
+function xAxisOrientAndFit(module, axis) {
+    axis.orient("bottom");
+    if(typeof axis.scale().rangePoints === "undefined") {
+        axis.scale().range([0,720-50-50]);
+    }
+}
+
 function createXAxis(module) {
-	var scale;
-	if ((scale = octopeerHelper.getSafeModuleValue(module,"xAxisScale")()) === "fit") {
-		scale = d3.scale.linear().domain([0,100]).range([0,720-50-50]).nice();
+	var axis;
+	if ((axis = octopeerHelper.getSafeModuleValue(module,"xAxisScale")()) === "fit") {
+		axis = d3.svg.axis().scale(d3.scale.linear().domain([0,100]).nice());
 	}
-	var axis = d3.svg.axis()
-        .scale(scale)
-        .orient("bottom");
+    xAxisOrientAndFit(module, axis);
 
     if(octopeerHelper.getSafeModuleValue(module,"xAxisTicks")) {
         axis.tickSize(-350+50+10);

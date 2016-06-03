@@ -26,6 +26,7 @@ define(function () {
         xAxis: true,
         yAxis: true,
         yRightAxis: false,
+        legend: [],
         data: [],
         body: function () { return document.createElement('g'); },
         failBody: function () { return document.createElement('g'); },

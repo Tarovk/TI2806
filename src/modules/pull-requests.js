@@ -17,14 +17,34 @@ define(function () {
             var data2 = [];
             var today = new Date();
             var month = today.getMonth();
+            var format = d3.time.format("%d/%m");
             // Because months are 0-11 this will get the previous month.
             data2.push(new Date().setMonth((month + 11) % 12));
             data2.push(today);
 
             var xScale = d3.time.scale().domain(data2).range([0, 720 - 50 - 50]).nice();
-            return xScale;
+            var axis = d3.svg.axis().scale(xScale);
+            axis.tickFormat(format).ticks(30);
+            return axis;
         },
         xAxisLabelRotation: 65,
+        legend: [
+            {
+                "type":"dot",
+                "style":"fill:green;",
+                "text":"Merged pull request"
+            },
+            {
+                "type":"dot",
+                "style":"fill:orange;",
+                "text":"Open pull requests"
+            },
+            {
+                "type":"dot",
+                "style":"fill:red;",
+                "text":"Closed pull requests"
+            }
+        ],
         body: function () {
 
             function processPRs(prs) {

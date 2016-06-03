@@ -1,4 +1,4 @@
-/* globals define, dataAggregator */
+/* globals define, Graph1Aggregator */
 define(function () {
     return {
         name: 'graph1',
@@ -21,7 +21,7 @@ define(function () {
                 .rangePoints(
                     [0.5 * (720 / domain.length - 40), 720 - 2 * 50 - 0.5 * (720 / domain.length - 40)]
                 );
-            return scale;
+            return d3.svg.axis().scale(scale);
         },
         yAxisFitFunction: function (res) {
             var sizeData = res[0],
@@ -50,13 +50,20 @@ define(function () {
             }
             var maxValue = Math.max.apply(Math, sizeData.map(function (o) { return o.y; }));
 
-            return [0, maxValue];            
+            return d3.svg.axis().scale(d3.scale.linear().domain([0,maxValue]));           
          },
         xAxis: true,
         yAxis: true,
         yRightAxis: false,
+        legend: [
+            {
+                "type":"rect",
+                "style":"fill:rgb(77, 136, 255);",
+                "text":"Number of pull requests with x number of comments"
+            }
+        ],
         data: [{
-            "serviceCall": function () { return dataAggregator.graphCommentAmountPerPullRequests(); },
+            "serviceCall": function () { return new Graph1Aggregator("borek2"); },
             "required": true
         }],
         body: function (res) {

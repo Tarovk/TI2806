@@ -64,21 +64,6 @@ function OctopeerService() {
         });
         return promise;
     };
-
-    this.getSemanticEvents = function () {
-        var url, objectResolver, promise;
-        objectResolver = new ObjectResolver(["element_type", "event_type", "session"]);
-        url = api.urlBuilder(api.endpoints.semanticEvents, {});
-
-        promise = new RSVP.Promise(function (fulfill, reject) {
-            getJSON(url, function (events) {
-                fulfill(objectResolver.resolveArray(events.results));
-            }, function (error) {
-                reject(error);
-            });
-        });
-        return promise;
-    };
     
     this.getSemanticEventsBySession = function () {//sessionId) {
         var url, promise;
@@ -151,5 +136,20 @@ function OctopeerService() {
                 reject(error);
             });
         });
+    };
+    
+    this.getSemanticEvents = function () {
+        var url, objectResolver, promise;
+        objectResolver = new ObjectResolver(["element_type", "event_type"]);
+        url = api.urlBuilder(api.endpoints.semanticEvents, {});
+
+        promise = new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (events) {
+                fulfill(objectResolver.resolveArray(events.results));
+            }, function (error) {
+                reject(error);
+            });
+        });
+        return promise;
     };
 }
