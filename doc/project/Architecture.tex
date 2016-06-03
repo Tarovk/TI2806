@@ -57,13 +57,21 @@ For the client itself a basic structure will be described. The calls to the Octo
 \caption{Octopeer viewer decomposition}
 \end{figure}
 
+The basic sequence the analytics client has is defined in the following sequence diagram. The data aggregator is the main interface between the front end and the back end. Basically, this class calls the services which than again calls the API. After it got all the data, it will reform this data into the requested data for the smooth drawing of the graphs in D3.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=10cm]{SequenceMain.png}
+\caption{Sequence diagram}
+\end{figure}
+
 \subsection{Subsystems}
 
 The following tools and systems are used to realize the visualization tool.
 
 \subsubsection{Programming languages}
 
-The visualization tool is mainly written in the usual web development languages (HTML, Javascript and CSS). To make writing Javascript code a bit easier, a framework called jQuery is used. Also to make a large amount of different kind of graphs the framework D3 is used. This framework is an extension of Javascript and is used to create great looking and useable graphs.
+The visualization tool is mainly written in the usual web development languages (HTML, Javascript and CSS). To make writing Javascript code a bit easier, a framework called jQuery is used. Also to make a large amount of different kind of graphs the framework D3 is used. This framework is an extension of Javascript and is used to create great looking and useable graphs. For more detail about D3 and how this project uses this framework, it is recommended to read the documents in the project git repository.
 
 \subsubsection{Project management}
 
@@ -81,7 +89,7 @@ The database is on the external Octopeer domain. This domain handles the data wi
 
 \subsection{Concurrency}
 
-A goal of this project is scalability. This means that when the user base grows rapidly big, the tool should not break down. A lot of concurrent users should not be hold back. The external Octopeer domain should be able to handle a lot of traffic.
+A goal of this project is scalability. This means that when the user base grows rapidly big, the tool should not break down. A lot of concurrent users should not be hold back. The external Octopeer domain should be able to handle a lot of traffic. Within the project git repository is a document describing into detail why and how promises are used.
 
 \subsubsection{Promises}
 
