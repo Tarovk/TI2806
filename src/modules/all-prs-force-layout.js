@@ -3,7 +3,7 @@ define(function () {
     var graph = {
         "nodes" : 
             [
-                {"name":"user","type":"user","src":"https://avatars3.githubusercontent.com/u/5946456?v=3&s=460"},
+                {"name":"user","type":"user","src":"https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"},
 
                 {"name":"repo1","type":"repo","title":"mboom/TI2806"},
                 {"name":"repo2","type":"repo","title":"agudek/repo0"},
