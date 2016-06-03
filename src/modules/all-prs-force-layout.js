@@ -61,7 +61,7 @@ define(function () {
         name: 'all-prs-force-layout',
         title: 'Peer reviews by you',
         size: "l12",
-        parentSelector: '#personal-modules',
+        parentSelector: '#dashboard-modules',
         xAxis: false,
         yAxis: false,
         yRightAxis: false,
