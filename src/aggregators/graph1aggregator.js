@@ -1,14 +1,13 @@
 /*exported Graph1Aggregator*/
-/*globals OctopeerService, RSVP*/
+/*globals octopeerService, RSVP*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: vars*/
 function Graph1Aggregator(userName) {
     "use strict";
-    var promise, opService;
-    opService = new OctopeerService();
+    var promise;
     
     function setSemanticEvents(sessions) {
-        opService.getSemanticEvents()
+        return octopeerService.getSemanticEvents()
             .then(function (events) {
                 sessions.forEach(function (session) {
                     session.events = events.filter(function (event) {
@@ -25,7 +24,6 @@ function Graph1Aggregator(userName) {
                 return event.event_type === "http://146.185.128.124/api/event-types/4/"; //Should be checked
             });
         });
-
         return sessions;
     }
     
@@ -67,7 +65,7 @@ function Graph1Aggregator(userName) {
     }
     
     promise = new RSVP.Promise(function (fulfill) {
-        opService
+        octopeerService
             //.getSessionsFromUser(userName) //first get the session array of urls
             .getSessions()
             //.then(objectResolver.resolveArrayOfUrls) //resolve them to session objects
