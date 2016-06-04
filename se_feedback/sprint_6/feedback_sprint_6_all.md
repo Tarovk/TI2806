@@ -8,19 +8,19 @@
 #Sprint Feedback
 Feedback and Grades for Sprint 6.
 
-Total: ****
+Total: **8.9**
 
 | User Story | Score |
 |------------|-------|
-| definition |      |
-| splitting  |      |
-| responsibility |   |
+| definition |  10    |
+| splitting  |  8    |
+| responsibility | 10  |
 
 | Learning from History | Score |
 |-----------------------|-------|
-| estimation            |    |
-| prioritisation        |     |
-| reflection            |     |
+| estimation            |  9  |
+| prioritisation        |  9   |
+| reflection            |  8   |
 
 ## Notes
 * Thanks for adding the overview of what was and what wasn't finished
@@ -31,36 +31,36 @@ Total: ****
 
 #Code Evolution Quality Feedback
 
-Total: ****
+Total: **7.12**
 
 | Architecture                       | Score |
 |------------------------------------|-------|
-| Changes                            |      |
-| Architecture Design Document (ADD) |      |
+| Changes                            |   7   |
+| Architecture Design Document (ADD) |   8   |
 
 |                     | Score |
 |---------------------|-------|
-| Code Change Quality |      |
+| Code Change Quality |   7   |
 
 | Code Readability | Score |
 |------------------|-------|
-| Formatting       |      |
-| Naming           |      |
-| Comments         |      |
+| Formatting       |   10   |
+| Naming           |   8   |
+| Comments         |   8   |
 
 | Continuous Integration | Score |
 |------------------------|-------|
-| Building               |      |
-| Testing                |      |
+| Building               |   10   |
+| Testing                |    3  |
 
 |         | Score |
 |---------|-------|
-| Tooling |      |
+| Tooling |   10   |
 
 | Pull-based Development | Score |
 |------------------------|-------|
-| Branching              |     |
-| Code Review            |      |
+| Branching              |  10  |
+| Code Review            |   8   |
 
 ##Notes
 * ADD
