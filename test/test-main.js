@@ -17,8 +17,8 @@ require.config({
   baseUrl: '/base',
   
   paths: {
-      'jquery': 'libs/jquery/jquery.min',
-      'd3': 'libs/d3/d3.min',
+      'jquery': 'libs/jquery-2.2.3',
+      'd3': 'libs/d3.v2.min',
       'test': 'test'
 
   },
