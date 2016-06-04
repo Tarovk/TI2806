@@ -63,3 +63,13 @@ Total: ****
 | Code Review            |      |
 
 ##Notes
+* ADD
+	* How have you met you're design goals so far?
+	* Good sequence diagrams!
+* Keep up the reviewing process
+* Didn't tag the new version
+* `graph1.js` is not a proper name
+* `time.js` is a misleading name
+	* `time_spent_per_pr` or `time_spent_on_pr` would be better
+* `SvgCreator` + services (everything in `main.js`) + `Settings` seems like a good candidate for a Singleton but isn't
+* `cache.js` - use cache not cash in naming and comments
