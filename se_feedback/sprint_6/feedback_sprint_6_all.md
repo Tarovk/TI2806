@@ -23,6 +23,11 @@ Total: ****
 | reflection            |     |
 
 ## Notes
+* Thanks for adding the overview of what was and what wasn't finished
+* Reflection is missing why "Write documentation for the tests" wasn't finished
+* 8 points for writing documentation?
+	* Hard to tell how many hours this is worth, but what sort of documentation were you planning on writing?
+* 20 point tasks usually should be split into smaller tasks
 
 #Code Evolution Quality Feedback
 
