@@ -17,13 +17,13 @@ require.config({
   baseUrl: '/base',
   
   paths: {
-      'jquery': 'libs/jquery/jquery.min.js',
-      'd3': 'libs/d3/d3.min.js',
+      'jquery': 'libs/jquery/jquery.min',
+      'd3': 'libs/d3/d3.min',
       'test': 'test'
 
   },
   // dynamically load all test files
-  deps: allTestFiles,
+  deps: ['jquery','d3'].concat(allTestFiles),
 
   // we have to kickoff jasmine, as it is asynchronous
   callback: window.__karma__.start
