@@ -9,20 +9,21 @@ define(function () {
                 {"name":"repo2","type":"repo","title":"agudek/repo0"},
                 {"name":"repo3","type":"repo","title":"agudek/demo"},
 
-                {"name":"pr2","type":"pr","size":5,"status":0},
-                {"name":"pr14","type":"pr","size":7,"status":2},
-                {"name":"pr26","type":"pr","size":13,"status":0},
+                {"id":"2","name":"Grunt init for jquery","type":"pr","size":5,"status":1,"repo":"mboom/TI2806"},
+                {"id":"185","name":"Created test file for a module to test if it works",
+                    "type":"pr","size":7,"status":2,"repo":"mboom/TI2806"},
+                {"id":"26","name":"Architecture design","type":"pr","size":13,"status":1,"repo":"mboom/TI2806"},
 
-                {"name":"pr1","type":"pr","size":2,"status":1},
-                {"name":"pr4","type":"pr","size":5,"status":1},
-                {"name":"pr7","type":"pr","size":9,"status":2},
-                {"name":"pr13","type":"pr","size":3,"status":0},
-                {"name":"pr21","type":"pr","size":15,"status":1},
-                {"name":"pr26","type":"pr","size":12,"status":0},
-                {"name":"pr37","type":"pr","size":5,"status":1},
+                {"id":"pr1","name":"repo0","type":"pr","size":2,"status":11,"repo":"agudek/repo0"},
+                {"id":"pr4","name":"repo0","type":"pr","size":5,"status":1,"repo":"agudek/repo0"},
+                {"id":"pr7","name":"repo0","type":"pr","size":9,"status":21,"repo":"agudek/repo0"},
+                {"id":"pr13","name":"repo0","type":"pr","size":3,"status":0,"repo":"agudek/repo0"},
+                {"id":"pr21","name":"repo0","type":"pr","size":15,"status":1,"repo":"agudek/repo0"},
+                {"id":"pr26","name":"repo0","type":"pr","size":12,"status":0,"repo":"agudek/repo0"},
+                {"id":"pr37","name":"repo0","type":"pr","size":5,"status":1,"repo":"agudek/repo0"},
 
-                {"name":"pr53","type":"pr","size":25,"status":1},
-                {"name":"pr79","type":"pr","size":15,"status":1}
+                {"id":"pr53","name":"demo","type":"pr","size":25,"status":1,"repo":"agudek/demo"},
+                {"id":"pr79","name":"demo","type":"pr","size":15,"status":1,"repo":"agudek/demo"}
             ],
         "links" :
             [
@@ -55,7 +56,35 @@ define(function () {
         .linkDistance(50)
         .size([width, height]);
 
+    var statusHTML = function(status) {
+        switch (status) {
+            case 0 : return "<span style='color:rgb(245, 230, 97)'>open</span>"; 
+            case 1 : return "<span style='color:rgb(97, 179, 97)'>merged</span>";
+            case 11 : return "<span style='color:rgb(97, 179, 97)'>merged</span>"+
+                "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>";  
+            case 2 : return "<span style='color:rgb(228, 74, 74)'>closed</span>";
+            case 21 : return "<span style='color:rgb(228, 74, 74)'>closed</span>"+
+                "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>";
+        }
+    };
 
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .direction("e")
+        .offset([0, 15])
+        .html(function(d) {
+            return "<div><a style='color:black;font-size:small'"+
+                    " href='http://www.github.com/"+d.repo+"/pull/"+d.id+"'>#" + d.id +
+                    " <span style='color:gray'>"+d.name+"</span></a></div>"+
+                "<div style='margin-top:-5px;'><a style='color:lightgray;font-size:smaller;'"+
+                    " href='http://www.github.com/"+d.repo+"'>" + d.repo + "</a></div>"+
+                "<div style='margin-top:5px;''><strong>Review duration : </strong> " + d.size+ 
+                    " minutes</span></div>"+
+                "<div style='margin-top:5px;''><strong>Status : </strong> " + statusHTML(d.status) +
+                    "</span></div>"+
+                "<div class='arrow-left'></div>";
+        }
+    );
 
     return {
         name: 'all-prs-force-layout',
@@ -73,6 +102,8 @@ define(function () {
               .start();
             
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
+
+            g.call(tip);
 
             var links = g.selectAll(".link")
                 .data(graph.links)
@@ -94,16 +125,17 @@ define(function () {
                     .attr("cy", 0)
                     .attr("r",function(d) { return d.size; })
                     .style("fill", function(d) { 
-                        if(d.status === 0) {
-                            return "#F5E661";
-                        } else if(d.status === 1) {
+                        if(d.status === 1 || d.status === 11) {
                             return "#61B361";
-                        } else {
+                        } else if(d.status === 2 || d.status === 21) {
                             return "#E44A4A";
+                        } else {
+                            return "#F5E661";
                         }
                     })
-                    .style("cursor", "pointer");
-
+                    .style("cursor", "pointer")
+      .on('mouseover', function(d) { return tip.show(d);})
+      .on('mouseout', tip.hide);
 
             g.selectAll(".pr")
                     .append("text")
