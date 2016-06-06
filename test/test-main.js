@@ -23,10 +23,10 @@ require.config({
 
   }, 
 
-  /*shim: {
-    'd3': {exports: 'd3'},
-    'd3-tip': { deps: ['d3'] }
-  },*/
+  shim: {
+    'd3-tip': { deps: ['d3'] },
+    allTestFiles : { deps: ['jquery','d3','d3-tip']}
+  },
 
   // dynamically load all test files
   deps: ['jquery','d3','d3-tip'].concat(allTestFiles),
