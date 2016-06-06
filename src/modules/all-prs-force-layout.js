@@ -66,7 +66,8 @@ define(function () {
             case 2 : return "<span style='color:rgb(228, 74, 74)'>closed</span>";
             case 21 : return "<span style='color:rgb(228, 74, 74)'>closed</span>"+
                 "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>"+
-                "<i style='color: #E44A4A;margin-left: 5px;transform:rotate(-90deg);' class='material-icons'>&#xE14A;</i>";
+                "<i style='color: #E44A4A;margin-left: 5px;transform:rotate(-90deg);'"+
+                " class='material-icons'>&#xE14A;</i>";
         }
     };
 
