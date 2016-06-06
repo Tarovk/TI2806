@@ -1,5 +1,14 @@
 /* globals define, Graph1Aggregator */
 define(function () {
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .direction("n")
+        .offset([-25, 0])
+        .html(function(d) {
+            return "<div>"+d.y+"</div>"+
+                "<div class='arrow-down'></div>";
+        }
+    );
     return {
         name: 'graph1',
         title: 'Number of pull-request per number of comments',
@@ -104,6 +113,9 @@ define(function () {
                     .range([padTop, h - padBottom]).nice();
             
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
+
+            g.call(tip);
+
             g.selectAll("rect").data(sizeData).enter()
                 .append("rect")
                 .attr("x", function (d) { return xSizeScale(d.x); })
@@ -111,8 +123,11 @@ define(function () {
                 .attr("width", function () { return (w / (domain.length)) - 40; })
                 .attr("height", function (d) { return ySizeScale(d.y); })
                 .attr("style", "fill:rgb(77, 136, 255);")
+                .on('mouseover', function(d) { return tip.show(d);})
+                .on('mouseout', tip.hide)
                 .transition()
                 .attr("y", function (d) { return h - padBottom - ySizeScale(d.y); });
+
             return g;
         }
     };

@@ -61,10 +61,12 @@ define(function () {
             case 0 : return "<span style='color:rgb(245, 230, 97)'>open</span>"; 
             case 1 : return "<span style='color:rgb(97, 179, 97)'>merged</span>";
             case 11 : return "<span style='color:rgb(97, 179, 97)'>merged</span>"+
-                "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>";  
+                "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>"+
+                "<i style='color: #61B361;margin-left: 5px;' class='material-icons'>&#xE52D;</i>";  
             case 2 : return "<span style='color:rgb(228, 74, 74)'>closed</span>";
             case 21 : return "<span style='color:rgb(228, 74, 74)'>closed</span>"+
-                "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>";
+                "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>"+
+                "<i style='color: #E44A4A;margin-left: 5px;transform:rotate(-90deg);' class='material-icons'>&#xE14A;</i>";
         }
     };
 
