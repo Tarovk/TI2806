@@ -17,8 +17,8 @@ module.exports = function (config) {
         files: [
           { pattern: 'libs/**/*.js', included: false },
           { pattern: 'src/**/*.js', included: false },
+          { pattern: 'src/*.js', included: false },
           { pattern: 'spec/**/*.js', included: false },
-          'src/octopeerHelper.js',
           'test/test-main.js'
         ],
 
