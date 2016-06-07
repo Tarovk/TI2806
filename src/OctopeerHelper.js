@@ -3,11 +3,8 @@
 
 //Helper functions for usage within octopeer
 function OctopeerHelper() {
-	console.log("Entered octopeerHelper");
 	this.defaultModule = null;
 	
-	console.log("Set defaultModule to null");
-
 	this.getSafeModuleValue = function(module,fieldname) {
 		var moduleValue = module[fieldname];
 		if(moduleValue === undefined) {
@@ -16,7 +13,6 @@ function OctopeerHelper() {
 			return moduleValue;
 		}
 	};
-	console.log("Defined getSafeModuleValue");
 
 	/**	svg line creator
 	* data - The data in JSON with defined x and y fields
@@ -27,7 +23,7 @@ function OctopeerHelper() {
 	*
 	* return - the value for the "d" field of an svg path element
 	**/
-	this.line = function (data, interpolationType, xFunction, yFunction) {
+	this.line = function (data, interpolationType = "cardinal", xFunction = null, yFunction = null) {
 		var lineFunction = d3.svg.line()
 			.x(function(d) { 
 				if(xFunction===null) {
