@@ -1,4 +1,4 @@
-require(["src/services/GitHubAPI", "src/services/BitbucketAPI", "src/services/OctopeerAPI", , "src/OctopeerHelper",
+require(["src/services/GitHubAPI", "src/services/BitbucketAPI", "src/services/OctopeerAPI", "src/OctopeerHelper",
     "src/svgCreator"], function () {
         require(["src/services/OctopeerService", "src/services/BitbucketService",
         "src/settings", "src/services/OctopeerAPI", "src/globals"], function () {
