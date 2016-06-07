@@ -1,5 +1,5 @@
 /*exported ObjectResolver*/
-/*globals get, getJSON*/
+/*globals get, RSVP, getJSON*/
 /*jshint -W083*/
 /**
 * This object will create a resolver object. This object contains functions which returns promises
@@ -83,9 +83,9 @@ function ObjectResolver(attributes) {
     this.resolveUrl = function (url) {
         var promise = new RSVP.Promise(function (fulfill) {
             getJSON(url, function (obj) {
-                fulfill(url);
+                fulfill(obj);
             });
         });
         return promise;
-    }
+    };
 }

@@ -1,12 +1,13 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP*/
+/*globals octopeerService, RSVP, ObjectResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
-/*jshint unused: vars*/
+/*jshint unused: false*/
 function Graph1Aggregator(userName) {
     "use strict";
     var promise;
     
     function setSemanticEvents(sessions, callback) {
+        /* jshint ignore:start */
         var objectResolver = new ObjectResolver(), promises = [];
         sessions.forEach(function (session) {
             promises.push(new RSVP.Promise(function (fulfill) {
@@ -17,12 +18,13 @@ function Graph1Aggregator(userName) {
             }));
         });
         return RSVP.all(promises);
+        /* jshint ignore:end */
     }
     
     function filterSessionsForComments(sessions) {
         sessions.forEach(function (session) {
             session.semantic_events = session.semantic_events.filter(function (event) {
-                return event.event_type === 203; //Should be checked
+                return event.element_type === 113 && event.event_type === 201; //Should be checked
             });
         });
         return sessions;

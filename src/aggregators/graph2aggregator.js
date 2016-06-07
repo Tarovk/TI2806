@@ -1,7 +1,7 @@
 /*exported Graph2Aggregator*/
-/*globals OctopeerService, RSVP, PullRequestResolver*/
+/*globals OctopeerService, RSVP, PullRequestResolver, ObjectResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
-/*jshint unused: vars*/
+/*jshint unused: false*/
 function Graph2Aggregator(userName, amountOfPr) {
     "use strict";
     var promise, opService, prResolver;
@@ -9,6 +9,7 @@ function Graph2Aggregator(userName, amountOfPr) {
     prResolver = new PullRequestResolver();
     
     function setSemanticEvents(sessions) {
+        /* jshint ignore:start */
         var objectResolver = new ObjectResolver(), promises = [];
         sessions.forEach(function (session) {
             promises.push(new RSVP.Promise(function (fulfill) {
@@ -19,6 +20,7 @@ function Graph2Aggregator(userName, amountOfPr) {
             }));
         });
         return RSVP.all(promises);
+        /* jshint ignore:end */
     }
     
     function createPullRequestsObjectFromSessions(sessions) {
@@ -37,7 +39,6 @@ function Graph2Aggregator(userName, amountOfPr) {
     
     function filterSessionStartFromSessionsFromPullRequests(pullRequests) {
         pullRequests.forEach(function (pr) {
-            console.log(pr);
             pr.sessions.forEach(function (session) {
                 session.sessionStart = new Date();
                 session.sessionEnd = new Date();
@@ -47,7 +48,7 @@ function Graph2Aggregator(userName, amountOfPr) {
                         session.sessionStart = date;
                     } else if (se.event_type === 402 && session.sessionEnd < date) {
                         session.sessionEnd = date;
-                    };
+                    }
                 });
             });
         });
