@@ -152,4 +152,8 @@ function OctopeerService() {
         });
         return promise;
     };
+    
+    this.getAPI = function () {
+        return api;
+    };
 }
