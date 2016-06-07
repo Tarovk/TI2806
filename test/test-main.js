@@ -18,18 +18,12 @@ require.config({
   
   paths: {
       'jquery': 'libs/jquery-2.2.3',
-      'd3': 'libs/d3.v2.min',
-      'd3-tip': 'libs/d3-tip'
+      'd3': 'libs/d3.v2.min'
 
   }, 
 
-  shim: {
-    'd3-tip': { deps: ['d3'] },
-    allTestFiles : { deps: ['jquery','d3','d3-tip']}
-  },
-
   // dynamically load all test files
-  deps: ['jquery','d3-tip','d3'].concat(allTestFiles),
+  deps: ['jquery','d3'].concat(allTestFiles),
 
   // we have to kickoff jasmine, as it is asynchronous
   callback: window.__karma__.start

@@ -2,8 +2,8 @@
 // Copyright (c) 2013 Justin Palmer
 //
 // Tooltips for d3.js SVG visualizations
-
 (function (root, factory) {
+    // Browser global.
     root.d3.tip = factory(root.d3)
 }(this, function (d3) {
 
