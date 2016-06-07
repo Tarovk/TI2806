@@ -1,27 +1,30 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP*/
+/*globals octopeerService, RSVP, ObjectResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
-/*jshint unused: vars*/
+/*jshint unused: false*/
 function Graph1Aggregator(userName) {
     "use strict";
     var promise;
     
-    function setSemanticEvents(sessions) {
-        return octopeerService.getSemanticEvents()
-            .then(function (events) {
-                sessions.forEach(function (session) {
-                    session.events = events.filter(function (event) {
-                        return event.session.url === session.url;
-                    });
+    function setSemanticEvents(sessions, callback) {
+        /* jshint ignore:start */
+        var objectResolver = new ObjectResolver(), promises = [];
+        sessions.forEach(function (session) {
+            promises.push(new RSVP.Promise(function (fulfill) {
+                objectResolver.resolveArrayOfUrls(session.semantic_events).then(function (events) {
+                    session.semantic_events = events;
+                    fulfill(session);
                 });
-                return sessions;
-            });
+            }));
+        });
+        return RSVP.all(promises);
+        /* jshint ignore:end */
     }
     
     function filterSessionsForComments(sessions) {
         sessions.forEach(function (session) {
-            session.events = session.events.filter(function (event) {
-                return event.event_type === "http://146.185.128.124/api/event-types/4/"; //Should be checked
+            session.semantic_events = session.semantic_events.filter(function (event) {
+                return event.element_type === 113 && event.event_type === 201; //Should be checked
             });
         });
         return sessions;
@@ -29,7 +32,6 @@ function Graph1Aggregator(userName) {
     
     function pullRequestCommentObject(sessions) {
         var i, pullRequests = [], pr;
-        
         sessions.forEach(function (session) {
             var found = false;
             for (i = 0; i < pullRequests.length; i += 1) {
@@ -41,10 +43,11 @@ function Graph1Aggregator(userName) {
                 }
             }
             if (!found) {
-                session.pull_request.commentCount = session.events.length;
+                session.pull_request.commentCount = session.semantic_events.length;
                 pullRequests.push(session.pull_request);
             }
         });
+        
         return pullRequests;
     }
     
@@ -53,7 +56,7 @@ function Graph1Aggregator(userName) {
         for (i = 0; i < 5; i += 1) {
             xy.push({
                 "x": i,
-                "y": 2
+                "y": 0
             });
             for (j = 0; j < pullRequests.length; j += 1) {
                 if (pullRequests[j].commentCount === i) {
@@ -66,10 +69,13 @@ function Graph1Aggregator(userName) {
     
     promise = new RSVP.Promise(function (fulfill) {
         octopeerService
-            //.getSessionsFromUser(userName) //first get the session array of urls
             .getSessions()
-            //.then(objectResolver.resolveArrayOfUrls) //resolve them to session objects
-            .then(setSemanticEvents) //Add events attribute to all the sessions
+            .then(function (sessions) {
+                return sessions.filter(function (session) {
+                    return session.user.username === userName;
+                });
+            })
+            .then(setSemanticEvents) //resolve semantic events
             .then(filterSessionsForComments) //filter those events for comments
             .then(pullRequestCommentObject) //count comments
             .then(graphObject) //Convert to wanted format for graph
