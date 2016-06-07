@@ -32,7 +32,7 @@ define([// Array of non-visualisation modules
 	    [// Array of visualisation modules
     	'modules/pull-requests',
     	'modules/time-and-pr-size',
-    	'modules/time',
+    	'modules/time-spent-on-pr',
     	'modules/pr-size',
     	'modules/average-comment-size-compared',
     	'modules/average-comment-size-yours',
