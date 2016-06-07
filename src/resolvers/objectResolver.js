@@ -69,12 +69,23 @@ function ObjectResolver(attributes) {
     };
     
     this.resolveArrayOfUrls = function (urls) {
-        var resolved = [], url;
+        var url, promises = [];
         for (url in urls) {
-            getJSON(urls[url], function (obj) {
-                resolved.push(obj);
-            });
+            promises.push(new RSVP.Promise(function (fulfill) {
+                getJSON(urls[url], function (obj) {
+                    fulfill(obj);
+                });
+            }));
         }
-        return resolved;
+        return RSVP.all(promises);
     };
+    
+    this.resolveUrl = function (url) {
+        var promise = new RSVP.Promise(function (fulfill) {
+            getJSON(url, function (obj) {
+                fulfill(url);
+            });
+        });
+        return promise;
+    }
 }

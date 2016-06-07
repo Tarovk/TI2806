@@ -71,10 +71,11 @@ define(function () {
             }
         ],
         data: [{
-            "serviceCall": function () { return new Graph1Aggregator("borek2"); },
+            "serviceCall": function () { return new Graph1Aggregator("Travis"); },
             "required": true
         }],
         body: function (res) {
+            console.log(res);
             var w = 720,
                 h = 350,
                 pad = 50,
