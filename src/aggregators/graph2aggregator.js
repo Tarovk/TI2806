@@ -9,20 +9,20 @@ function Graph2Aggregator(userName, amountOfPr) {
     prResolver = new PullRequestResolver();
     
     function setSemanticEvents(sessions) {
-        return opService.getSemanticEvents()
-            .then(function (events) {
-                sessions.forEach(function (session) {
-                    session.events = events.filter(function (event) {
-                        return event.session.url === session.url;
-                    });
+        var objectResolver = new ObjectResolver(), promises = [];
+        sessions.forEach(function (session) {
+            promises.push(new RSVP.Promise(function (fulfill) {
+                objectResolver.resolveArrayOfUrls(session.semantic_events).then(function (events) {
+                    session.semantic_events = events;
+                    fulfill(session);
                 });
-                return sessions;
-            });
+            }));
+        });
+        return RSVP.all(promises);
     }
     
     function createPullRequestsObjectFromSessions(sessions) {
         var pullRequests = [], dictionary = {}, counter = 0;
-        
         sessions.forEach(function (session) {
             if (!dictionary.hasOwnProperty(session.pull_request.url)) {
                 dictionary[session.pull_request.url] = counter;
@@ -37,9 +37,17 @@ function Graph2Aggregator(userName, amountOfPr) {
     
     function filterSessionStartFromSessionsFromPullRequests(pullRequests) {
         pullRequests.forEach(function (pr) {
+            console.log(pr);
             pr.sessions.forEach(function (session) {
-                session.events = session.events.filter(function (se) {
-                    return se.event_type === "http://146.185.128.124/api/event-types/4/";
+                session.sessionStart = new Date();
+                session.sessionEnd = new Date();
+                session.semantic_events.forEach(function (se) {
+                    var date = new Date(se.created_at);
+                    if (se.event_type === 401 && session.sessionStart > date) {
+                        session.sessionStart = date;
+                    } else if (se.event_type === 402 && session.sessionEnd < date) {
+                        session.sessionEnd = date;
+                    };
                 });
             });
         });
@@ -48,14 +56,10 @@ function Graph2Aggregator(userName, amountOfPr) {
     
     function sumDurationOfSessionsFromPullRequests(pullRequests) {
         pullRequests.forEach(function (pr) {
-            var summedDuration = 0;
+            pr.totalDuration = 0;
             pr.sessions.forEach(function (session) {
-                session.events.forEach(function (se) {
-                    summedDuration += se.duration;
-                });
+                pr.totalDuration += (session.sessionEnd - session.sessionStart);
             });
-            pr.totalDuration = summedDuration;
-            summedDuration = 0;
         });
         return pullRequests;
     }
@@ -67,11 +71,7 @@ function Graph2Aggregator(userName, amountOfPr) {
             mIndex = objectMatrix.length - 1;
             objectMatrix[mIndex].push(pr.pull_request_number);
             pr.sessions.forEach(function (session) {
-                var summedDuration = 0;
-                session.events.forEach(function (se) {
-                    summedDuration += se.duration;
-                });
-                objectMatrix[mIndex].push(summedDuration);
+                objectMatrix[mIndex].push(session.sessionEnd - session.sessionStart);
             });
         });
         return objectMatrix;
@@ -79,13 +79,21 @@ function Graph2Aggregator(userName, amountOfPr) {
     
     promise = new RSVP.Promise(function (fulfill) {
         opService
-            //.getSessionsFromUser(userName) //Gets sessions from user
             .getSessions()
-            .then(setSemanticEvents) //Set semantic events for sessions
+            .then(function (sessions) {
+                return sessions.filter(function (session) {
+                    return session.user.username === userName;
+                });
+            })
+            .then(setSemanticEvents) //resolve semantic events
             .then(createPullRequestsObjectFromSessions) //Create pullrequests object
             .then(prResolver.resolvePullRequests)
             .then(function (pullRequests) { //Filter to amount of wanted Prs
-                return pullRequests.splice(0, amountOfPr);
+                if (pullRequests.length > amountOfPr) {
+                    return pullRequests.splice(0, amountOfPr);
+                } else {
+                    return pullRequests;
+                }
             })
             .then(prResolver.resolvePullRequests)
             .then(filterSessionStartFromSessionsFromPullRequests)
