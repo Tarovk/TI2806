@@ -219,6 +219,39 @@ main > div.tab-pane > div.row {
     top: calc(50% - 10px);
 }
 
+.d3-tip > .arrow-right{
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-left: 25px solid #F7F7F7;
+    border-bottom: 10px solid transparent;
+    position: absolute;
+    right: -25px;
+    top: calc(50% - 10px);
+}
+
+.d3-tip > .arrow-up{
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-bottom: 25px solid #F7F7F7;
+    border-right: 10px solid transparent;
+    position: absolute;
+    top: -25px;
+    left: calc(50% - 10px);
+}
+
+.d3-tip > .arrow-down{
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-top: 25px solid #F7F7F7;
+    border-right: 10px solid transparent;
+    position: absolute;
+    bottom: -25px;
+    left: calc(50% - 10px);
+}
+
 .d3-tip:hover{
     display: initial !important;
 }
