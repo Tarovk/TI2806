@@ -1,4 +1,4 @@
-/* globals BitbucketAPI, PullRequestTransformer, getJSON */
+/* globals BitbucketAPI, PullRequestTransformer */
 /* exported BitbucketService */
 function BitbucketService() {
     "use strict";
@@ -6,7 +6,7 @@ function BitbucketService() {
     api = new BitbucketAPI();
 
     this.getPullRequests = function (owner, repo, callback) {
-        getJSON(api.urlBuilder('repositories/' +
+        $.getJSON(api.urlBuilder('repositories/' +
                                owner + '/' +
                                repo +
                                '/pullrequests', {}), function (pullrequests) {
@@ -22,7 +22,7 @@ function BitbucketService() {
     };
     
     this.getPullRequest = function (owner, repo, number, callback) {
-        getJSON(api.urlBuilder('repositories/' +
+        $.getJSON(api.urlBuilder('repositories/' +
                                owner + '/' +
                                repo +
                                '/pullrequests/' +

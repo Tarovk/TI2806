@@ -1,4 +1,4 @@
-/* globals PullRequestTransformer, getJSON, GitHubAPI */
+/* globals PullRequestTransformer, GitHubAPI */
 /* exported GitHubService */
 function GitHubService() {
     "use strict";
@@ -6,7 +6,7 @@ function GitHubService() {
     api = new GitHubAPI();
 
     this.getPullRequests = function (owner, repo, callback) {
-        getJSON(api.urlBuilder('repos/' +
+        $.getJSON(api.urlBuilder('repos/' +
                                owner + '/' +
                                repo +
                                '/pulls', { state: "all" }), function (pullrequests) {
@@ -20,7 +20,7 @@ function GitHubService() {
     };
 
     this.getPullRequest = function (owner, repo, number, callback) {
-        getJSON(api.urlBuilder('repos/' +
+        $.getJSON(api.urlBuilder('repos/' +
                                owner + '/' +
                                repo +
                                '/pulls' + '/' +
@@ -36,7 +36,7 @@ function GitHubService() {
     };
 
     function getFilesChanged(owner, repo, number, callback) {
-        getJSON(api.urlBuilder('repos/' +
+        $.getJSON(api.urlBuilder('repos/' +
                                owner + '/' +
                                repo +
                                '/pulls' + '/' +
