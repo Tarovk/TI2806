@@ -27,7 +27,7 @@ function OctopeerHelper() {
 	*
 	* return - the value for the "d" field of an svg path element
 	**/
-	this.line = function (data, interpolationType = "cardinal", xFunction = null, yFunction = null) {
+	this.line = function (data, interpolationType, xFunction, yFunction) {
 		var lineFunction = d3.svg.line()
 			.x(function(d) { 
 				if(xFunction===null) {
