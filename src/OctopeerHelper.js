@@ -5,6 +5,8 @@
 function OctopeerHelper() {
 	this.defaultModule = null;
 	
+	console.log("Entered octopeerHelper");
+
 	this.getSafeModuleValue = function(module,fieldname) {
 		var moduleValue = module[fieldname];
 		if(moduleValue === undefined) {
