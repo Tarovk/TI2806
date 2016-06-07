@@ -1,4 +1,6 @@
 /* globals define */
+/* jshint unused : vars*/
+
 define(function () {
         var w = 720,
             h = 350,
@@ -83,7 +85,9 @@ define(function () {
                 .attr("y", h - padBottom)
                 .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
                 .attr("height", function (d) { return yTimeScale(d.y); })
-                .on("click", function (d) { window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x); })
+                .on("click", function (d) {
+                    window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
+                })
                 .attr("style", "fill:rgb(77, 136, 255);")
                 .on("mouseover", function (d) { d3.select(this).style("fill", "rgb(77, 70, 255)"); })
                 .on("mouseout", function (d) { d3.select(this).style("fill", "rgb(77, 136, 255)"); })
