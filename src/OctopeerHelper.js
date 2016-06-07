@@ -23,7 +23,7 @@ function OctopeerHelper() {
 		} else {
 			return "linear";
 		}
-	}
+	};
 
 	/**	svg line creator
 	* data - The data in JSON with defined x and y fields

@@ -8,7 +8,7 @@ define(['modules/moduleList'], function (dynModules) {
     require(dynModules[0], function(module) {
         octopeerHelper.defaultModule = module;
     });
-
+    /*jshint maxstatements:34*/
     require(dynModules[1], function () {
     // Set global modules variable to a list of all imported modules after converting pseudo-array to array
     modules = Array.prototype.slice.call(arguments);
