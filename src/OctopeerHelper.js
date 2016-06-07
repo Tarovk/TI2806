@@ -3,9 +3,10 @@
 
 //Helper functions for usage within octopeer
 function OctopeerHelper() {
+	console.log("Entered octopeerHelper");
 	this.defaultModule = null;
 	
-	console.log("Entered octopeerHelper");
+	console.log("Set defaultModule to null");
 
 	this.getSafeModuleValue = function(module,fieldname) {
 		var moduleValue = module[fieldname];
@@ -15,6 +16,7 @@ function OctopeerHelper() {
 			return moduleValue;
 		}
 	};
+	console.log("Defined getSafeModuleValue");
 
 	/**	svg line creator
 	* data - The data in JSON with defined x and y fields
