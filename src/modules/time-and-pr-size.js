@@ -12,7 +12,7 @@ define(function () {
         yRightAxisLabel: "Number of lines changed",
         xAxisTicks: false,
         xAxisLabelRotation: 65,
-        xAxisScale: function () {
+        xAxisFitFunction: function () {
             var axisScale = d3.scale.ordinal()
                 .domain([
                     "pr0", "pr1", "pr2", "pr3",
