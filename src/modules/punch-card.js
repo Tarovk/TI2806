@@ -2,9 +2,21 @@
 /* jshint unused : vars*/
 
 define(function () {
+
+    var margin = { left: 50, right: 50, top: 10, bottom: 50 };
+    var w = 720;
+    var h = 350;
+
+    var xScale = d3.scale.linear().domain([0, 23]).range([margin.left, w - margin.right]);
+    var yScale = d3.scale.linear().domain([6, 0]).range([h - margin.bottom, margin.top]);
+    var minuteScale = d3.scale.linear().domain([0, 60]).range([0, 1]);
+
+    var today = new Date().getDay();
+    console.log(today);
+
     return {
         name: "punch-card",
-        title: "Code review punch card",
+        title: "Code review last week",
         parentSelector: "#personal-modules",
         size: "m6",
         xAxis: true,
@@ -14,26 +26,53 @@ define(function () {
         xAxisTicks: false,
         yAxisTicks: false,
         xAxisScale: function () {
-            var axisScale = d3.scale.linear().domain([0, 23]);
-            return d3.svg.axis().ticks(24).scale(axisScale);
+            return d3.svg.axis()
+                .ticks(24)
+                .scale(xScale.copy());
         },
         yAxisScale: function () {
-            var axisScale = d3.scale.linear().domain([6, 0]);
             return d3.svg.axis()
                 .ticks(7)
                 .tickFormat(function (d, i) {
                     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d];
                 })
-                .scale(axisScale);
+                .scale(yScale.copy());
         },
+        xAxisFitFunction: false,
+        yAxisFitFunction: false,
         body: function () {
-            function getDay(date) {
 
+            function getSameDays(sessions) {
+                var res = [];
+                for (var i = 0; i < sessions.length; i++) {
+                    var item = sessions[i];
+                    if (item.start.getDay() === item.end.getDay()) {
+                        res.push(item);
+                    }
+                }
+                return res;
             }
+
+            function getDifferentDays(sessions) {
+                var res = [];
+                for (var i = 0; i < sessions.length; i++) {
+                    var item = sessions[i];
+                    if (item.start.getDay() !== item.end.getDay()) {
+                        res.push(item);
+                    }
+                }
+                return res;
+            }
+
+            function getHoursAndMinutes(date) {
+                var hour = date.getHours();
+                var minutes = date.getMinutes();
+                return hour + minuteScale(minutes);
+            }
+
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
-            //"2016-06-06T12:02:19.529Z"
             var dummyData = [
-                { start: "2016-06-06T10:02:19.529Z", end: "2016-06-06T13:02:19.529Z" },
+                { start: "2016-06-06T10:59:19.529Z", end: "2016-06-06T13:02:19.529Z" },
                 { start: "2016-06-07T11:02:19.529Z", end: "2016-06-07T14:02:19.529Z" },
                 { start: "2016-06-08T12:02:19.529Z", end: "2016-06-08T15:02:19.529Z" },
                 { start: "2016-06-09T13:02:19.529Z", end: "2016-06-09T16:02:19.529Z" },
@@ -46,25 +85,14 @@ define(function () {
                 { start: "2016-06-16T20:02:19.529Z", end: "2016-06-16T23:02:19.529Z" }
             ];
             var transformedData = dummyData.map(function (item) { return { start: new Date(item.start), end: new Date(item.end) } });
-            console.log(transformedData);
-            console.log(dummyData[0].start);
-            console.log(new Date(dummyData[0].start));
+            var sameDays = getSameDays(transformedData);
+            var diffDays = getDifferentDays(transformedData);
 
-            var margin = { left: 50, right: 50, top: 50, down: 50 };
-
-
-            var w = 720;
-            var h = 350;
-            var xScale = d3.scale.linear().domain([0, 23]).range([0 + margin.left, w - margin.right]);
-            var yScale = d3.scale.linear().domain([0, 6]).range([0 + margin.top, h - margin.down]);
-            for (var i = 0; i < 7; i++) {
-                console.log(yScale(i));
-            }
             g.selectAll("circle-start")
             .data(transformedData)
             .enter()
             .append("circle")
-            .attr("cx", function (d) { return xScale(d.start.getHours()); })
+            .attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
             .attr("cy", function (d) { return yScale(d.start.getDay()); })
             .attr("r", 5);
 
@@ -72,17 +100,42 @@ define(function () {
             .data(transformedData)
             .enter()
             .append("circle")
-            .attr("cx", function (d) { return xScale(d.end.getHours()); })
+            .attr("cx", function (d) { return xScale(getHoursAndMinutes(d.end)); })
             .attr("cy", function (d) { return yScale(d.end.getDay()); })
             .attr("r", 5);
 
-            g.selectAll("line")
-            .data(transformedData)
+            // draw full lines on the same day
+            g.selectAll("line-full")
+            .data(sameDays)
             .enter()
             .append("line")
-            .attr("x1", function (d) { return xScale(d.start.getHours()); })
+            .attr("x1", function (d) { return xScale(getHoursAndMinutes(d.start)); })
             .attr("y1", function (d) { return yScale(d.start.getDay()); })
-            .attr("x2", function (d) { return xScale(d.end.getHours()); })
+            .attr("x2", function (d) { return xScale(getHoursAndMinutes(d.end)); })
+            .attr("y2", function (d) { return yScale(d.end.getDay()); })
+            .style("stroke", "black");
+
+            console.log(diffDays);
+
+            // draw lines for code review up to midnight
+            g.selectAll("line-first-half")
+            .data(diffDays)
+            .enter()
+            .append("line")
+            .attr("x1", function (d) { return xScale(getHoursAndMinutes(d.start)); })
+            .attr("y1", function (d) { return yScale(d.start.getDay()); })
+            .attr("x2", function (d) { return xScale(23); })
+            .attr("y2", function (d) { return yScale(d.start.getDay()); })
+            .style("stroke", "black");
+
+            // draw lines for code review after midnight
+            g.selectAll("line-second-half")
+            .data(diffDays)
+            .enter()
+            .append("line")
+            .attr("x1", function (d) { return xScale(0); })
+            .attr("y1", function (d) { return yScale(d.end.getDay()); })
+            .attr("x2", function (d) { return xScale(getHoursAndMinutes(d.end)); })
             .attr("y2", function (d) { return yScale(d.end.getDay()); })
             .style("stroke", "black");
 
