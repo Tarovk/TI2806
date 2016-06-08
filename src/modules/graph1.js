@@ -71,7 +71,7 @@ define(function () {
             }
         ],
         data: [{
-            "serviceCall": function () { return new Graph1Aggregator("Travis"); },
+            "serviceCall": function () { return new Graph1Aggregator("Travis", 20); },
             "required": true
         }],
         body: function (res) {
