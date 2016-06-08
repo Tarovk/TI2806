@@ -95,6 +95,19 @@ define(function () {
                 .range([padTop, h-padBottom]).nice();
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
+            var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .direction("e")
+                .offset([0, 5])
+                .html(function (d) {
+                    return "<div>" + d.y + "</div>";
+                });
+            g.call(tip);
+
+            var OWNER = "mboom";
+            var REPO_NAME = "TI2806";
+            var DATA_POINT_RADIUS_DEFAULT = 4;
+            var DATA_POINT_RADIUS_HOVER = 6;
 
             var tempSizeData = [{"x":-0.5, "y":0}]
                 .concat(sizeData)
@@ -110,10 +123,16 @@ define(function () {
 
             g.selectAll("circle").data(sizeData).enter()
                 .append("circle")
-                .attr("cx",function (d) {return xSizeScale(d.x+0.5);})
-                .attr("cy",function (d) {return ySizeScale(d.y);})
-                .attr("r",3)
-                .attr("style","fill:rgb(212, 51, 51);stroke-width: 3px;");
+                .attr("cx", function (d) { return xSizeScale(d.x + 0.5); })
+                .attr("cy", function (d) { return ySizeScale(d.y); })
+                .attr("r", DATA_POINT_RADIUS_DEFAULT)
+                .attr("style", "fill:rgb(212, 51, 51);stroke-width: 3px;")
+                .style("cursor", "pointer")
+                .on("click", function (d) {
+                    window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
+                })
+                .on("mouseover", function (d) { d3.select(this).attr("r", DATA_POINT_RADIUS_HOVER); return tip.show(d); })
+                .on("mouseout", function (d) { d3.select(this).attr("r", DATA_POINT_RADIUS_DEFAULT); tip.hide(); });
 
             return g;
         }
