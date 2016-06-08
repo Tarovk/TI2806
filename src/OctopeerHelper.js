@@ -15,6 +15,16 @@ function OctopeerHelper() {
 		}
 	};
 
+	this.getScaleType = function(scale) {
+		if (typeof scale.rangePoints === "function") {
+			return "ordinal";
+		} else if (scale.domain()[0] instanceof Date) {
+			return "time";
+		} else {
+			return "linear";
+		}
+	};
+
 	/**	svg line creator
 	* data - The data in JSON with defined x and y fields
 	* interpolationType - String describing the path shape, defaults to cardinal. 
