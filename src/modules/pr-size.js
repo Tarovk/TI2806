@@ -131,8 +131,12 @@ define(function () {
                 .on("click", function (d) {
                     window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
                 })
-                .on("mouseover", function (d) { d3.select(this).attr("r", DATA_POINT_RADIUS_HOVER); return tip.show(d); })
-                .on("mouseout", function (d) { d3.select(this).attr("r", DATA_POINT_RADIUS_DEFAULT); tip.hide(); });
+                .on("mouseover", function (d) {
+                    d3.select(this).attr("r", DATA_POINT_RADIUS_HOVER); return tip.show(d);
+                })
+                .on("mouseout", function (d) {
+                    d3.select(this).attr("r", DATA_POINT_RADIUS_DEFAULT); tip.hide();
+                });
 
             return g;
         }
