@@ -154,8 +154,7 @@ function OctopeerService() {
     };
     
     this.getCommentEventsFromUser = function (userName) {
-        var url, promise;
-        url = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
+        var url = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
             "event-type": 201,
             "element-type": 113
         });

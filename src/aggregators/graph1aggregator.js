@@ -65,6 +65,7 @@ function Graph1Aggregator(userName, bucketMax) {
     
     function graphObject(pullRequests) {
         var xy = [], i, j;
+        
         for (i = 0; i < bucketMax; i += 1) {
             xy.push({
                 "x": i,
