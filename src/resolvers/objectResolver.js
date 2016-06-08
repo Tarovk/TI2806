@@ -1,5 +1,5 @@
 /*exported ObjectResolver*/
-/*globals get, RSVP, getJSON*/
+/*globals RSVP, getJSON*/
 /*jshint -W083*/
 /**
 * This object will create a resolver object. This object contains functions which returns promises
