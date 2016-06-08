@@ -8,6 +8,7 @@ define(function () {
     maxNumberOfSessions = 0,
 
     matrix = [],
+    maxY = 0,
     remapped = [[]].map(function (dat, i) {
         return matrix.map(function (d, ii) {
             return { x: ii, y: d[i + 1] };
@@ -45,20 +46,28 @@ define(function () {
         for (i = 1; i <= maxNumberOfSessions; ++i) {
             mapping.push('c' + i);
         }
+        for (i = 0; i < matrix.length; ++i) {
+            var sum = 0;
+            for (var j = 1; j < matrix[i].length; ++j) {
+                sum += matrix[i][j];
+            }
+            maxY = Math.max(maxY, sum);
+        }
         remapped = mapping.map(function (dat, i) {
             return matrix.map(function (d, ii) {
                 return { x: ii, y: d[i + 1] };
             });
         });
+        console.log(maxY);
         stacked = d3.layout.stack()(remapped);
         x = d3.scale.ordinal()
             .domain(stacked[0].map(function (d) { return d.x; }))
             .rangeRoundBands([pad, w - pad]);
         y = d3.scale.linear()
-            .domain([0, d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; })])
+            .domain([0, maxY])
             .range([0, h - padBottom - padTop]);
         yAxisRange = d3.scale.linear()
-            .domain([d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; }), 0])
+            .domain([0, d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; })])
             .range([0, h - padBottom - padTop]);
     }
 
@@ -74,11 +83,11 @@ define(function () {
         }],
         xAxisFitFunction: function () {
             console.log("x1");
-            return d3.svg.axis().scale(d3.scale.linear().domain([100, 0]));
+            return d3.svg.axis().scale(x);
         },
         yAxisFitFunction: function () {
             console.log("y1");
-            return d3.svg.axis().scale(yAxisRange);
+            return d3.svg.axis().scale(y);
         },
         body: function (res) {
             updateData(res[0]);
