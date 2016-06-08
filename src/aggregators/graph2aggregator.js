@@ -70,11 +70,9 @@ function Graph2Aggregator(userName, amountOfPr) {
     }
     
     function graphObject(pullRequests) {
-        var objectMatrix = [], mIndex;
+        var objectMatrix, mIndex;
         pullRequests.forEach(function (pr) {
-            objectMatrix.push([]);
-            mIndex = objectMatrix.length - 1;
-            objectMatrix[mIndex].push(pr.pull_request_number);
+            objectMatrix = [];
             pr.sessionStarts.forEach(function (session) {
                 var endSessionFound = false;
                 pr.sessionEnds.forEach(function (sessionEnd) {
@@ -84,11 +82,17 @@ function Graph2Aggregator(userName, amountOfPr) {
                     }
                 });
                 if (!endSessionFound) {
-                    objectMatrix[mIndex].push(1);
+                    objectMatrix.push(1);
                 }
             });
+            pr.sessionLengths = objectMatrix;
         });
-        return objectMatrix;
+        var go = pullRequests.map(function (pr) {
+            var values = pr.sessionLengths;
+            values.unshift(pr.pull_request_number);
+            return values;
+        });
+        return go;
     }
     
     promise = new RSVP.Promise(function (fulfill) {
