@@ -12,7 +12,11 @@ define(function () {
     var minuteScale = d3.scale.linear().domain([0, 60]).range([0, 1]);
 
     var today = new Date().getDay();
+
     console.log(today);
+    for (var i = 0; i < 7; i++) {
+        console.log((i + today) % 7);
+    }
 
     return {
         name: "punch-card",
@@ -34,7 +38,10 @@ define(function () {
             return d3.svg.axis()
                 .ticks(7)
                 .tickFormat(function (d, i) {
-                    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d];
+                    if ((d + today + 1) % 7 === today) {
+                        return 'Today';
+                    }
+                    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][(d + today + 1) % 7];
                 })
                 .scale(yScale.copy());
         },
