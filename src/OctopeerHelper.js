@@ -3,14 +3,13 @@
 
 //Helper functions for usage within octopeer
 function OctopeerHelper() {
-    this.defaultModule = function() {return null;};
+    this.defaultModule = null;
         
     this.getSafeModuleValue = function(module,fieldname) {
-        var moduleValue = module[fieldname];
-        if(moduleValue === undefined) {
+        if(module[fieldname] === undefined) {
             return this.defaultModule[fieldname];
         } else {
-            return moduleValue;
+            return module[fieldname];
         }
     };
 
