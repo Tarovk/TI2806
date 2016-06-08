@@ -1,4 +1,4 @@
-define(['libs/rsvp', 'src/services/OctopeerService'], function () {
+define(['libs/rsvp', 'src/settings', 'src/services/OctopeerService', 'src/services/OctopeerAPI'], function () {
     describe('An OctopeerService object', function () {
         var opservice = new OctopeerService();
         var apispy = opservice.getAPI();
