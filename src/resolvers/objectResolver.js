@@ -27,7 +27,7 @@ function ObjectResolver(attributes) {
         if (!object.hasOwnProperty(attr) || !isUrl(object[attr])) {
             return object[attr];
         }
-        get(object[attr], function (obj) {
+        $.get(object[attr], function (obj) {
             object[attr] = obj;
         });
     }
