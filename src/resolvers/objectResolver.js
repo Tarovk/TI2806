@@ -1,5 +1,5 @@
 /*exported ObjectResolver*/
-/*globals get, RSVP, getJSON*/
+/*globals RSVP, getJSON*/
 /*jshint -W083*/
 /**
 * This object will create a resolver object. This object contains functions which returns promises
@@ -27,7 +27,7 @@ function ObjectResolver(attributes) {
         if (!object.hasOwnProperty(attr) || !isUrl(object[attr])) {
             return object[attr];
         }
-        get(object[attr], function (obj) {
+        $.get(object[attr], function (obj) {
             object[attr] = obj;
         });
     }

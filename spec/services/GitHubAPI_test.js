@@ -1,4 +1,4 @@
-define(['src/services/GitHubAPI'], function (settings) {
+define(['src/services/GitHubAPI'], function () {
     describe('A GitHubAPI object', function () {
         var ghapi = new GitHubAPI();
 

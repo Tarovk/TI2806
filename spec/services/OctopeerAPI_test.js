@@ -1,4 +1,4 @@
-define(['src/services/OctopeerAPI'], function (api) {
+define(['src/services/OctopeerAPI'], function () {
     describe('OctopeerAPI test', function () {
         it('should fail on incorrect endpoints', function () {
             var opapi = new OctopeerAPI();
