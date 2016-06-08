@@ -75,6 +75,14 @@ define(function () {
                     .nice();
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
+            var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .direction("e")
+                .offset([0, 5])
+                .html(function (d) {
+                    return "<div>" + d.y + "</div>";
+                });
+            g.call(tip);
 
             var OWNER = "mboom";
             var REPO_NAME = "TI2806";
@@ -89,8 +97,11 @@ define(function () {
                     window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
                 })
                 .attr("style", "fill:rgb(77, 136, 255);")
-                .on("mouseover", function (d) { d3.select(this).style("fill", "rgb(77, 70, 255)"); })
-                .on("mouseout", function (d) { d3.select(this).style("fill", "rgb(77, 136, 255)"); })
+                .on("mouseover", function (d) {
+                    d3.select(this).style("fill", "rgb(77, 70, 255)");
+                    return tip.show(d);
+                })
+                .on("mouseout", function (d) { d3.select(this).style("fill", "rgb(77, 136, 255)"); tip.hide(); })
                 .style("cursor", "pointer")
                 .transition()
                 .attr("y", function (d) { return h - padBottom - yTimeScale(d.y); });
