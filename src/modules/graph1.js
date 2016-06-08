@@ -75,7 +75,6 @@ define(function () {
             "required": true
         }],
         body: function (res) {
-            console.log(res);
             var w = 720,
                 h = 350,
                 pad = 50,

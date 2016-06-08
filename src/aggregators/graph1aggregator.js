@@ -59,7 +59,6 @@ function Graph1Aggregator(userName, bucketMax) {
                 pullRequests.push(se.session.pull_request);
             }
         });
-        console.log(pullRequests);
         return pullRequests;
     }
     
