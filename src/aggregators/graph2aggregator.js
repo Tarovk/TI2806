@@ -23,34 +23,29 @@ function Graph2Aggregator(userName, amountOfPr) {
         /* jshint ignore:end */
     }
     
-    function createPullRequestsObjectFromSessions(sessions) {
-        var pullRequests = [], dictionary = {}, counter = 0;
-        sessions.forEach(function (session) {
-            if (!dictionary.hasOwnProperty(session.pull_request.url)) {
-                dictionary[session.pull_request.url] = counter;
-                pullRequests.push(session.pull_request);
-                pullRequests[dictionary[session.pull_request.url]].sessions = [];
+    function createPullRequestsObjectFromSessions(startAndEndEvents) {
+        var pullRequests = [],
+            dictionary = {},
+            counter = 0,
+            startEvents = startAndEndEvents[0],
+            endEvents = startAndEndEvents[1];
+        startEvents.forEach(function (event) {
+            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
+                dictionary[event.session.pull_request.url] = counter;
+                pullRequests.push(event.session.pull_request);
+                pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
+                pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
                 counter += 1;
             }
-            pullRequests[dictionary[session.pull_request.url]].sessions.push(session);
+            pullRequests[dictionary[event.session.pull_request.url]].sessionStarts.push(event);
         });
-        return pullRequests;
-    }
-    
-    function filterSessionStartFromSessionsFromPullRequests(pullRequests) {
-        pullRequests.forEach(function (pr) {
-            pr.sessions.forEach(function (session) {
-                session.sessionStart = new Date();
-                session.sessionEnd = new Date();
-                session.semantic_events.forEach(function (se) {
-                    var date = new Date(se.created_at);
-                    if (se.event_type === 401 && session.sessionStart > date) {
-                        session.sessionStart = date;
-                    } else if (se.event_type === 402 && session.sessionEnd < date) {
-                        session.sessionEnd = date;
-                    }
-                });
-            });
+        endEvents.forEach(function (event) {
+            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
+                dictionary[event.session.pull_request.url] = counter;
+                pullRequests.push(event.session.pull_request);
+                counter += 1;
+            }
+            pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
         });
         return pullRequests;
     }
@@ -58,8 +53,17 @@ function Graph2Aggregator(userName, amountOfPr) {
     function sumDurationOfSessionsFromPullRequests(pullRequests) {
         pullRequests.forEach(function (pr) {
             pr.totalDuration = 0;
-            pr.sessions.forEach(function (session) {
-                pr.totalDuration += (session.sessionEnd - session.sessionStart);
+            pr.sessionStarts.forEach(function (session) {
+                var endSessionFound = false;
+                pr.sessionEnds.forEach(function (sessionEnd) {
+                    if (session.session.id === sessionEnd.session.id) {
+                        pr.totalDuration = session.created_at - sessionEnd.create_at;
+                        endSessionFound = true;
+                    }
+                });
+                if (!endSessionFound) {
+                    pr.totalDuration = 1;
+                }
             });
         });
         return pullRequests;
@@ -71,8 +75,17 @@ function Graph2Aggregator(userName, amountOfPr) {
             objectMatrix.push([]);
             mIndex = objectMatrix.length - 1;
             objectMatrix[mIndex].push(pr.pull_request_number);
-            pr.sessions.forEach(function (session) {
-                objectMatrix[mIndex].push(session.sessionEnd - session.sessionStart);
+            pr.sessionStarts.forEach(function (session) {
+                var endSessionFound = false;
+                pr.sessionEnds.forEach(function (sessionEnd) {
+                    if (session.session.id === sessionEnd.session.id) {
+                        objectMatrix[mIndex].push(new Date(session.created_at) - new Date(sessionEnd.created_at));
+                        endSessionFound = true;
+                    }
+                });
+                if (!endSessionFound) {
+                    objectMatrix[mIndex].push(1);
+                }
             });
         });
         return objectMatrix;
@@ -80,15 +93,8 @@ function Graph2Aggregator(userName, amountOfPr) {
     
     promise = new RSVP.Promise(function (fulfill) {
         opService
-            .getSessions()
-            .then(function (sessions) {
-                return sessions.filter(function (session) {
-                    return session.user.username === userName;
-                });
-            })
-            .then(setSemanticEvents) //resolve semantic events
+            .getSessionEventsFromUser(userName)
             .then(createPullRequestsObjectFromSessions) //Create pullrequests object
-            .then(prResolver.resolvePullRequests)
             .then(function (pullRequests) { //Filter to amount of wanted Prs
                 if (pullRequests.length > amountOfPr) {
                     return pullRequests.splice(0, amountOfPr);
@@ -96,8 +102,7 @@ function Graph2Aggregator(userName, amountOfPr) {
                     return pullRequests;
                 }
             })
-            .then(prResolver.resolvePullRequests)
-            .then(filterSessionStartFromSessionsFromPullRequests)
+            //.then(prResolver.resolvePullRequests)
             .then(sumDurationOfSessionsFromPullRequests)
             .then(graphObject)
             .then(fulfill);

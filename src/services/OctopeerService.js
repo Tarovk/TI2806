@@ -155,8 +155,8 @@ function OctopeerService() {
     
     this.getCommentEventsFromUser = function (userName) {
         var url = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
-            "event-type": 201,
-            "element-type": 113
+            "event_type": 201,
+            "element_type": 113
         });
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (events) {
@@ -165,6 +165,28 @@ function OctopeerService() {
                 reject(error);
             });
         });
+    };
+    
+    this.getSessionEventsFromUser = function (userName) {
+        var promises = [],
+            startSessionsUrl = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
+                "event_type": 401
+            }),
+            endSessionsUrl = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
+                "event_type": 402
+            });
+        promises.push(new RSVP.Promise(function (fulfill) {
+            getJSON(startSessionsUrl, function (events) {
+                fulfill(events.results);
+            });
+        }));
+        promises.push(new RSVP.Promise(function (fulfill) {
+            getJSON(endSessionsUrl, function (events) {
+                fulfill(events.results);
+            });
+        }));
+        
+        return RSVP.all(promises);
     };
     
     this.getAPI = function () {
