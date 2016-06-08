@@ -255,3 +255,15 @@ main > div.tab-pane > div.row {
 .d3-tip:hover{
     display: initial !important;
 }
+
+.xAxis > g > text {
+	text-anchor: start;
+}
+
+.yRightAxis > g > text {
+	text-anchor: start;
+}
+
+.yAxis > g > text {
+	text-anchor: end;
+}

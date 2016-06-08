@@ -12,7 +12,7 @@ define(function () {
         yRightAxisLabel: "Number of lines changed",
         xAxisTicks: false,
         xAxisLabelRotation: 65,
-        xAxisScale: function () {
+        xAxisFitFunction: function () {
             var axisScale = d3.scale.ordinal()
                 .domain([
                     "pr0", "pr1", "pr2", "pr3",
@@ -159,6 +159,14 @@ define(function () {
                 .nice();
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
+            var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .direction("e")
+                .offset([0, 5])
+                .html(function (d) {
+                    return "<div>" + d.y + "</div>";
+                });
+            g.call(tip);
 
             g.selectAll("rect").data(timeData).enter()
                 .append("rect")
@@ -167,6 +175,15 @@ define(function () {
                 .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
                 .attr("height", function (d) { return yTimeScale(d.y); })
                 .attr("style", "fill:rgb(77, 136, 255);")
+                .on("click", function (d) {
+                    window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
+                })
+                .on("mouseover", function (d) {
+                    d3.select(this).style("fill", "rgb(77, 70, 255)");
+                    return tip.show(d);
+                })
+                .on("mouseout", function (d) { d3.select(this).style("fill", "rgb(77, 136, 255)"); tip.hide(); })
+                .style("cursor", "pointer")
                     .transition()
                     .attr("y", function (d) { return h - padBottom - yTimeScale(d.y); });
 
@@ -197,8 +214,14 @@ define(function () {
                 .on("click", function (d) {
                     window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
                 })
-                .on("mouseover", function (d) { d3.select(this).attr("r", DATA_POINT_RADIUS_HOVER); })
-                .on("mouseout", function (d) { d3.select(this).attr("r", DATA_POINT_RADIUS_DEFAULT); });
+                .on("mouseover", function (d) {
+                    d3.select(this).attr("r", DATA_POINT_RADIUS_HOVER);
+                    return tip.show(d);
+                })
+                .on("mouseout", function (d) {
+                    d3.select(this).attr("r", DATA_POINT_RADIUS_DEFAULT);
+                    tip.hide();
+                });
             return g;
         }
     };

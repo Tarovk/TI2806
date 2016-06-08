@@ -2,7 +2,7 @@
 /*globals octopeerService, RSVP, ObjectResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
-function Graph1Aggregator(userName) {
+function Graph1Aggregator(userName, bucketMax) {
     "use strict";
     var promise;
     
@@ -30,30 +30,43 @@ function Graph1Aggregator(userName) {
         return sessions;
     }
     
-    function pullRequestCommentObject(sessions) {
+    function prEquals(pullRequest, pullRequest2) {
+        var prNr = pullRequest.pull_request_number,
+            repo = pullRequest.repository.name,
+            owner = pullRequest.repository.owner,
+            prNr2 = pullRequest2.pull_request_number,
+            repo2 = pullRequest2.repository.name,
+            owner2 = pullRequest2.repository.owner;
+        
+        return prNr === prNr2 &&
+            repo === repo2 &&
+            owner === owner2;
+    }
+    
+    function pullRequestCommentObject(semanticEvents) {
         var i, pullRequests = [], pr;
-        sessions.forEach(function (session) {
-            var found = false;
+        semanticEvents.forEach(function (se) {
+            var found = false, semanticEventsPr;
             for (i = 0; i < pullRequests.length; i += 1) {
                 pr = pullRequests[i];
-                if (pr.repository.url === session.pull_request.repository.url &&
-                        pr.pull_request_number === session.pull_request.pull_request_number) {
-                    pullRequests[i].commentCount += session.events.length;
+                if (prEquals(pr, se.session.pull_request)) {
+                    pullRequests[i].commentCount += 1;
                     found = true;
                 }
             }
             if (!found) {
-                session.pull_request.commentCount = session.semantic_events.length;
-                pullRequests.push(session.pull_request);
+                se.session.pull_request.commentCount = 1;
+                pullRequests.push(se.session.pull_request);
             }
         });
-        
+        console.log(pullRequests);
         return pullRequests;
     }
     
     function graphObject(pullRequests) {
         var xy = [], i, j;
-        for (i = 0; i < 5; i += 1) {
+        
+        for (i = 0; i < bucketMax; i += 1) {
             xy.push({
                 "x": i,
                 "y": 0
@@ -69,14 +82,7 @@ function Graph1Aggregator(userName) {
     
     promise = new RSVP.Promise(function (fulfill) {
         octopeerService
-            .getSessions()
-            .then(function (sessions) {
-                return sessions.filter(function (session) {
-                    return session.user.username === userName;
-                });
-            })
-            .then(setSemanticEvents) //resolve semantic events
-            .then(filterSessionsForComments) //filter those events for comments
+            .getCommentEventsFromUser(userName)
             .then(pullRequestCommentObject) //count comments
             .then(graphObject) //Convert to wanted format for graph
             .then(fulfill);
