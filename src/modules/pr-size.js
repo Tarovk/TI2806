@@ -135,10 +135,9 @@ define(function () {
                     d3.select(this).attr("r", DATA_POINT_RADIUS_HOVER);
                     return tip.show(d);
                 })
-                .on("mouseout", function (d) {
+                .on("mouseout", function () {
                     d3.select(this).attr("r", DATA_POINT_RADIUS_DEFAULT);
                     tip.hide();
-                    return d;
                 });
 
             return g;
