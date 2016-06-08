@@ -6,24 +6,24 @@ define(function () {
             [
                 {"id":"1","status":"11","duration":35,"repo":"mboom/TI2806"},
                 {"id":"12","status":"2","duration":38,"repo":"mboom/TI2806"},
-                {"id":"15","status":"22","duration":15,"repo":"mboom/TI2806"},
+                {"id":"15","status":"21","duration":15,"repo":"mboom/TI2806"},
                 {"id":"21","status":"2","duration":57,"repo":"mboom/TI2806"},
                 {"id":"25","status":"2","duration":45,"repo":"mboom/TI2806"},
+                {"id":"71","status":"0","duration":4,"repo":"agudek/repo"},
                 {"id":"31","status":"2","duration":24,"repo":"mboom/TI2806"},
                 {"id":"41","status":"1","duration":44,"repo":"mboom/TI2806"},
                 {"id":"52","status":"2","duration":7,"repo":"mboom/TI2806"},
                 {"id":"63","status":"1","duration":25,"repo":"mboom/TI2806"},
                 {"id":"71","status":"11","duration":4,"repo":"mboom/TI2806"},
                 {"id":"1","status":"11","duration":35,"repo":"agudek/demo0"},
-                {"id":"12","status":"22","duration":38,"repo":"agudek/demo0"},
+                {"id":"12","status":"21","duration":38,"repo":"agudek/demo0"},
                 {"id":"15","status":"1","duration":15,"repo":"agudek/demo0"},
                 {"id":"21","status":"2","duration":57,"repo":"agudek/demo0"},
                 {"id":"25","status":"1","duration":45,"repo":"agudek/demo0"},
                 {"id":"31","status":"2","duration":24,"repo":"agudek/demo0"},
                 {"id":"41","status":"2","duration":44,"repo":"agudek/demo0"},
                 {"id":"52","status":"0","duration":7,"repo":"agudek/demo0"},
-                {"id":"63","status":"0","duration":25,"repo":"agudek/demo0"},
-                {"id":"71","status":"0","duration":4,"repo":"agudek/demo0"},
+                {"id":"63","status":"0","duration":25,"repo":"agudek/demo0"}
             ]
         };
 
@@ -57,7 +57,7 @@ define(function () {
             return n.status === "1" || n.status === "11";
         }).length;
         var c = data.sessions.filter(function (n) {
-            return n.status === "2" || n.status === "22";
+            return n.status === "2" || n.status === "21";
         }).length;
         var a = data.sessions.length-m-c;
         d.push(c);
@@ -252,7 +252,8 @@ define(function () {
 
         svg.append('text')
             .attr('x','250')
-            .attr('y','300')            .style('font-size','1.6em')
+            .attr('y','300')            
+            .style('font-size','1.6em')
             .style('fill','#484848')
             .style("font-size","2em")
             .text("Merged by you");
@@ -260,10 +261,10 @@ define(function () {
 
     function drawClosedByYouBar(svg, data) {
         var c = data.sessions.filter(function (n) {
-            return n.status === "2" || n.status === "22";
+            return n.status === "2" || n.status === "21";
         }).length;
         var cby = data.sessions.filter(function (n) {
-            return n.status === "22";
+            return n.status === "21";
         }).length;
 
         var yscale = d3.scale.linear().domain([0,c]).range([0,260]);
@@ -276,7 +277,7 @@ define(function () {
 
         svg.append("rect")
             .attr("x","50")
-            .attr("y","50")
+            .attr("y",310-yscale(cby))
             .attr("width","100")
             .attr("height",yscale(cby))
             .style("fill","rgb(228, 74, 74)");
@@ -296,7 +297,6 @@ define(function () {
             .style("font-weight","200")
             .text("/");
 
-
         svg.append("text")
             .attr("x","355")
             .attr("y","220")
@@ -307,10 +307,223 @@ define(function () {
 
         svg.append('text')
             .attr('x','250')
-            .attr('y','300')            .style('font-size','1.6em')
+            .attr('y','300')            
+            .style('font-size','1.6em')
             .style('fill','#484848')
             .style("font-size","2em")
             .text("Closed by you");
+    }
+
+    function drawDuration(svg,data) {
+        svg.append('line')
+            .attr('x1',"80")
+            .attr('y1',"50")
+            .attr('x2',"80")
+            .attr('y2',"300")
+            .style("stroke-width","3px")
+            .style("stroke","gray"); 
+
+        svg.append('line')
+            .attr('x1',"60")
+            .attr('y1',"50")
+            .attr('x2',"100")
+            .attr('y2',"50")
+            .style("stroke-width","3px")
+            .style("stroke","gray"); 
+
+        svg.append('line')
+            .attr('x1',"60")
+            .attr('y1',"300")
+            .attr('x2',"100")
+            .attr('y2',"300")
+            .style("stroke-width","3px")
+            .style("stroke","gray");   
+
+        var avgtime = 0;
+        $.each(data.sessions, function () {
+            avgtime += this.duration;
+        });
+        avgtime /= data.sessions.length;
+        var maxtime = Math.max.apply(Math,data.sessions.map(function(o){return o.duration;}));
+        var mintime = Math.min.apply(Math,data.sessions.map(function(o){return o.duration;}));
+
+        var yscale = d3.scale.linear().domain([mintime,maxtime]).range([300,50]);
+
+        svg.append('line')
+            .attr('x1',"60")
+            .attr('y1',yscale(avgtime))
+            .attr('x2',"100")
+            .attr('y2',yscale(avgtime))
+            .style("stroke-width","3px")
+            .style("stroke","red");   
+
+        svg.append("text")
+            .attr("x","120")
+            .attr("y","60")
+            .style("font-size","2em")
+            .style("font-weight","300")
+            .text(maxtime+" Minutes"); 
+
+        svg.append("text")
+            .attr("x","120")
+            .attr("y","310")
+            .style("font-size","2em")
+            .style("font-weight","300")
+            .text(mintime+" Minutes"); 
+
+        svg.append("text")
+            .attr("x","140")
+            .attr("y","200")
+            .style("font-size","8em")
+            .style("font-weight","500")
+            .text(avgtime); 
+
+        svg.append("text")
+            .attr("x","140")
+            .attr("y","240")
+            .style("font-size","2em")
+            .style("font-weight","300")
+            .text("Average peer review duration"); 
+    }
+
+    function drawReviewRepos(svg,data) {
+        var orderedbyrepos = [];
+        $.each(data.sessions, function () {
+            if(orderedbyrepos[this.repo] === undefined) {
+                orderedbyrepos[this.repo] = [this];
+            } else {
+                orderedbyrepos[this.repo].push(this);
+            }
+        });
+        var numeric_array = [];
+        for (var items in orderedbyrepos){
+            numeric_array.push( orderedbyrepos[items] );
+        }
+        numeric_array.sort(function(a, b){return b.length-a.length;});
+
+        var yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,230]);
+        
+        svg.append('rect')
+            .attr('x',"60")
+            .attr('y',280-yscale(numeric_array[2].length))
+            .attr('width',"60")
+            .attr('height',yscale(numeric_array[2].length))
+            .style('fill',"rgb(77, 136, 255)");
+
+        svg.append('rect')
+            .attr('x',"140")
+            .attr('y',280-yscale(numeric_array[1].length))
+            .attr('width',"60")
+            .attr('height',yscale(numeric_array[1].length))
+            .style('fill',"rgb(77, 136, 255)");
+
+        svg.append('rect')
+            .attr('x',"220")
+            .attr('y',280-yscale(numeric_array[0].length))
+            .attr('width',"60")
+            .attr('height',yscale(numeric_array[0].length))
+            .style('fill',"rgb(77, 136, 255)");
+
+        svg.append('line')
+            .attr('x1',"50")
+            .attr('y1',"280")
+            .attr('x2',"290")
+            .attr('y2',"280")
+            .style("stroke-width","3px")
+            .style("stroke","lightgray");
+    }
+
+    function drawActionRepos(svg,data) {
+        var orderedbyrepos = [];
+        $.each(data.sessions, function () {
+            if(this.status === "11" || this.status === "21") {
+                if(orderedbyrepos[this.repo] === undefined) {
+                    orderedbyrepos[this.repo] = [this];
+                } else {
+                    orderedbyrepos[this.repo].push(this);
+                }
+            }
+        });
+        var numeric_array = [];
+        for (var items in orderedbyrepos){
+            numeric_array.push( orderedbyrepos[items] );
+        }
+        numeric_array.sort(function(a, b){return b.length-a.length;});
+        var yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,230]);
+
+        var m,c;
+        if(numeric_array[2]){
+            m = numeric_array[2].filter(function (n) {
+                return n.status === "11";
+            }).length;
+            c = numeric_array[2].filter(function (n) {
+                return n.status === "21";
+            }).length;
+            svg.append('rect')
+                .attr('x',"60")
+                .attr('y',280-yscale(m+c))
+                .attr('width',"60")
+                .attr('height',yscale(m))
+                .style('fill',"rgb(97, 179, 97)");
+            svg.append('rect')
+                .attr('x',"60")
+                .attr('y',280-yscale(c))
+                .attr('width',"60")
+                .attr('height',yscale(c))
+                .style('fill',"rgb(228, 74, 74)");
+        }
+
+        if(numeric_array[1]){
+            m = numeric_array[1].filter(function (n) {
+                return n.status === "11";
+            }).length;
+            c = numeric_array[1].filter(function (n) {
+                return n.status === "21";
+            }).length;
+            svg.append('rect')
+                .attr('x',"140")
+                .attr('y',280-yscale(m+c))
+                .attr('width',"60")
+                .attr('height',yscale(m))
+                .style('fill',"rgb(97, 179, 97)");
+            svg.append('rect')
+                .attr('x',"140")
+                .attr('y',280-yscale(c))
+                .attr('width',"60")
+                .attr('height',yscale(c))
+                .style('fill',"rgb(228, 74, 74)");
+        }
+
+        if(numeric_array[0]){
+            m = numeric_array[0].filter(function (n) {
+                return n.status === "11";
+            }).length;
+            c = numeric_array[0].filter(function (n) {
+                return n.status === "21";
+            }).length;
+            svg.append('rect')
+                .attr('x',"220")
+                .attr('y',280-yscale(m+c))
+                .attr('width',"60")
+                .attr('height',yscale(m))
+                .style('fill',"rgb(97, 179, 97)");
+            svg.append('rect')
+                .attr('x',"220")
+                .attr('y',280-yscale(c))
+                .attr('width',"60")
+                .attr('height',yscale(c))
+                .style('fill',"rgb(228, 74, 74)");
+        }
+
+        svg.append('line')
+            .attr('x1',"50")
+            .attr('y1',"280")
+            .attr('x2',"290")
+            .attr('y2',"280")
+            .style("stroke-width","3px")
+            .style("stroke","lightgray");
+
+
     }
 
     return {
@@ -342,6 +555,9 @@ define(function () {
                     .style("transform","translate("+300+"px,"+180+"px)");
                 drawMergedByYouBar(mergedbyyoubar.svg,data);
                 drawClosedByYouBar(closedbyyoubar.svg,data);
+                drawDuration(averagetime.svg,data);
+                drawReviewRepos(reviewrepos.svg,data);
+                drawActionRepos(actionrepos.svg,data);
 
             return ret;
         }
