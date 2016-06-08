@@ -41,4 +41,12 @@ function PullRequestResolver() {
         return RSVP.all(promises);
     };
 
+    this.getGitHubService = function () {
+        return ghService;
+    };
+
+    this.getBitbucketService = function () {
+        return bbService;
+    };
+
 }
