@@ -52,19 +52,6 @@ function OctopeerService() {
         return promise;
     };
     
-    this.getPullRequestsFromUser = function (username) {
-        var url, objectResolver, promise;
-        objectResolver = new ObjectResolver(["session"]);
-        url = api.urlBuilder(api.endpoints.pullRequests, {});
-
-        promise = new RSVP.Promise(function (fulfill) {
-            getJSON(url, function (pullRequests) {
-                fulfill(objectResolver.resolveArray(pullRequests.results));
-            });
-        });
-        return promise;
-    };
-    
     this.getSemanticEventsBySession = function () {//sessionId) {
         var url, promise;
         url = api.urlBuilder(api.endpoints.semanticEvents, {});
@@ -121,17 +108,11 @@ function OctopeerService() {
     
     this.getSessionsFromUser = function (userName) {
         var url;
-        url = api.urlBuilder(api.endpoints.users + userName, {});
+        url = api.urlBuilder(api.endpoints.sessions + '/' + userName, {});
         
         return new RSVP.Promise(function (fulfill, reject) {
-            getJSON(url, function (users) {
-                users.sessions.map(function (sessionUrl) {
-                    getJSON(sessionUrl, function (session) {
-                        return session;
-                    });
-                }).then(function (asd) {
-                    fulfill(asd);
-                });
+            getJSON(url, function (sessions) {
+                fulfill(sessions.results);
             }, function (error) {
                 reject(error);
             });
@@ -155,8 +136,8 @@ function OctopeerService() {
     
     this.getCommentEventsFromUser = function (userName) {
         var url = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
-            "event-type": 201,
-            "element-type": 113
+            "event_type": 201,
+            "element_type": 113
         });
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (events) {
@@ -165,6 +146,28 @@ function OctopeerService() {
                 reject(error);
             });
         });
+    };
+    
+    this.getSessionEventsFromUser = function (userName) {
+        var promises = [],
+            startSessionsUrl = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
+                "event_type": 401
+            }),
+            endSessionsUrl = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
+                "event_type": 402
+            });
+        promises.push(new RSVP.Promise(function (fulfill) {
+            getJSON(startSessionsUrl, function (events) {
+                fulfill(events.results);
+            });
+        }));
+        promises.push(new RSVP.Promise(function (fulfill) {
+            getJSON(endSessionsUrl, function (events) {
+                fulfill(events.results);
+            });
+        }));
+        
+        return RSVP.all(promises);
     };
     
     this.getAPI = function () {

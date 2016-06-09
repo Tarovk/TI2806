@@ -1,27 +1,28 @@
-/* globals define, gitHubService */
+/* globals define, PullRequestsAggregator, globalUserName */
 /* exported xAxisGroup, yAxisGroup */
 /* jshint unused : vars */
 
 define(function () {
-    return {
-        name: "pull-requests",
-        title: "Pull requests",
-        parentSelector: "#project-modules",
-        xAxisLabel: "Date",
-        yAxisLabel: "",
-        yAxis: false,
-        xAxisTicks: false,
-        xAxisLine: true,
-        xAxisScale: function() { 
-            var data2 = [];
-            var today = new Date();
+    var data2 = [];
+    var today = new Date();
             var month = today.getMonth();
             var format = d3.time.format("%d/%m");
             // Because months are 0-11 this will get the previous month.
             data2.push(new Date().setMonth((month + 11) % 12));
             data2.push(today);
-
-            var xScale = d3.time.scale().domain(data2).range([0, 720 - 50 - 50]).nice();
+    var xScale = d3.time.scale().domain(data2).range([0, 720 - 50 - 50]).nice();
+    
+    var yScale = d3.scale.linear().domain([0,300]).range([50, 300]).nice();
+    
+    return {
+        name: "pull-requests",
+        title: "Pull requests",
+        parentSelector: "#project-modules",
+        yAxis: false,
+        xAxis: true,
+        xAxisTicks: false,
+        xAxisLine: true,
+        xAxisScale: function() { 
             var axis = d3.svg.axis().scale(xScale);
             axis.tickFormat(format).ticks(30);
             return axis;
@@ -44,52 +45,32 @@ define(function () {
                 "text":"Closed pull requests"
             }
         ],
-        body: function () {
-
-            function processPRs(prs) {
-                for (var i = 0; i < prs.length; i++) {
-                    arr.push(prs[i]);
-                }
-                g.selectAll("circle")
-                .data(arr)
+        data: [{
+            "serviceCall": function () { return new PullRequestsAggregator(globalUserName); }
+        }],
+        body: function (res) {
+            var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
+            console.log(res[0]);
+            g.selectAll('circle')
+                .data(res[0])
                 .enter()
-                .append("circle")
+                .append('circle')
                 .attr("cx", function (d) {
-                    return xScale(parser.parse(d.created_at));
+                    var parser = d3.time.format("%Y-%m-%dT%H:%M:%SZ");
+                    return xScale(parser.parse(d.prInfo.created_at));
                 })
                 .attr("cy", function (d) {
                     return yScale(Math.random() * 300);
                 })
                 .style("fill", function (d) {
-                    return d.merged ? "green" : (d.state === "closed" ? "red" : "orange");
+                    return d.prInfo.merged ? "green" : (d.prInfo.state === "closed" ? "red" : "orange");
                 })
                 .style("cursor", "pointer")
                 .attr("r", 5)
                 .on("click", function (d) {
-                    window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.number);
+                    window.open(d.prInfo.url);
                 });
-            }
-
-            var REPO_NAME = "TI2806";
-            var OWNER = "mboom";
-            var leftPad = 50;
-            var w = 720;
-            var h = 350;
-            var data2 = [];
-            var today = new Date();
-            var month = today.getMonth();
-            // Because months are 0-11 this will get the previous month.
-            data2.push(new Date().setMonth((month + 11) % 12));
-            data2.push(today);
-
-            var xScale = d3.time.scale().domain(data2).range([0, w - leftPad]);
-            var yScale = d3.scale.linear().domain([300, 0]).range([15, h - 50]);
-            var parser = d3.time.format("%Y-%m-%dT%H:%M:%SZ");
-            var arr = [];
-            gitHubService.getPullRequests("mboom", "TI2806", processPRs);
-
-            var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
-
+            console.log(g);
             return g;
         }
     };

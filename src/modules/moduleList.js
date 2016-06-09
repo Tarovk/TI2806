@@ -1,7 +1,6 @@
 /* globals define */
 define([// Array of non-visualisation modules
         // These must be loaded in before the visualisation modules
-        // Keep in mind that there should be a corresponding module_test.js in the /test folder
         'settings',
         'cache',
         'apicallers',
@@ -16,6 +15,8 @@ define([// Array of non-visualisation modules
 	    'services/BitbucketService',
         'resolvers/pullRequestResolver',
         'svgCreator',
+        'aggregators/pullRequestsAggregator.js',
+        'aggregators/forceLayoutAggregator.js',
         'aggregators/graph1aggregator.js',
         'aggregators/graph2aggregator.js',
         'aggregators/graph3aggregator.js',
@@ -39,7 +40,9 @@ define([// Array of non-visualisation modules
     	'modules/average-comment-size-total',
         'modules/graph1.js',
         'modules/all-prs-force-layout',
-        'modules/dashboard-m4-modules'
+        'modules/dashboard-m4-modules',
+        'modules/punch-card',
+        'modules/graph2.js'
     	]
     ]; 
 });
