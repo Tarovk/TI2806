@@ -37,8 +37,9 @@ define([// Array of non-visualisation modules
     	'modules/average-comment-size-yours',
     	'modules/average-comment-size-total',
         'modules/graph1.js',
-        'modules/graph2.js',
-        'modules/all-prs-force-layout'
+        'modules/all-prs-force-layout',
+        'modules/punch-card',
+        'modules/graph2.js'
     	]
     ]; 
 });
