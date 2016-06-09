@@ -8,18 +8,6 @@ function Graph3Aggregator(userName, amountOfPr) {
     opService = new OctopeerService();
     prResolver = new PullRequestResolver();
     
-    function setSemanticEvents(sessions) {
-        return opService.getSemanticEvents()
-            .then(function (events) {
-                sessions.forEach(function (session) {
-                    session.events = events.filter(function (event) {
-                        return event.session.url === session.url;
-                    });
-                });
-                return sessions;
-            });
-    }
-    
     function createPullRequestsObjectFromSessions(sessions) {
         var pullRequests = [], dictionary = {}, counter = 0;
         

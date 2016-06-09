@@ -81,7 +81,7 @@ define(function () {
                 padTop = 10,
                 padBottom = 50,
                 sizeData = res[0],
-                domain = ['0-2', '3-5', '5-10', '<10'],
+                domain = ['0-2', '3-5', '5-10', '10'],
                 buckets = [];
             for (var i = 0; i < domain.length; ++i) {
                 buckets.push(0);

@@ -6,21 +6,6 @@ function Graph1Aggregator(userName, bucketMax) {
     "use strict";
     var promise;
     
-    function setSemanticEvents(sessions, callback) {
-        /* jshint ignore:start */
-        var objectResolver = new ObjectResolver(), promises = [];
-        sessions.forEach(function (session) {
-            promises.push(new RSVP.Promise(function (fulfill) {
-                objectResolver.resolveArrayOfUrls(session.semantic_events).then(function (events) {
-                    session.semantic_events = events;
-                    fulfill(session);
-                });
-            }));
-        });
-        return RSVP.all(promises);
-        /* jshint ignore:end */
-    }
-    
     function filterSessionsForComments(sessions) {
         sessions.forEach(function (session) {
             session.semantic_events = session.semantic_events.filter(function (event) {
