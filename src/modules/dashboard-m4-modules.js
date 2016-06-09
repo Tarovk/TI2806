@@ -1,4 +1,4 @@
-/* globals define, DashboardAggregator */
+/* globals define, DashboardAggregator, globalUserName */
 define(function () {
     var w = 600,
         h = 360;
@@ -454,6 +454,7 @@ define(function () {
     }
 
     function drawActionRepos(svg,data) {
+    /*jshint maxstatements:100, maxcomplexity:7 */
         var orderedbyrepos = [];
         $.each(data.sessions, function () {
             if(this.status === "11" || this.status === "21") {
@@ -653,7 +654,7 @@ define(function () {
             return ret;
         },
         body: function (res) {
-            data = res[0];
+            var data = res[0];
 
             drawPieChart(allsessionspie.svg,data)
                 .style("transform","translate("+300+"px,"+180+"px)");
