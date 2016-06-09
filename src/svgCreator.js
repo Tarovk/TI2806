@@ -204,8 +204,8 @@ function SvgCreator() {
         }
     };
 
-    this.createSVG = function(module) {
-        var svg = createSvgContainer();
+    this.createSVG = function(module, w = 720, h = 350) {
+        var svg = createSvgContainer(w,h);
         this.createAxes(svg, module);
         this.createAxisLabels(svg, module);
         return svg;

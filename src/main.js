@@ -200,7 +200,16 @@ define(['modules/moduleList'], function (dynModules) {
             .addClass("errorBadge")
             .html("error")
             .appendTo(outerdiv);
-        var svg = svgCreator.createSVG(module);
+        var svg;
+        if(module.customSVGSize !== undefined) {
+            svg = svgCreator.createSVG(
+                module,
+                module.customSVGSize[0],
+                module.customSVGSize[1]
+            );
+        } else  {
+            svg = svgCreator.createSVG(module);
+        }
         svg.append('g')
             .attr("class","content");
         module.svg = svg.node();
