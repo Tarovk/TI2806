@@ -1,4 +1,4 @@
-/* globals define, PullRequestsAggregator */
+/* globals define, PullRequestsAggregator, globalUserName */
 /* exported xAxisGroup, yAxisGroup */
 /* jshint unused : vars */
 
@@ -46,7 +46,7 @@ define(function () {
             }
         ],
         data: [{
-            "serviceCall": function () { return new PullRequestsAggregator("Travis"); }
+            "serviceCall": function () { return new PullRequestsAggregator(globalUserName); }
         }],
         body: function (res) {
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));

@@ -1,4 +1,4 @@
-/* globals define, Graph1Aggregator */
+/* globals define, Graph1Aggregator, globalUserName */
 define(function () {
     var tip = d3.tip()
         .attr('class', 'd3-tip')
@@ -71,7 +71,7 @@ define(function () {
             }
         ],
         data: [{
-            "serviceCall": function () { return new Graph1Aggregator("Travis", 20); },
+            "serviceCall": function () { return new Graph1Aggregator(globalUserName, 20); },
             "required": true
         }],
         body: function (res) {
