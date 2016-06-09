@@ -1,31 +1,31 @@
-/* globals define */
+/* globals define, DashboardAggregator */
 define(function () {
     var w = 600,
-        h = 360,
-        data = { "sessions":
-            [
-                {"id":"1","status":"11","duration":35,"repo":"mboom/TI2806"},
-                {"id":"12","status":"2","duration":38,"repo":"mboom/TI2806"},
-                {"id":"15","status":"21","duration":15,"repo":"mboom/TI2806"},
-                {"id":"21","status":"2","duration":57,"repo":"mboom/TI2806"},
-                {"id":"25","status":"2","duration":45,"repo":"mboom/TI2806"},
-                {"id":"71","status":"0","duration":4,"repo":"agudek/repo"},
-                {"id":"31","status":"2","duration":24,"repo":"mboom/TI2806"},
-                {"id":"41","status":"1","duration":44,"repo":"mboom/TI2806"},
-                {"id":"52","status":"2","duration":7,"repo":"mboom/TI2806"},
-                {"id":"63","status":"1","duration":25,"repo":"mboom/TI2806"},
-                {"id":"71","status":"11","duration":4,"repo":"mboom/TI2806"},
-                {"id":"1","status":"11","duration":35,"repo":"agudek/demo0"},
-                {"id":"12","status":"21","duration":38,"repo":"agudek/demo0"},
-                {"id":"15","status":"1","duration":15,"repo":"agudek/demo0"},
-                {"id":"21","status":"2","duration":57,"repo":"agudek/demo0"},
-                {"id":"25","status":"1","duration":45,"repo":"agudek/demo0"},
-                {"id":"31","status":"2","duration":24,"repo":"agudek/demo0"},
-                {"id":"41","status":"2","duration":44,"repo":"agudek/demo0"},
-                {"id":"52","status":"0","duration":7,"repo":"agudek/demo0"},
-                {"id":"63","status":"0","duration":25,"repo":"agudek/demo0"}
-            ]
-        };
+        h = 360;
+//        data = { "sessions":
+//            [
+//                {"id":"1","status":"11","duration":35,"repo":"mboom/TI2806"},
+//                {"id":"12","status":"2","duration":38,"repo":"mboom/TI2806"},
+//                {"id":"15","status":"21","duration":15,"repo":"mboom/TI2806"},
+//                {"id":"21","status":"2","duration":57,"repo":"mboom/TI2806"},
+//                {"id":"25","status":"2","duration":45,"repo":"mboom/TI2806"},
+//                {"id":"71","status":"0","duration":4,"repo":"agudek/repo"},
+//                {"id":"31","status":"2","duration":24,"repo":"mboom/TI2806"},
+//                {"id":"41","status":"1","duration":44,"repo":"mboom/TI2806"},
+//                {"id":"52","status":"2","duration":7,"repo":"mboom/TI2806"},
+//                {"id":"63","status":"1","duration":25,"repo":"mboom/TI2806"},
+//                {"id":"71","status":"11","duration":4,"repo":"mboom/TI2806"},
+//                {"id":"1","status":"11","duration":35,"repo":"agudek/demo0"},
+//                {"id":"12","status":"21","duration":38,"repo":"agudek/demo0"},
+//                {"id":"15","status":"1","duration":15,"repo":"agudek/demo0"},
+//                {"id":"21","status":"2","duration":57,"repo":"agudek/demo0"},
+//                {"id":"25","status":"1","duration":45,"repo":"agudek/demo0"},
+//                {"id":"31","status":"2","duration":24,"repo":"agudek/demo0"},
+//                {"id":"41","status":"2","duration":44,"repo":"agudek/demo0"},
+//                {"id":"52","status":"0","duration":7,"repo":"agudek/demo0"},
+//                {"id":"63","status":"0","duration":25,"repo":"agudek/demo0"}
+//            ]
+//        };
 
     var pieLayout = d3.layout.pie()
         .sort(null)
@@ -627,7 +627,13 @@ define(function () {
         size: "m12 l12",
         parentSelector: '#dashboard-modules',
         customContainer: true,
-        body: function () {
+        data: [{
+            "serviceCall": function () { return new DashboardAggregator(globalUserName); },
+            "required": true
+        }],
+        body: function (res) {
+            var data = res[0];
+            console.log(data);
             var ret = d3.select(document.createElement('div'))
                 .attr("class","row")
                 .style("margin-left","-0.75em")
