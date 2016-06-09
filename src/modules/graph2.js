@@ -1,4 +1,4 @@
-/* globals define, Graph2Aggregator */
+/* globals define, Graph2Aggregator, globalUserName */
 define(function () {
     var w = 720,
     h = 350,

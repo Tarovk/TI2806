@@ -1,4 +1,4 @@
-/* globals define, PullRequestsAggregator */
+/* globals define, PullRequestsAggregator, globalUserName */
 /* exported xAxisGroup, yAxisGroup */
 /* jshint unused : vars */
 
