@@ -89,8 +89,7 @@ define(function () {
             }
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
-            var dummyData = res[0];
-            var transformedData = dummyData.map(function (item) {
+            var transformedData = res[0].map(function (item) {
                 return { start: new Date(item.start), end: new Date(item.end) };
             });
             var sameDays = getSameDays(transformedData);
