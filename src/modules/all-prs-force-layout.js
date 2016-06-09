@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, ForceLayoutAggregator */
 define(function () {
     var graph = {
         "nodes" : 

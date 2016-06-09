@@ -1,5 +1,5 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, ObjectResolver*/
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
 function ForceLayoutAggregator(userName) {
@@ -61,12 +61,12 @@ function ForceLayoutAggregator(userName) {
             "name": "user",
             "type": "user",
             "src": "https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"
-        })
+        });
         graphObject.nodes.push({
             "name": "repo1",
             "type": "repo",
             "title": "bla"
-        })
+        });
         graphObject.nodes = graphObject.nodes.concat(pullRequests.map(function (pr) {
             return {
                 "id": "1",
@@ -74,7 +74,7 @@ function ForceLayoutAggregator(userName) {
                 "name": pr.prInfo.title,
                 "size": pr.totalDuration,
                 "status": 1,
-                "repo": pr.repository.name,
+                "repo": pr.repository.name
             };
         }));
 

@@ -1,5 +1,5 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, ObjectResolver*/
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
 function PullRequestsAggregator(userName) {
@@ -23,7 +23,7 @@ function PullRequestsAggregator(userName) {
             .getSessionsFromUser(userName)
             .then(convertSessionsToPullRequests)
             .then(prResolver.resolvePullRequests)
-            .then(fulfill)
+            .then(fulfill);
     });
     return promise;
 }

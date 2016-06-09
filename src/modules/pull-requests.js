@@ -1,4 +1,4 @@
-/* globals define, gitHubService */
+/* globals define, PullRequestsAggregator */
 /* exported xAxisGroup, yAxisGroup */
 /* jshint unused : vars */
 

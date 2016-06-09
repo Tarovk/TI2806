@@ -44,7 +44,6 @@ function Graph3Aggregator(userName, amountOfPr) {
         opService
             //.getSessionsFromUser(userName) //Gets sessions from user
             .getSessions()
-            .then(setSemanticEvents) //Set semantic events for sessions
             .then(createPullRequestsObjectFromSessions) //Create pullrequests object
             .then(prResolver.resolvePullRequests)
             .then(aggregateDurationEventsPerPR) //Aggregate duration semantic events
