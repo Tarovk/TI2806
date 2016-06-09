@@ -98,7 +98,7 @@ define(function () {
         yAxis: false,
         yRightAxis: false,
         data: [{
-            'serviceCall': function () { return new ForceLayoutAggregator('Travis'); },
+            'serviceCall': function () { return new ForceLayoutAggregator(globalUserName); },
             'required': true
         }],
         body: function (res) {

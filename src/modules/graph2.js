@@ -76,7 +76,7 @@ define(function () {
         yAxisLabel: 'Sessions and session duration',
         parentSelector: '#project-modules',
         data: [{
-            'serviceCall': function () { return new Graph2Aggregator('Travis', 10); },
+            'serviceCall': function () { return new Graph2Aggregator(globalUserName, 10); },
             'required': true
         }],
         xAxisFitFunction: function () {
