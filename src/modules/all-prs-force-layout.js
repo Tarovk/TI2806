@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, ForceLayoutAggregator */
 define(function () {
     var graph = {
         "nodes" : 
@@ -97,8 +97,12 @@ define(function () {
         xAxis: false,
         yAxis: false,
         yRightAxis: false,
-        body: function () {
-
+        data: [{
+            'serviceCall': function () { return new ForceLayoutAggregator('Travis'); },
+            'required': true
+        }],
+        body: function (res) {
+            console.log(res[0]);
             force
               .nodes(graph.nodes)
               .links(graph.links)

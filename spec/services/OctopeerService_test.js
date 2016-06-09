@@ -35,18 +35,6 @@ define(['libs/rsvp', 'src/settings', 'src/services/OctopeerService', 'src/servic
             expect(RSVP.Promise).toHaveBeenCalled();
         });
 
-        it('calls the API urlBuilder correctly and creates a Promise when executing getPullRequestsFromUser(username)', function () {
-            // Get actual URL from OctopeerAPI
-            var providedURLfromAPI = new OctopeerAPI().endpoints.pullRequests;
-            var providedUsername = 'mboom';
-
-            // Keep in mind: at this point, selecting the right pull requests of a specific user
-            // is done by Octopeer Analytics. This could change in the future, for example by the Octopeer server.
-            opservice.getPullRequestsFromUser(providedUsername);
-            expect(apispy.urlBuilder).toHaveBeenCalledWith(providedURLfromAPI, {});
-            expect(RSVP.Promise).toHaveBeenCalled();
-        });
-
         it('calls the API urlBuilder correctly and creates a Promise when executing getSemanticEventsBySession()', function () {
             // Get actual URL from OctopeerAPI
             var providedURLfromAPI = new OctopeerAPI().endpoints.semanticEvents;
@@ -68,11 +56,11 @@ define(['libs/rsvp', 'src/settings', 'src/services/OctopeerService', 'src/servic
 
         it('calls the API urlBuilder correctly and creates a Promise when executing getSessionsFromUser(username)', function () {
             // Get actual URL from OctopeerAPI
-            var providedURLfromAPI = new OctopeerAPI().endpoints.users;
+            var providedURLfromAPI = new OctopeerAPI().endpoints.sessions;
             var providedUsername = 'mboom';
 
             opservice.getSessionsFromUser(providedUsername);
-            expect(apispy.urlBuilder).toHaveBeenCalledWith(providedURLfromAPI + providedUsername, jasmine.any(Object));
+            expect(apispy.urlBuilder).toHaveBeenCalledWith(providedURLfromAPI + '/' + providedUsername, jasmine.any(Object));
             expect(RSVP.Promise).toHaveBeenCalled();
         });
 

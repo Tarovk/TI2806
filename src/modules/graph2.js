@@ -25,14 +25,12 @@ define(function () {
         .domain([d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; }), 0])
         .range([0, h - padBottom - padTop]),
     z = d3.scale.ordinal().range([
-        'rgba(51, 125, 212, 0.5)',
-        'rgba(255, 255, 255, 1.00)',
-        'rgba(51, 125, 212, 0.5)'
+        'rgba(51, 125, 212, 1.00)',
+        'rgba(255, 0, 0, 1.00)',
+        'rgba(51, 125, 212, 1.00)'
     ]),
     zBorder = d3.scale.ordinal().range([
-        'rgba(51, 125, 212, 1.00)',
-        'rgba(255, 255, 255, 1.00)',
-        'rgba(51, 125, 212, 0.5)'
+        'rgba(0, 0, 0, 1)'
     ]);
 
     function updateData(data) {
@@ -90,6 +88,7 @@ define(function () {
             return d3.svg.axis().scale(y);
         },
         body: function (res) {
+            console.log(res);
             updateData(res[0]);
 
             // create canvas
@@ -110,7 +109,7 @@ define(function () {
             .attr('x', function (d) { return x(d.x); })
             .attr('y', function (d) { return h - padBottom - y(d.y0) - y(d.y); })
             .attr('height', function (d) { return y(d.y); })
-            .attr('width', x.rangeBand());
+            .attr('width', 50);
 
             return g;
         }
