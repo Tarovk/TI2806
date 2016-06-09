@@ -40,7 +40,8 @@ define(function () {
                 .attr('id',id)
                 .attr("class","dashboard-m4-module-module col s12 m4")
                     .append('div')
-                    .attr('class','card hoverable');
+                    .attr('class','card hoverable')
+                    .style("padding", "20px 30px");
     }
 
     function createSVG(parent) {
@@ -66,12 +67,6 @@ define(function () {
         return d;
     }
     function addPieChartText(g, piedata) {
-        g.append('circle')
-            .attr('cx','0')
-            .attr('cy','0')
-            .attr('r','90')
-            .style('fill','white');
-
         g.append('text')
             .attr('y','10')
             .style('text-anchor','middle')
@@ -197,6 +192,12 @@ define(function () {
                     return "#61B361";
                 }
             });
+
+        g.append('circle')
+            .attr('cx','0')
+            .attr('cy','0')
+            .attr('r','90')
+            .style('fill','white');
 
         addPieChartText(g, piedata);
         addPieChartLines(g, piearcdata);
@@ -421,7 +422,9 @@ define(function () {
                 .style('fill',"rgb(77, 136, 255)");
         }
         
-        if(numeric_array[0]) {        
+        var max = 0;
+        if(numeric_array[0]) {   
+            max = numeric_array[0].length;     
             svg.append('rect')
                 .attr('x',"220")
                 .attr('y',310-yscale(numeric_array[0].length))
@@ -437,6 +440,27 @@ define(function () {
             .attr('y2',"310")
             .style("stroke-width","3px")
             .style("stroke","lightgray");
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","200")
+            .style("font-size","8em")
+            .style("font-weight","500")
+            .text(max);   
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","240")
+            .style("font-size","2em")
+            .style("font-weight","300")
+            .text("contributions on");   
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","270")
+            .style("font-size","2em")
+            .style("font-weight","300")
+            .text("repository");         
     }
 
     function drawActionRepos(svg,data) {
