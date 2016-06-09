@@ -87,7 +87,7 @@ define(function () {
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
             var dummyData = [
-                { start: "2016-06-06T21:00:00.529Z", end: "2016-06-06T22:30:00.529Z" },
+                { start: "2016-06-06T21:00:00.529Z", end: "2016-06-07T22:30:00.529Z" },
                 { start: "2016-06-06T05:00:00.529Z", end: "2016-06-06T09:00:00.529Z" },
                 { start: "2016-06-07T11:00:00.529Z", end: "2016-06-07T14:00:00.529Z" },
                 { start: "2016-06-08T12:00:00.529Z", end: "2016-06-08T15:00:00.529Z" },
