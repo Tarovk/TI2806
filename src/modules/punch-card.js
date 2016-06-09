@@ -22,7 +22,7 @@ define(function () {
 
     return {
         name: "punch-card",
-        title: "Code review last week",
+        title: "Code reviews last week",
         parentSelector: "#personal-modules",
         size: "m6",
         xAxis: true,
@@ -55,10 +55,6 @@ define(function () {
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {
                 return (today + 7 - day) % 7;
-            }
-
-            for (var i = 0; i < 7; i++) {
-                console.log(transformDay(i));
             }
 
             function getSameDays(sessions) {
@@ -100,9 +96,7 @@ define(function () {
                 return { start: new Date(item.start), end: new Date(item.end) };
             });
             var sameDays = getSameDays(transformedData);
-            console.log(sameDays);
             var diffDays = getDifferentDays(transformedData);
-            console.log(diffDays);
 
             var tip = d3.tip()
                 .attr('class', 'd3-tip')
@@ -185,7 +179,6 @@ define(function () {
                 d3.select(this).selectAll("circle").attr("r", RADIUS_HOVER);
                 d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_HOVER);
                 var svg = d3.select(this).select(".circle-start");
-                console.log(svg);
                 tip.show(d, svg.node());
             })
             .on("mouseout", function (d) {
