@@ -1,4 +1,4 @@
-define(['src/services/BitbucketService'], function (settings) {
+define(['src/services/BitbucketService', 'src/services/BitbucketAPI'], function (settings) {
     describe('A BitbucketService object', function () {
         var bbservice = new BitbucketService();
 
