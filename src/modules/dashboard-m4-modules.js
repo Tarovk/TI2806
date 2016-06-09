@@ -2,30 +2,13 @@
 define(function () {
     var w = 600,
         h = 360;
-//        data = { "sessions":
-//            [
-//                {"id":"1","status":"11","duration":35,"repo":"mboom/TI2806"},
-//                {"id":"12","status":"2","duration":38,"repo":"mboom/TI2806"},
-//                {"id":"15","status":"21","duration":15,"repo":"mboom/TI2806"},
-//                {"id":"21","status":"2","duration":57,"repo":"mboom/TI2806"},
-//                {"id":"25","status":"2","duration":45,"repo":"mboom/TI2806"},
-//                {"id":"71","status":"0","duration":4,"repo":"agudek/repo"},
-//                {"id":"31","status":"2","duration":24,"repo":"mboom/TI2806"},
-//                {"id":"41","status":"1","duration":44,"repo":"mboom/TI2806"},
-//                {"id":"52","status":"2","duration":7,"repo":"mboom/TI2806"},
-//                {"id":"63","status":"1","duration":25,"repo":"mboom/TI2806"},
-//                {"id":"71","status":"11","duration":4,"repo":"mboom/TI2806"},
-//                {"id":"1","status":"11","duration":35,"repo":"agudek/demo0"},
-//                {"id":"12","status":"21","duration":38,"repo":"agudek/demo0"},
-//                {"id":"15","status":"1","duration":15,"repo":"agudek/demo0"},
-//                {"id":"21","status":"2","duration":57,"repo":"agudek/demo0"},
-//                {"id":"25","status":"1","duration":45,"repo":"agudek/demo0"},
-//                {"id":"31","status":"2","duration":24,"repo":"agudek/demo0"},
-//                {"id":"41","status":"2","duration":44,"repo":"agudek/demo0"},
-//                {"id":"52","status":"0","duration":7,"repo":"agudek/demo0"},
-//                {"id":"63","status":"0","duration":25,"repo":"agudek/demo0"}
-//            ]
-//        };
+
+    var allsessionspie,
+        mergedbyyoubar,
+        closedbyyoubar,
+        averagetime,
+        reviewrepos,
+        actionrepos;
 
     var pieLayout = d3.layout.pie()
         .sort(null)
@@ -66,7 +49,7 @@ define(function () {
         d.push(m);
         return d;
     }
-    function addPieChartText(g, piedata) {
+    function addPieChartText(g, data, piedata) {
         g.append('text')
             .attr('y','10')
             .style('text-anchor','middle')
@@ -115,7 +98,7 @@ define(function () {
             .text("Closed");
     }
 
-    function addPieChartLines(g,piearcdata) {
+    function addPieChartLines(g, data, piearcdata) {
         g.append('line')
             .attr('x1',"-190")
             .attr('y1',"-40")
@@ -162,10 +145,10 @@ define(function () {
             .style("stroke","gray");
     }
 
-    function drawPieChart(svg,arr){
+    function drawPieChart(svg, data){
         var g = svg.append('g').attr("class","piecontent");
 
-        var piedata = createPieData(arr);
+        var piedata = createPieData(data);
         var piearcdata = pieLayout(piedata);
 
         var arcs = g.selectAll(".arc")
@@ -199,8 +182,8 @@ define(function () {
             .attr('r','90')
             .style('fill','white');
 
-        addPieChartText(g, piedata);
-        addPieChartLines(g, piearcdata);
+        addPieChartText(g, data, piedata);
+        addPieChartLines(g, data, piearcdata);
         return g;
     }
 
@@ -485,10 +468,16 @@ define(function () {
         for (var items in orderedbyrepos){
             numeric_array.push( orderedbyrepos[items] );
         }
-        numeric_array.sort(function(a, b){return b.length-a.length;});
-        var yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,260]);
 
-        var m,c;
+        numeric_array.sort(function(a, b){return b.length-a.length;});
+        var numeric_array_size = 0;
+        if(numeric_array.length !== 0) {
+            numeric_array_size = numeric_array[0].length;
+        }
+        var yscale = d3.scale.linear().domain([0,numeric_array_size]).range([0,260]);
+
+        var m = 0,c = 0;
+
         if(numeric_array[2]){
             m = numeric_array[2].filter(function (n) {
                 return n.status === "11";
@@ -552,7 +541,7 @@ define(function () {
                 .attr('width',"60")
                 .attr('height',yscale(c))
                 .style('fill',"rgb(228, 74, 74)");
-        }
+        }    
 
         svg.append('line')
             .attr('x1',"50")
@@ -584,12 +573,14 @@ define(function () {
             .style("font-weight","300")
             .text("repository"); 
 
-        svg.append("text")
-            .attr("x","320")
-            .attr("y","250")
-            .style("font-size","2.25em")
-            .style("font-weight","400")
-            .text(numeric_array[0][0].repo);  
+        if(numeric_array_size !== 0) {
+            svg.append("text")
+                .attr("x","320")
+                .attr("y","250")
+                .style("font-size","2.25em")
+                .style("font-weight","400")
+                .text(numeric_array[0][0].repo);  
+        }
 
         svg.append("text")
             .attr("x","320")
@@ -631,19 +622,17 @@ define(function () {
             "serviceCall": function () { return new DashboardAggregator(globalUserName); },
             "required": true
         }],
-        body: function (res) {
-            var data = res[0];
-            console.log(data);
+        prebody: function() {
             var ret = d3.select(document.createElement('div'))
                 .attr("class","row")
                 .style("margin-left","-0.75em")
                 .style("margin-right", "-0.75em");
 
-                var allsessionspie = createCard(ret, 'dashboard-m4-module-sessions-allsessionspie'),
-                mergedbyyoubar = createCard(ret, 'dashboard-m4-module-sessions-mergedbyyoubar'),
-                closedbyyoubar = createCard(ret, 'dashboard-m4-module-sessions-closedbyyoubar'),
-                averagetime = createCard(ret, 'dashboard-m4-module-sessions-averagetime'),
-                reviewrepos = createCard(ret, 'dashboard-m4-module-sessions-reviewrepos'),
+                allsessionspie = createCard(ret, 'dashboard-m4-module-sessions-allsessionspie');
+                mergedbyyoubar = createCard(ret, 'dashboard-m4-module-sessions-mergedbyyoubar');
+                closedbyyoubar = createCard(ret, 'dashboard-m4-module-sessions-closedbyyoubar');
+                averagetime = createCard(ret, 'dashboard-m4-module-sessions-averagetime');
+                reviewrepos = createCard(ret, 'dashboard-m4-module-sessions-reviewrepos');
                 actionrepos = createCard(ret, 'dashboard-m4-module-sessions-actionrepos');
 
                 allsessionspie.svg = createSVG(allsessionspie);
@@ -653,15 +642,35 @@ define(function () {
                 reviewrepos.svg = createSVG(reviewrepos);
                 actionrepos.svg = createSVG(actionrepos);
 
-                drawPieChart(allsessionspie.svg,data)
-                    .style("transform","translate("+300+"px,"+180+"px)");
-                drawMergedByYouBar(mergedbyyoubar.svg,data);
-                drawClosedByYouBar(closedbyyoubar.svg,data);
-                drawDuration(averagetime.svg,data);
-                drawReviewRepos(reviewrepos.svg,data);
-                drawActionRepos(actionrepos.svg,data);
+
+                $(allsessionspie.node()).append($('#spinner-template').html());
+                $(mergedbyyoubar.node()).append($('#spinner-template').html());
+                $(closedbyyoubar.node()).append($('#spinner-template').html());
+                $(averagetime.node()).append($('#spinner-template').html());
+                $(reviewrepos.node()).append($('#spinner-template').html());
+                $(actionrepos.node()).append($('#spinner-template').html());
 
             return ret;
+        },
+        body: function (res) {
+            data = res[0];
+
+            drawPieChart(allsessionspie.svg,data)
+                .style("transform","translate("+300+"px,"+180+"px)");
+            drawMergedByYouBar(mergedbyyoubar.svg,data);
+            drawClosedByYouBar(closedbyyoubar.svg,data);
+            drawDuration(averagetime.svg,data);
+            drawReviewRepos(reviewrepos.svg,data);
+            drawActionRepos(actionrepos.svg,data);
+
+
+            $(allsessionspie.node()).find(".spinner").addClass("hidden");
+            $(mergedbyyoubar.node()).find(".spinner").addClass("hidden");
+            $(closedbyyoubar.node()).find(".spinner").addClass("hidden");
+            $(averagetime.node()).find(".spinner").addClass("hidden");
+            $(reviewrepos.node()).find(".spinner").addClass("hidden");
+            $(actionrepos.node()).find(".spinner").addClass("hidden");
+
         }
     };
 });

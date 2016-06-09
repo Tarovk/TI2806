@@ -157,13 +157,20 @@ define(['modules/moduleList'], function (dynModules) {
     }
 
     function addCustomBody(module,outerdiv){
-        if(module.data) {
+        if(module.prebody !== undefined) {
+            $(module.prebody().node()).appendTo(outerdiv);
             performDataRequests(module.data, module, function (objects) {
-                $(module.body(objects).node()).appendTo(outerdiv);
+                module.body(objects);
             });
         } else {
-            //Expects the modules to return a d3 encapsulated element
-            $(module.body().node()).appendTo(outerdiv);
+            if(module.data) {
+                performDataRequests(module.data, module, function (objects) {
+                    $(module.body(objects).node()).appendTo(outerdiv);
+                });
+            } else {
+                //Expects the modules to return a d3 encapsulated element
+                $(module.body().node()).appendTo(outerdiv);
+            }
         }
     }
 
