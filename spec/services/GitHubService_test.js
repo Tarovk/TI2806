@@ -1,4 +1,4 @@
-define(['src/services/GitHubService'], function (settings) {
+define(['src/services/GitHubService'], function () {
     describe('A GitHubService object', function () {
         var ghservice = new GitHubService();
 

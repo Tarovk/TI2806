@@ -1,12 +1,10 @@
-/*exported Graph2Aggregator*/
-/*globals OctopeerService, RSVP, PullRequestResolver, ObjectResolver*/
+/*exported Graph1Aggregator*/
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
-function Graph2Aggregator(userName, amountOfPr) {
+function ForceLayoutAggregator(userName) {
     "use strict";
-    var promise, opService, prResolver;
-    opService = new OctopeerService();
-    prResolver = new PullRequestResolver();
+    var promise, prResolver = new PullRequestResolver();
     
     function createPullRequestsObjectFromSessions(startAndEndEvents) {
         var pullRequests = [],
@@ -54,48 +52,43 @@ function Graph2Aggregator(userName, amountOfPr) {
         return pullRequests;
     }
     
-    function graphObject(pullRequests) {
-        var objectMatrix, mIndex;
-        pullRequests.forEach(function (pr) {
-            objectMatrix = [];
-            pr.sessionStarts.forEach(function (session) {
-                var endSessionFound = false;
-                pr.sessionEnds.forEach(function (sessionEnd) {
-                    if (session.session.id === sessionEnd.session.id) {
-                        objectMatrix[mIndex].push(new Date(session.created_at) - new Date(sessionEnd.created_at));
-                        endSessionFound = true;
-                    }
-                });
-                if (!endSessionFound) {
-                    objectMatrix.push(1);
-                }
-            });
-            pr.sessionLengths = objectMatrix;
+    function convertToGraphObject(pullRequests) {
+        var graphObject = {
+            "nodes": [],
+            "links": []
+        };
+        graphObject.nodes.push({
+            "name": "user",
+            "type": "user",
+            "src": "https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"
         });
-        var go = pullRequests.map(function (pr) {
-            var values = pr.sessionLengths;
-            values.unshift(pr.pull_request_number);
-            return values;
+        graphObject.nodes.push({
+            "name": "repo1",
+            "type": "repo",
+            "title": "bla"
         });
-        return go;
+        graphObject.nodes = graphObject.nodes.concat(pullRequests.map(function (pr) {
+            return {
+                "id": "1",
+                "type": "pr",
+                "name": pr.prInfo.title,
+                "size": pr.totalDuration,
+                "status": 1,
+                "repo": pr.repository.name
+            };
+        }));
+
+        return graphObject;
     }
     
     promise = new RSVP.Promise(function (fulfill) {
-        opService
+        octopeerService
             .getSessionEventsFromUser(userName)
-            .then(createPullRequestsObjectFromSessions) //Create pullrequests object
-            .then(function (pullRequests) { //Filter to amount of wanted Prs
-                if (pullRequests.length > amountOfPr) {
-                    return pullRequests.splice(0, amountOfPr);
-                } else {
-                    return pullRequests;
-                }
-            })
-            //.then(prResolver.resolvePullRequests)
+            .then(createPullRequestsObjectFromSessions)
+            .then(prResolver.resolvePullRequests)
             .then(sumDurationOfSessionsFromPullRequests)
-            .then(graphObject)
+            .then(convertToGraphObject)
             .then(fulfill);
     });
-        
     return promise;
 }
