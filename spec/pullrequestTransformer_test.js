@@ -306,17 +306,16 @@ define(['src/pullrequestTransformer'], function (prt) {
                 "deletions": 151,
                 "changed_files": 13
             };
-            expect(JSON.stringify(prt.transform(pullrequest, "GITHUB"))).toEqual(JSON.stringify({
-                "title": pullrequest.title,
-                "author": pullrequest.user.login,
-                "created_at": pullrequest.created_at,
-                "updated_at": pullrequest.updated_at,
-                "description": pullrequest.body,
-                "state": pullrequest.state,
-                "merged": pullrequest.merged,
-                "number": pullrequest.number,
-                "url": pullrequest.html_url
-            }));
+            var transformed = prt.transform(pullrequest, "GITHUB");
+            
+            expect(transformed.title).toEqual(pullrequest.title);
+            expect(transformed.author).toEqual(pullrequest.user.login);
+            expect(transformed.created_at).toEqual(pullrequest.created_at);
+            expect(transformed.updated_at).toEqual(pullrequest.updated_at);
+            expect(transformed.description).toEqual(pullrequest.body);
+            expect(transformed.state).toEqual(pullrequest.state);
+            expect(transformed.merged).toEqual(pullrequest.merged);
+            expect(transformed.number).toEqual(pullrequest.number);
         });
     });
 });

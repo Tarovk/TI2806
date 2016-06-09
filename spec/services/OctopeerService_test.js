@@ -60,7 +60,7 @@ define(['libs/rsvp', 'src/settings', 'src/services/OctopeerService', 'src/servic
             var providedUsername = 'mboom';
 
             opservice.getSessionsFromUser(providedUsername);
-            expect(apispy.urlBuilder).toHaveBeenCalledWith(providedURLfromAPI + providedUsername, jasmine.any(Object));
+            expect(apispy.urlBuilder).toHaveBeenCalledWith(providedURLfromAPI + '/' + providedUsername, jasmine.any(Object));
             expect(RSVP.Promise).toHaveBeenCalled();
         });
 
