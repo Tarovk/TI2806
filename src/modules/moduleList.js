@@ -41,6 +41,7 @@ define([// Array of non-visualisation modules
     	'modules/average-comment-size-total',
         'modules/graph1.js',
         'modules/all-prs-force-layout',
+        'modules/reviews-on-my-prs',
         'modules/punch-card',
         'modules/graph2.js'
     	]
