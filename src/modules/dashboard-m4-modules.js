@@ -401,34 +401,40 @@ define(function () {
         }
         numeric_array.sort(function(a, b){return b.length-a.length;});
 
-        var yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,230]);
+        var yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,260]);
         
-        svg.append('rect')
-            .attr('x',"60")
-            .attr('y',280-yscale(numeric_array[2].length))
-            .attr('width',"60")
-            .attr('height',yscale(numeric_array[2].length))
-            .style('fill',"rgb(77, 136, 255)");
+        if(numeric_array[2]) {
+            svg.append('rect')
+                .attr('x',"60")
+                .attr('y',310-yscale(numeric_array[2].length))
+                .attr('width',"60")
+                .attr('height',yscale(numeric_array[2].length))
+                .style('fill',"rgb(77, 136, 255)");
+        }
 
-        svg.append('rect')
-            .attr('x',"140")
-            .attr('y',280-yscale(numeric_array[1].length))
-            .attr('width',"60")
-            .attr('height',yscale(numeric_array[1].length))
-            .style('fill',"rgb(77, 136, 255)");
-
-        svg.append('rect')
-            .attr('x',"220")
-            .attr('y',280-yscale(numeric_array[0].length))
-            .attr('width',"60")
-            .attr('height',yscale(numeric_array[0].length))
-            .style('fill',"rgb(77, 136, 255)");
-
+        if(numeric_array[1]) {
+            svg.append('rect')
+                .attr('x',"140")
+                .attr('y',310-yscale(numeric_array[1].length))
+                .attr('width',"60")
+                .attr('height',yscale(numeric_array[1].length))
+                .style('fill',"rgb(77, 136, 255)");
+        }
+        
+        if(numeric_array[0]) {        
+            svg.append('rect')
+                .attr('x',"220")
+                .attr('y',310-yscale(numeric_array[0].length))
+                .attr('width',"60")
+                .attr('height',yscale(numeric_array[0].length))
+                .style('fill',"rgb(77, 136, 255)");
+        }
+        
         svg.append('line')
             .attr('x1',"50")
-            .attr('y1',"280")
+            .attr('y1',"310")
             .attr('x2',"290")
-            .attr('y2',"280")
+            .attr('y2',"310")
             .style("stroke-width","3px")
             .style("stroke","lightgray");
     }
@@ -449,7 +455,7 @@ define(function () {
             numeric_array.push( orderedbyrepos[items] );
         }
         numeric_array.sort(function(a, b){return b.length-a.length;});
-        var yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,230]);
+        var yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,260]);
 
         var m,c;
         if(numeric_array[2]){
@@ -461,13 +467,13 @@ define(function () {
             }).length;
             svg.append('rect')
                 .attr('x',"60")
-                .attr('y',280-yscale(m+c))
+                .attr('y',310-yscale(m+c))
                 .attr('width',"60")
                 .attr('height',yscale(m))
                 .style('fill',"rgb(97, 179, 97)");
             svg.append('rect')
                 .attr('x',"60")
-                .attr('y',280-yscale(c))
+                .attr('y',310-yscale(c))
                 .attr('width',"60")
                 .attr('height',yscale(c))
                 .style('fill',"rgb(228, 74, 74)");
@@ -482,13 +488,13 @@ define(function () {
             }).length;
             svg.append('rect')
                 .attr('x',"140")
-                .attr('y',280-yscale(m+c))
+                .attr('y',310-yscale(m+c))
                 .attr('width',"60")
                 .attr('height',yscale(m))
                 .style('fill',"rgb(97, 179, 97)");
             svg.append('rect')
                 .attr('x',"140")
-                .attr('y',280-yscale(c))
+                .attr('y',310-yscale(c))
                 .attr('width',"60")
                 .attr('height',yscale(c))
                 .style('fill',"rgb(228, 74, 74)");
@@ -503,13 +509,13 @@ define(function () {
             }).length;
             svg.append('rect')
                 .attr('x',"220")
-                .attr('y',280-yscale(m+c))
+                .attr('y',310-yscale(m+c))
                 .attr('width',"60")
                 .attr('height',yscale(m))
                 .style('fill',"rgb(97, 179, 97)");
             svg.append('rect')
                 .attr('x',"220")
-                .attr('y',280-yscale(c))
+                .attr('y',310-yscale(c))
                 .attr('width',"60")
                 .attr('height',yscale(c))
                 .style('fill',"rgb(228, 74, 74)");
@@ -517,9 +523,9 @@ define(function () {
 
         svg.append('line')
             .attr('x1',"50")
-            .attr('y1',"280")
+            .attr('y1',"310")
             .attr('x2',"290")
-            .attr('y2',"280")
+            .attr('y2',"310")
             .style("stroke-width","3px")
             .style("stroke","lightgray");
 
