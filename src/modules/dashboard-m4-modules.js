@@ -443,28 +443,28 @@ define(function () {
 
         svg.append("text")
             .attr("x","320")
-            .attr("y","200")
+            .attr("y","140")
             .style("font-size","8em")
             .style("font-weight","500")
             .text(max);   
 
         svg.append("text")
             .attr("x","320")
-            .attr("y","240")
+            .attr("y","180")
             .style("font-size","2em")
             .style("font-weight","300")
             .text("peer reviews on");   
 
         svg.append("text")
             .attr("x","320")
-            .attr("y","270")
+            .attr("y","210")
             .style("font-size","2em")
             .style("font-weight","300")
             .text("repository"); 
 
         svg.append("text")
             .attr("x","320")
-            .attr("y","310")
+            .attr("y","250")
             .style("font-size","2.25em")
             .style("font-weight","400")
             .text(numeric_array[0][0].repo);         
@@ -565,31 +565,61 @@ define(function () {
 
         svg.append("text")
             .attr("x","320")
-            .attr("y","200")
+            .attr("y","140")
             .style("font-size","8em")
             .style("font-weight","500")
             .text(max);   
 
         svg.append("text")
             .attr("x","320")
-            .attr("y","240")
+            .attr("y","180")
             .style("font-size","2em")
             .style("font-weight","300")
             .text("actions taken on");   
 
         svg.append("text")
             .attr("x","320")
-            .attr("y","270")
+            .attr("y","210")
             .style("font-size","2em")
             .style("font-weight","300")
             .text("repository"); 
 
         svg.append("text")
             .attr("x","320")
-            .attr("y","310")
+            .attr("y","250")
             .style("font-size","2.25em")
             .style("font-weight","400")
             .text(numeric_array[0][0].repo);  
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","282")
+            .style("font-size","1.6em")
+            .style("font-weight","300")
+            .text("Merged");  
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","310")
+            .style("font-size","1.6em")
+            .style("font-weight","300")
+            .text("Closed");  
+
+        svg.append("text")
+            .attr("x","420")
+            .attr("y","282")
+            .style("font-size","1.6em")
+            .style("font-weight","500")
+            .style("fill","rgb(97, 179, 97)")
+            .text(m);  
+
+        svg.append("text")
+            .attr("x","420")
+            .attr("y","310")
+            .style("font-size","1.6em")
+            .style("font-weight","500")
+            .style("fill","rgb(228, 74, 74)")
+            .text(c);  
     }
 
     return {
