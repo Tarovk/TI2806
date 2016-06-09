@@ -314,8 +314,8 @@ define(['src/pullrequestTransformer'], function (prt) {
                 "description": pullrequest.body,
                 "state": pullrequest.state,
                 "merged": pullrequest.merged,
-                "number": pullrequest.number
-
+                "number": pullrequest.number,
+                "url": pullrequest.html_url
             }));
         });
     });
