@@ -21,6 +21,7 @@ define([// Array of non-visualisation modules
         'aggregators/graph2aggregator.js',
         'aggregators/graph3aggregator.js',
         'aggregators/graph4aggregator.js',
+        'aggregators/punchCardAggregator.js',
         'example-services',
         'globals'
         ], function () {

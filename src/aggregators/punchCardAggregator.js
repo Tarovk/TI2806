@@ -1,14 +1,13 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, ObjectResolver*/
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
 function PunchCardAggregator(userName) {
     "use strict";
-    var promise;
+    var promise, pullRequestResolver = new PullRequestResolver();
     
     function getEndEvents(startEvents) {
-        console.log(startEvents);
-        return octopeerService.getSemanticEventsFromUser(userName, 402, 113)
+        return octopeerService.getSemanticEventsFromUser(userName, 402)
             .then(function (endEvents) {
                 return {
                     "startEvents": startEvents,
@@ -22,14 +21,17 @@ function PunchCardAggregator(userName) {
             counter = 0;
         startEndEvents.startEvents.forEach(function (se) {
             var endDate;
-            if (startEndEvents.endEvents.length >= counter) {
-                endDate = se.created_at;
+            if (startEndEvents.endEvents.length > counter) {
+                endDate = startEndEvents.endEvents[counter].created_at;
+                counter += 1;
             } else {
-                endDate = startEndEvents.endEvents[counter];
+                endDate = se.created_at;
             }
+            pullRequestResolver.resolveSinglePullRequest(se.session.pull_request);
             graphObject.push({
                 "start": se.created_at,
-                "end": endDate
+                "end": endDate,
+                "session": se.session
             });
         });
         return graphObject;
@@ -37,9 +39,10 @@ function PunchCardAggregator(userName) {
     
     promise = new RSVP.Promise(function (fulfill) {
         octopeerService
-            .getSemanticEventsFromUser(userName, 401, 113)
+            .getSemanticEventsFromUser(userName, 401)
             .then(getEndEvents)
-            .then(createGraphObject);
+            .then(createGraphObject)
+            .then(fulfill);
     });
         
     return promise;
