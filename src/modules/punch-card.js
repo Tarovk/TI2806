@@ -3,6 +3,8 @@
 
 define(function () {
 
+    var pca = new PunchCardAggregator('mboom');
+
     var margin = { left: 50, right: 50, top: 10, bottom: 50 };
     var w = 720;
     var h = 350;
