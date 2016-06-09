@@ -453,14 +453,21 @@ define(function () {
             .attr("y","240")
             .style("font-size","2em")
             .style("font-weight","300")
-            .text("contributions on");   
+            .text("peer reviews on");   
 
         svg.append("text")
             .attr("x","320")
             .attr("y","270")
             .style("font-size","2em")
             .style("font-weight","300")
-            .text("repository");         
+            .text("repository"); 
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","310")
+            .style("font-size","2.25em")
+            .style("font-weight","400")
+            .text(numeric_array[0][0].repo);         
     }
 
     function drawActionRepos(svg,data) {
@@ -524,6 +531,7 @@ define(function () {
                 .style('fill',"rgb(228, 74, 74)");
         }
 
+        var max = 0;
         if(numeric_array[0]){
             m = numeric_array[0].filter(function (n) {
                 return n.status === "11";
@@ -531,6 +539,7 @@ define(function () {
             c = numeric_array[0].filter(function (n) {
                 return n.status === "21";
             }).length;
+            max = m+c;
             svg.append('rect')
                 .attr('x',"220")
                 .attr('y',310-yscale(m+c))
@@ -554,6 +563,33 @@ define(function () {
             .style("stroke","lightgray");
 
 
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","200")
+            .style("font-size","8em")
+            .style("font-weight","500")
+            .text(max);   
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","240")
+            .style("font-size","2em")
+            .style("font-weight","300")
+            .text("actions taken on");   
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","270")
+            .style("font-size","2em")
+            .style("font-weight","300")
+            .text("repository"); 
+
+        svg.append("text")
+            .attr("x","320")
+            .attr("y","310")
+            .style("font-size","2.25em")
+            .style("font-weight","400")
+            .text(numeric_array[0][0].repo);  
     }
 
     return {
