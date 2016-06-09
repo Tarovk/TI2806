@@ -170,6 +170,20 @@ function OctopeerService() {
         return RSVP.all(promises);
     };
     
+    this.getSemanticEventsFromUser = function (userName, eventType, elementType) {
+        var url = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
+            "event_type": eventType,
+            "element_type": elementType
+        });
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (events) {
+                fulfill(events.results);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
+    
     this.getAPI = function () {
         return api;
     };

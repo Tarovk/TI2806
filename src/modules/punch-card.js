@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, PunchCardAggregator */
 /* jshint unused : vars*/
 
 define(function () {
@@ -50,8 +50,11 @@ define(function () {
         },
         xAxisFitFunction: false,
         yAxisFitFunction: false,
-        body: function () {
-
+        data: [{
+            "serviceCall": function () { return new PunchCardAggregator("Travis", 20); },
+            "required": true
+        }],
+        body: function (res) {
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {
                 return (today + 7 - day) % 7;
@@ -86,12 +89,7 @@ define(function () {
             }
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
-            var dummyData = [
-                { start: "2016-06-06T21:00:00.529Z", end: "2016-06-07T22:30:00.529Z" },
-                { start: "2016-06-06T05:00:00.529Z", end: "2016-06-06T09:00:00.529Z" },
-                { start: "2016-06-07T11:00:00.529Z", end: "2016-06-07T14:00:00.529Z" },
-                { start: "2016-06-08T12:00:00.529Z", end: "2016-06-08T15:00:00.529Z" },
-            ];
+            var dummyData = res[0];
             var transformedData = dummyData.map(function (item) {
                 return { start: new Date(item.start), end: new Date(item.end) };
             });
