@@ -51,13 +51,22 @@ define(function () {
         xAxisFitFunction: false,
         yAxisFitFunction: false,
         data: [{
-            "serviceCall": function () { return new PunchCardAggregator("Travis", 20); },
+            "serviceCall": function () { console.log(new PunchCardAggregator("Travis", 20)); return new PunchCardAggregator("Travis", 20); },
             "required": true
         }],
         body: function (res) {
+            var arr = res[0];
+            console.log(arr);
+            console.log(new Date(res[0][0].start).getTime());
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {
                 return (today + 7 - day) % 7;
+            }
+
+            // 604800000 == amount of ms in a week
+            function lessThanAWeekAgo(pr) {
+                return true;
+                //return (today.getTime() - new Date(pr.start).getTime() < 604800000);
             }
 
             function getSameDays(sessions) {
@@ -89,9 +98,21 @@ define(function () {
             }
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
-            var transformedData = res[0].map(function (item) {
-                return { start: new Date(item.start), end: new Date(item.end) };
+            console.log(res[0][0]);
+            var filtered = [];
+            for (var i = 0; i < arr.length; i++) {
+                var item = arr[i];
+                if (lessThanAWeekAgo(item)) {
+                    filtered.push(item);
+                }
+            }
+
+            var transformedData = filtered.map(function (item) {
+                return { start: new Date(item.start), end: new Date(item.end), original: item };
             });
+            
+
+            console.log(transformedData);
             var sameDays = getSameDays(transformedData);
             var diffDays = getDifferentDays(transformedData);
 
