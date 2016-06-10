@@ -655,7 +655,7 @@ define(function () {
         },
         body: function (res) {
             var data = res[0];
-
+            console.log(data);
             drawPieChart(allsessionspie.svg,data)
                 .style("transform","translate("+300+"px,"+180+"px)");
             drawMergedByYouBar(mergedbyyoubar.svg,data);

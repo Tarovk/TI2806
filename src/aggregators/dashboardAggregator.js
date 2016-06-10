@@ -7,7 +7,6 @@ function DashboardAggregator(userName) {
     var promise, prResolver = new PullRequestResolver();
     
     function createPullRequestsObjectFromSessions(startAndEndEvents) {
-        console.log(startAndEndEvents);
         var pullRequests = [],
             dictionary = {},
             counter = 0,
@@ -31,10 +30,25 @@ function DashboardAggregator(userName) {
             }
             pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
         });
+        console.log(pullRequests);
         return pullRequests;
     }
     
+    function checkIfClosedByUser(pullRequests) {
+        return octopeerService.getSemanticEventsFromUser(userName, 201, 102).then(function (events) {
+            pullRequests.forEach(function (pr) {
+                events.forEach(function (event) {
+                    if (event.session.pull_request.url === pr.url) {
+                        pr["closedByYou"] = true;
+                    }
+                })
+            })
+            return pullRequests;
+        });
+    }
+    
     function sumDurationOfSessionsFromPullRequests(pullRequests) {
+        console.log(pullRequests);
         pullRequests.forEach(function (pr) {
             pr.totalDuration = 0;
             pr.sessionStarts.forEach(function (session) {
@@ -66,12 +80,25 @@ function DashboardAggregator(userName) {
             "sessions": []
         };
         graphObject.sessions = graphObject.sessions.concat(pullRequests.map(function (pr) {
+            var state = "0";
+            if (pr.prInfo.state === "merged") {
+                state = "1";
+            } else if (pr.prInfo.state === "closed") {
+                state = "2";
+            }
+            if (pr.prInfo.hasOwnProperty("merged_by")) {
+                if (pr.prInfo.merged_by === userName) {
+                    state = "11";
+                }  
+            } else if (pr.closedByYou) {
+                state = "21";
+            } 
             return {
                 "id": "1",
                 "type": "pr",
                 "name": pr.prInfo.title,
                 "duration": pr.totalDuration,
-                "status": pr.prInfo.state,
+                "status": state,
                 "repo": pr.repository.name
             };
         }));
@@ -83,6 +110,7 @@ function DashboardAggregator(userName) {
             .getSessionEventsFromUser(userName)
             .then(createPullRequestsObjectFromSessions)
             .then(prResolver.resolvePullRequests)
+            .then(checkIfClosedByUser)
             .then(sumDurationOfSessionsFromPullRequests)
             .then(convertToGraphObject)
             .then(fulfill);
