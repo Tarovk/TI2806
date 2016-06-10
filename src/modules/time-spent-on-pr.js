@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, RSVP, octopeerHelper */
 /* jshint unused : vars*/
 
 define(function () {
@@ -29,6 +29,7 @@ define(function () {
                 {"x":18, "y":57},
                 {"x":19, "y":90}
             ];
+
     return {
     	name: "time-spent-on-pr",
         title: "Time spent on pr",
@@ -84,32 +85,58 @@ define(function () {
                 });
             g.call(tip);
 
-            d3.text('Select test', function (dat) {
-                var select = d3.select("#shru").append("select").on("change", change),
-                    options = select.selectAll('option').data(dat);
-            });
+            var optns = [
+                { 'val': 5, 'text': 'last 5 days' },
+                { 'val': 28, 'text': 'last 4 weeks' },
+                { 'val': 365, 'text': 'last 12 months' }
+            ];
+            function updateData(dat) {
+
+            }
+            d3.select('#' + this.name).select('.card-content').insert('div', ':first-child')
+                .style({ 'display': 'inline-block', 'position': 'absolute', 'right': '0px', 'width': '300px' })
+                .text('select the time span')
+                .insert('select')
+                .style({ 'display': 'inline-block', 'margin-left': '10px', 'width': '150px' })
+                .on('change', function () {
+                    var timespan = octopeerHelper.getTimespan(this.children[this.selectedIndex].value);
+                    //alert('start: ' + timespan.start + ', end: ' + timespan.end);
+                    RSVP.when(function () { return new Aggregator(); }).then(function (dat) {
+                        updateData(dat);
+                        redrawGraph();
+                    });
+                })
+                .selectAll('option').data(optns).enter()
+                .append('option')
+                .attr('value', function (d) { return d.val; })
+                .text(function (d) { return d.text; });
 
             var OWNER = "mboom";
             var REPO_NAME = "TI2806";
 
-            g.selectAll("rect").data(timeData).enter()
-                .append("rect")
-                .attr("x", function (d) { return xTimeScale(d.x) + 9; })
-                .attr("y", h - padBottom)
-                .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
-                .attr("height", function (d) { return yTimeScale(d.y); })
-                .on("click", function (d) {
-                    window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
-                })
-                .attr("style", "fill:rgb(77, 136, 255);")
-                .on("mouseover", function (d) {
-                    d3.select(this).style("fill", "rgb(77, 70, 255)");
-                    return tip.show(d);
-                })
-                .on("mouseout", function (d) { d3.select(this).style("fill", "rgb(77, 136, 255)"); tip.hide(); })
-                .style("cursor", "pointer")
-                .transition()
-                .attr("y", function (d) { return h - padBottom - yTimeScale(d.y); });
+            function redrawGraph() {
+                g.selectAll('*').remove();
+                g.selectAll("rect").data(timeData).enter()
+                    .append("rect")
+                    .attr("x", function (d) { return xTimeScale(d.x) + 9; })
+                    .attr("y", h - padBottom)
+                    .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
+                    .attr("height", function (d) { return yTimeScale(d.y); })
+                    .on("click", function (d) {
+                        window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
+                    })
+                    .attr("style", "fill:rgb(77, 136, 255);")
+                    .on("mouseover", function (d) {
+                        d3.select(this).style("fill", "rgb(77, 70, 255)");
+                        return tip.show(d);
+                    })
+                    .on("mouseout", function (d) { d3.select(this).style("fill", "rgb(77, 136, 255)"); tip.hide(); })
+                    .style("cursor", "pointer")
+                    .transition()
+                    .attr("y", function (d) { return h - padBottom - yTimeScale(d.y); });
+            }
+
+            redrawGraph();
             return g;
         }
     };

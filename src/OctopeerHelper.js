@@ -85,4 +85,10 @@ function OctopeerHelper() {
         return areaFunction(data);
     };
 
+
+    this.getTimespan = function (days) {
+        var end = new Date(),
+                start = new Date(end.getTime() - days * 86400000);
+        return { 'start': start, 'end': end };
+    };
 }
