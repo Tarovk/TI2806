@@ -35,7 +35,6 @@ define(["src/modules/reviews-on-my-prs"], function (module) {
     module.body(data);
     describe('Test suite for the reviews-on-my-prs', function () {
         it('Return 17 rows', function () {
-                    .selectAll('.reviews-on-my-prs-row'));
             expect(
             	g.select('.reviews-on-my-prs-scrollContainer')
                     .selectAll('.reviews-on-my-prs-row')[0].length
