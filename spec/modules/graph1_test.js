@@ -5,10 +5,18 @@ define(["src/modules/graph1"], function (module) {
         {"x":2,"y":2},
         {"x":3,"y":3},
         {"x":4,"y":2},
+        {"x":5,"y":2},
+        {"x":6,"y":2},
+        {"x":7,"y":3},
+        {"x":8,"y":2},
+        {"x":9,"y":2},
+        {"x":10,"y":3},
+        {"x":11,"y":3},
+        {"x":"undefined","y":2},
     ];
-    var g = module.body(data),
+    var g = module.body([data]),
     xaxis = module.xAxisScale(),
-    yaxis = module.yAxisFitFunction(data);
+    yaxis = module.yAxisFitFunction([data]);
 
     describe('Test suite for the all-prs-force-layout module', function () {
         it('Return 4 bars', function () {
