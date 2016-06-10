@@ -1,9 +1,9 @@
 /* globals define */
 define(function () {
     return {
-    	name: "no-name",
+        name: "no-name",
         title: "No title",
-    	size: "m6",
+        size: "m6",
         parentSelector: "#bodyrow",
         xAxisLabel: "",
         yAxisLabel: "",
@@ -17,12 +17,12 @@ define(function () {
         xAxisLabelRotation: 0,
         yAxisLabelRotation: 0,
         yRightAxisLabelRotation: 0,
-        xAxisScale: function() { return "fit"; },
-        yAxisScale: function() { return "fit"; },
-        yRightAxisScale: function() { return "fit"; },
-        xAxisFitFunction: function() { return [0,100]; },
-        yAxisFitFunction: function() { return [0,100]; },
-        yRightAxisFitFunction: function() { return this.yAxisFitFunction; },
+        xAxisScale: function () { return "fit"; },
+        yAxisScale: function () { return "fit"; },
+        yRightAxisScale: function () { return "fit"; },
+        xAxisFitFunction: function () { return [0, 100]; },
+        yAxisFitFunction: function () { return [0, 100]; },
+        yRightAxisFitFunction: function () { return this.yAxisFitFunction; },
         xAxis: true,
         yAxis: true,
         yRightAxis: false,
@@ -30,6 +30,8 @@ define(function () {
         data: [],
         body: function () { return document.createElement('g'); },
         failBody: function () { return document.createElement('g'); },
-        customContainer: false
+        customContainer: false,
+        margin: { left: 50, right: 50, top: 10, bottom: 50 },
+        customSVGSize: { h: 350, w: 720 }
     };
 });

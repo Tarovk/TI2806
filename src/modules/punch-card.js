@@ -4,10 +4,10 @@
 define(function () {
 
     var margin = { left: 50, right: 50, top: 10, bottom: 50 };
-    var w = 720;
+    var w = 1440;
     var h = 350;
 
-    var xScale = d3.scale.linear().domain([0, 23]).range([margin.left, w - margin.right]);
+    var xScale = d3.scale.linear().domain([0, 24 * 4]).range([margin.left, w - margin.right]);
     var yScale = d3.scale.linear().domain([6, 0]).range([margin.top, h - margin.bottom]);
     var minuteScale = d3.scale.linear().domain([0, 60]).range([0, 1]);
 
@@ -24,7 +24,8 @@ define(function () {
         name: "punch-card",
         title: "Code reviews last week",
         parentSelector: "#personal-modules",
-        size: "m6",
+        size: "m12",
+        customSVGSize: { h: h, w: w },
         xAxis: true,
         yAxis: true,
         xAxisLine: false,
@@ -33,7 +34,14 @@ define(function () {
         yAxisTicks: false,
         xAxisScale: function () {
             return d3.svg.axis()
-                .ticks(24)
+                .ticks(24 * 4)
+                .tickFormat(function (d, i) {
+                    if (d % 4 == 0) {
+                        return d / 4;
+                    } else {
+                        return "";
+                    }
+                })
                 .scale(xScale.copy());
         },
         yAxisScale: function () {
@@ -51,22 +59,14 @@ define(function () {
         xAxisFitFunction: false,
         yAxisFitFunction: false,
         data: [{
-            "serviceCall": function () { console.log(new PunchCardAggregator("Travis", 20)); return new PunchCardAggregator("Travis", 20); },
+            "serviceCall": function () { return new PunchCardAggregator("Travis", 20); },
             "required": true
         }],
         body: function (res) {
-            var arr = res[0];
-            console.log(arr);
-            console.log(new Date(res[0][0].start).getTime());
+
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {
                 return (today + 7 - day) % 7;
-            }
-
-            // 604800000 == amount of ms in a week
-            function lessThanAWeekAgo(pr) {
-                return true;
-                //return (today.getTime() - new Date(pr.start).getTime() < 604800000);
             }
 
             function getSameDays(sessions) {
@@ -98,21 +98,9 @@ define(function () {
             }
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
-            console.log(res[0][0]);
-            var filtered = [];
-            for (var i = 0; i < arr.length; i++) {
-                var item = arr[i];
-                if (lessThanAWeekAgo(item)) {
-                    filtered.push(item);
-                }
-            }
-
-            var transformedData = filtered.map(function (item) {
-                return { start: new Date(item.start), end: new Date(item.end), original: item };
+            var transformedData = res[0].map(function (item) {
+                return { start: new Date(item.start), end: new Date(item.end) };
             });
-            
-
-            console.log(transformedData);
             var sameDays = getSameDays(transformedData);
             var diffDays = getDifferentDays(transformedData);
 
@@ -122,7 +110,7 @@ define(function () {
                     return d.start.toDateString() + " " + d.start.toTimeString() + "<div class='arrow-down'></div>";
                 })
                 .offset([-20, 0]);
-            
+
             g.call(tip);
 
             g.selectAll("g.diff")
