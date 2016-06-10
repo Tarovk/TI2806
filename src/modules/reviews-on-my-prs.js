@@ -195,7 +195,7 @@ define(function () {
 
     return {
         name: 'reviews-on-my-prs',
-        title: 'Your reviewed prs',
+        title: 'Reviews on your PRs',
         size: "m4",
         parentSelector: '#dashboard-modules',
         xAxis: false,
