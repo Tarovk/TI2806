@@ -16,9 +16,24 @@ function PunchCardAggregator(userName) {
             });
     }
     
+    function setSemanticEvents(startEndEvents) {
+        startEndEvents.startEvents.forEach(function (se) {
+            octopeerService.getSemanticEventsOfPullRequest(userName,
+                                                          se.session.pull_request.repository.owner,
+                                                          se.session.pull_request.repository.name,
+                                                          se.session.pull_request.pull_request_number)
+                .then(function (events) {
+                    se.session.pull_request.semanticEvents = events;
+                });
+        });
+        return startEndEvents;
+    }
+    
     function createGraphObject(startEndEvents) {
         var graphObject = [],
             counter = 0;
+        console.log(startEndEvents);
+        console.log(cache);
         startEndEvents.startEvents.forEach(function (se) {
             var endDate;
             if (startEndEvents.endEvents.length > counter) {
@@ -41,6 +56,7 @@ function PunchCardAggregator(userName) {
         octopeerService
             .getSemanticEventsFromUser(userName, 401)
             .then(getEndEvents)
+            .then(setSemanticEvents)
             .then(createGraphObject)
             .then(fulfill);
     });

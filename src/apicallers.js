@@ -1,7 +1,9 @@
 /*exported OctopeerCaller, GitHubAPICaller, BitbucketAPICaller, get, getJSON */
 /*globals console, cache, $*/
+var requestAmount = 0;
 function get(url, callback, bypassCash) {
     "use strict";
+    requestAmount += 1;
     
     if (cache.hasOwnProperty(url) && !bypassCash) {
         callback(cache[url]);
@@ -23,6 +25,7 @@ function get(url, callback, bypassCash) {
 
 function getJSON(url, callback, errorCallback, bypassCash) {
     "use strict";
+    requestAmount += 1;
     
     if (cache.hasOwnProperty(url) && !bypassCash) {
         callback(cache[url]);
