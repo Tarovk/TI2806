@@ -267,3 +267,7 @@ main > div.tab-pane > div.row {
 .yAxis > g > text {
 	text-anchor: end;
 }
+
+text {
+	fill : #484848;
+}
