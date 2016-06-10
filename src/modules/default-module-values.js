@@ -1,9 +1,9 @@
 /* globals define */
 define(function () {
     return {
-    	name: "no-name",
+        name: "no-name",
         title: "No title",
-    	size: "m6",
+        size: "m6",
         parentSelector: "#bodyrow",
         xAxisLabel: "",
         yAxisLabel: "",
