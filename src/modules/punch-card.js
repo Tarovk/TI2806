@@ -24,7 +24,7 @@ define(function () {
     }
 
     function generateTickValues() {
-        var res = []; 
+        var res = [];
         for (var i = 0; i <= 24; i += 0.25) {
             res.push(i)
         }
@@ -48,7 +48,6 @@ define(function () {
                 .ticks(24 * 2)
                 .tickValues(generateTickValues())
                 .tickFormat(function (d, i) {
-                    console.log(d);
                     if (isInt(d)) {
                         return d;
                     } else {
@@ -92,7 +91,7 @@ define(function () {
                 }
                 return res;
             }
-                        
+
             function getDifferentDays(sessions) {
                 var res = [];
                 for (var i = 0; i < sessions.length; i++) {
@@ -110,17 +109,32 @@ define(function () {
                 return hour + minuteScale(minutes);
             }
 
+            function getPrNumber(pr) {
+                return pr.session.pull_request.pull_request_number;
+            }
+
+            function getPrInfo(pr) {
+                return pr.session.pull_request.prInfo;
+            }
+
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
             var transformedData = res[0].map(function (item) {
-                return { start: new Date(item.start), end: new Date(item.end) };
+                return { start: new Date(item.start), end: new Date(item.end), origin: item };
             });
+
+            var prs = [];
+            for (var i = 0; i < transformedData.length; i++) {
+                var item = transformedData[i];
+                prs.push(getPrNumber(item.origin))
+            }
+            console.log(prs);
             var sameDays = getSameDays(transformedData);
             var diffDays = getDifferentDays(transformedData);
 
             var tip = d3.tip()
                 .attr('class', 'd3-tip')
                 .html(function (d) {
-                    return d.start.toDateString() + " " + d.start.toTimeString() + "<div class='arrow-down'></div>";
+                    return '#' + getPrNumber(d.origin) + "<div class='arrow-down'></div>";
                 })
                 .offset([-20, 0]);
 
@@ -136,14 +150,20 @@ define(function () {
             .data(sameDays)
             .enter()
             .append("g")
-            .attr("class", "same");
+            .attr("class", "same")
+            .style("cursor", "pointer")
+            .on("click", function (d) {
+                window.open(getPrInfo(d.origin).url);
+            });
 
             g.selectAll(".same")
             .append("circle")
             .attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
             .attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
             .attr("r", RADIUS_DEFAULT)
-            .attr("class", "circle-start");
+            .attr("class", "circle-start")
+            
+               
 
             g.selectAll(".same")
             .append("circle")
