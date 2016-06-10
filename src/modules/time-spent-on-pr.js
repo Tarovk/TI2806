@@ -84,6 +84,11 @@ define(function () {
                 });
             g.call(tip);
 
+            d3.text('Select test', function (dat) {
+                var select = d3.select("#shru").append("select").on("change", change),
+                    options = select.selectAll('option').data(dat);
+            });
+
             var OWNER = "mboom";
             var REPO_NAME = "TI2806";
 
