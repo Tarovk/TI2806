@@ -30,7 +30,6 @@ function DashboardAggregator(userName) {
             }
             pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
         });
-        console.log(pullRequests);
         return pullRequests;
     }
     
@@ -48,7 +47,6 @@ function DashboardAggregator(userName) {
     }
     
     function sumDurationOfSessionsFromPullRequests(pullRequests) {
-        console.log(pullRequests);
         pullRequests.forEach(function (pr) {
             pr.totalDuration = 0;
             pr.sessionStarts.forEach(function (session) {
@@ -71,7 +69,6 @@ function DashboardAggregator(userName) {
                 pr.totalDuration = pr.totalDuration / 1000;
             });
         });
-        console.log(pullRequests);
         return pullRequests;
     }
     
@@ -102,6 +99,7 @@ function DashboardAggregator(userName) {
                 "repo": pr.repository.name
             };
         }));
+        console.log(graphObject);
         return graphObject;
     }
     
