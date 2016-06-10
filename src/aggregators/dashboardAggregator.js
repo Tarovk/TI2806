@@ -40,8 +40,8 @@ function DashboardAggregator(userName) {
                     if (event.session.pull_request.url === pr.url) {
                         pr["closedByYou"] = true;
                     }
-                })
-            })
+                });
+            });
             return pullRequests;
         });
     }

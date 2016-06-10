@@ -379,6 +379,7 @@ define(function () {
     }
 
     function drawReviewRepos(svg,data) {
+        /* jshint maxcomplexity:7 */
         var orderedbyrepos = [];
         $.each(data.sessions, function () {
             if(orderedbyrepos[this.repo] === undefined) {
