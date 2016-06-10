@@ -100,7 +100,7 @@ define(['modules/moduleList'], function (dynModules) {
         }
     }
 
-    function performDataRequests(data, module, outerdiv) {
+    function performDataRequests(data, module, callback) {
         var promises = [];
         for(var i = 0 ; i < data.length ; i++){
             var promise = data[i].serviceCall();
@@ -108,9 +108,7 @@ define(['modules/moduleList'], function (dynModules) {
             promises.push(promise);
         }
         RSVP.all(promises).then(function (objects) {
-            $(module.body(objects).node()).appendTo($(module.svg).find('g.content'));
-            scaleAxes(module, objects);
-            outerdiv.find(".spinner").addClass("hidden");
+            callback(objects);
             /* TODO if (singleFail(objects) && module.failBody) {
                 $(module.failBody()).appendTo(outerdiv);
             }
@@ -158,6 +156,80 @@ define(['modules/moduleList'], function (dynModules) {
         }
     }
 
+    function addCustomBody(module,outerdiv){
+        if(module.prebody !== undefined) {
+            $(module.prebody().node()).appendTo(outerdiv);
+            performDataRequests(module.data, module, function (objects) {
+                module.body(objects);
+            });
+        } else {
+            if(module.data) {
+                performDataRequests(module.data, module, function (objects) {
+                    $(module.body(objects).node()).appendTo(outerdiv);
+                });
+            } else {
+                //Expects the modules to return a d3 encapsulated element
+                $(module.body().node()).appendTo(outerdiv);
+            }
+        }
+    }
+
+    function addDefaultBody(module,outerdiv) {
+        outerdiv = $(document.createElement('div'))
+            .addClass('card')
+            .addClass("hoverable")
+            //The 'relative' class allow us to place absolute elements inside the card
+            .addClass("relative")
+            .appendTo(outerdiv);
+        outerdiv = $(document.createElement('div'))
+            .addClass('card-content')
+            .appendTo(outerdiv);
+        $(document.createElement('span'))
+            .addClass("card-title")
+            .addClass("truncate")
+            .addClass("flow-text")
+            .html(module.title)
+            .appendTo(outerdiv);
+        $(document.createElement('li'))
+            .addClass("material-icons")
+            .addClass("warningBadge")
+            .html("warning")
+            .appendTo(outerdiv);
+        $(document.createElement('li'))
+            .addClass("material-icons")
+            .addClass("errorBadge")
+            .html("error")
+            .appendTo(outerdiv);
+        var svg;
+        if(module.customSVGSize !== undefined) {
+            svg = svgCreator.createSVG(
+                module,
+                module.customSVGSize[0],
+                module.customSVGSize[1]
+            );
+        } else  {
+            svg = svgCreator.createSVG(module);
+        }
+        svg.append('g')
+            .attr("class","content");
+        module.svg = svg.node();
+        $(module.svg).appendTo(outerdiv);
+        drawLegend(module);
+        $(outerdiv).append($('#spinner-template').html());
+        if(module.data) {
+            performDataRequests(module.data, module, function (objects) {
+                $(module.body(objects).node()).appendTo($(module.svg).find('g.content'));
+                scaleAxes(module, objects);
+                outerdiv.find(".spinner").addClass("hidden");
+            });
+        } else {
+            //Expects the modules to return a d3 encapsulated element
+            $(module.body().node()).appendTo($(module.svg).find('g.content'));
+            scaleAxes(module, null);
+            outerdiv.find(".spinner").addClass("hidden");
+        }
+    }
+
     //For each module, read its arguments, set up divs to append to, execute the Ajax calls 
     //if available and append it to the DOM.
 
@@ -166,52 +238,15 @@ define(['modules/moduleList'], function (dynModules) {
         if (arguments[i].parentSelector) {
             parentContainer = $(arguments[i].parentSelector);
         }
-        var outerdiv = $(document.createElement('div'));
-        outerdiv.attr('id', arguments[i].name).appendTo(parentContainer);
-        if (!arguments[i].customContainer) {
-            outerdiv.addClass('col s12 '+octopeerHelper.getSafeModuleValue(arguments[i],"size"));
-            outerdiv = $(document.createElement('div'))
-        		.addClass('card')
-                .addClass("hoverable")
-                //The 'relative' class allow us to place absolute elements inside the card
-                .addClass("relative")
-        		.appendTo(outerdiv);
-            outerdiv = $(document.createElement('div'))
-                .addClass('card-content')
-                .appendTo(outerdiv);
-            $(document.createElement('span'))
-                .addClass("card-title")
-                .addClass("truncate")
-                .addClass("flow-text")
-                .html(arguments[i].title)
-                .appendTo(outerdiv);
-            $(document.createElement('li'))
-                .addClass("material-icons")
-                .addClass("warningBadge")
-                .html("warning")
-                .appendTo(outerdiv);
-            $(document.createElement('li'))
-                .addClass("material-icons")
-                .addClass("errorBadge")
-                .html("error")
-                .appendTo(outerdiv);
-            var svg = svgCreator.createSVG(arguments[i]);
-            svg.append('g')
-                .attr("class","content");
-            arguments[i].svg = svg.node();
-        }
-        $(arguments[i].svg).appendTo(outerdiv);
-        drawLegend(arguments[i]);
-        $(outerdiv).append($('#spinner-template').html());
-        if(arguments[i].data) {
-            performDataRequests(arguments[i].data, arguments[i], outerdiv);
+        var outerdiv = $(document.createElement('div'))
+            .attr('id', arguments[i].name)
+            .addClass('col s12 '+octopeerHelper.getSafeModuleValue(arguments[i],"size"))
+            .appendTo(parentContainer);
+        if (arguments[i].customContainer) {
+            addCustomBody(arguments[i],outerdiv);
         } else {
-            //Expects the modules to return a d3 encapsulated element
-            $(arguments[i].body().node()).appendTo($(arguments[i].svg).find('g.content'));
-            scaleAxes(arguments[i], null);
-            outerdiv.find(".spinner").addClass("hidden");
+            addDefaultBody(arguments[i],outerdiv);
         }
-
     }
 
 });
