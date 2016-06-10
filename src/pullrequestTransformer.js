@@ -27,6 +27,7 @@ function PullRequestTransformer() {
         return {
             "url": pullrequest.html_url,
             "title": pullrequest.title,
+            "merged_by": pullrequest.merged_by,
             "author": pullrequest.user.login,
             "created_at": pullrequest.created_at,
             "updated_at": pullrequest.updated_at,

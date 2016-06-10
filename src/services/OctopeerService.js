@@ -148,6 +148,21 @@ function OctopeerService() {
         });
     };
     
+    function getAllPages(results) {
+        var promise = new RSVP.Promise(function (fulfill) {
+            if (results.next === null) {
+                fulfill(results.results);
+            } else {
+                getJSON(results.next, function (result) {
+                    getAllPages(result).then(function (rest) {
+                        fulfill(results.results.concat(rest));
+                    });
+                });
+            }
+        });
+        return promise;
+    }
+    
     this.getSessionEventsFromUser = function (userName) {
         var promises = [],
             startSessionsUrl = api.urlBuilder(api.endpoints.semanticEvents + '/' + userName + '/', {
@@ -158,12 +173,16 @@ function OctopeerService() {
             });
         promises.push(new RSVP.Promise(function (fulfill) {
             getJSON(startSessionsUrl, function (events) {
-                fulfill(events.results);
+                getAllPages(events).then(function(a) {
+                    fulfill(a);
+                });
             });
         }));
         promises.push(new RSVP.Promise(function (fulfill) {
             getJSON(endSessionsUrl, function (events) {
-                fulfill(events.results);
+                getAllPages(events).then(function(a) {
+                    fulfill(a);
+                });
             });
         }));
         
@@ -175,11 +194,13 @@ function OctopeerService() {
             "event_type": eventType,
             "element_type": elementType
         });
-        return new RSVP.Promise(function (fulfill, reject) {
+        return new RSVP.Promise(function (fulfill) {
             getJSON(url, function (events) {
-                fulfill(events.results);
+                getAllPages(events).then(function(a) {
+                    fulfill(a);
+                });
             }, function (error) {
-                reject(error);
+                RSVP.reject(error);
             });
         });
     };

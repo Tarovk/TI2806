@@ -35,6 +35,7 @@ define([// Array of non-visualisation modules
 	    [// Array of visualisation modules
         //DASHBOARD
         'modules/all-prs-force-layout',
+        'modules/reviews-on-my-prs',
         'modules/dashboard-m4-modules',
 
         //PERSONAL
