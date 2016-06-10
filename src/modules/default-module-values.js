@@ -28,6 +28,7 @@ define(function () {
         yRightAxis: false,
         legend: [],
         data: [],
+        SVGoverflow: 'initial',
         body: function () { return document.createElement('g'); },
         failBody: function () { return document.createElement('g'); },
         customContainer: false

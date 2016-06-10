@@ -210,6 +210,7 @@ define(['modules/moduleList'], function (dynModules) {
         } else  {
             svg = svgCreator.createSVG(module);
         }
+        svg.style('overflow',octopeerHelper.getSafeModuleValue(module,'SVGoverflow'))
         svg.append('g')
             .attr("class","content");
         module.svg = svg.node();

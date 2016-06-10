@@ -95,17 +95,22 @@ define(function () {
         yRightAxis: false,
         data: [],
         customSVGSize:[width,height],
+        SVGoverflow:'hidden',
         body: function (res) {
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
 
             function xZoom() {
-                console.log(d3.select(this))
-                container.attr("transform", "translate(0," + d3.event.translate[1] + ")");
+                console.log(d3.event.translate[1])
+                if(d3.event.translate[1]>=0 && d3.event.translate[1] <= 50*data.length) {
+                    container.attr("transform", "translate(0," + -d3.event.translate[1] + ")");
+                }
             }
-
+console.log('b z');
             var zoom = d3.behavior.zoom()
                 .on("zoom", xZoom);
+
+console.log('a z');
 
             container = g.append('g')
                 .attr('class','reviews-on-my-prs-scrollContainer');
@@ -115,7 +120,7 @@ define(function () {
                 .attr('y',0)
                 .attr('width',720)
                 .attr('height',750)
-                .style('fill','rgba(120,120,120,0.2)')
+                .style('fill','transparent')
                 .call(zoom);
 
             addPrs(container,data);
