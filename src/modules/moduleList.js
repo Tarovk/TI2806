@@ -47,7 +47,6 @@ define([// Array of non-visualisation modules
         //BEHAVIOUR
 
         //PROJECT
-    	'modules/pull-requests',
     	'modules/pr-size',
     	'modules/average-comment-size-total',
         'modules/graph1.js',
