@@ -159,7 +159,7 @@ function OctopeerService() {
                     });
                 });
             }
-        })
+        });
         return promise;
     }
     
@@ -200,7 +200,7 @@ function OctopeerService() {
                     fulfill(a);
                 });
             }, function (error) {
-                reject(error);
+                RSVP.reject(error);
             });
         });
     };
