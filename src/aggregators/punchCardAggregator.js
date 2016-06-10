@@ -32,8 +32,6 @@ function PunchCardAggregator(userName) {
     function createGraphObject(startEndEvents) {
         var graphObject = [],
             counter = 0;
-        console.log(startEndEvents);
-        console.log(cache);
         startEndEvents.startEvents.forEach(function (se) {
             var endDate;
             if (startEndEvents.endEvents.length > counter) {
