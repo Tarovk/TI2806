@@ -327,9 +327,17 @@ define(function () {
         $.each(data.sessions, function () {
             avgtime += this.duration;
         });
-        avgtime /= data.sessions.length;
-        var maxtime = Math.max.apply(Math,data.sessions.map(function(o){return o.duration;}));
-        var mintime = Math.min.apply(Math,data.sessions.map(function(o){return o.duration;}));
+        var data_size = data.sessions.length;
+        if(data_size !== 0) {
+            avgtime /= data_size;
+        }
+        var maxtime = 0; 
+        var mintime = 0;
+
+        if(data_size !== 0) {
+            maxtime = Math.max.apply(Math,data.sessions.map(function(o){return o.duration;}));
+            mintime = Math.min.apply(Math,data.sessions.map(function(o){return o.duration;}));
+        }
 
         var yscale = d3.scale.linear().domain([mintime,maxtime]).range([300,50]);
 
@@ -384,8 +392,12 @@ define(function () {
             numeric_array.push( orderedbyrepos[items] );
         }
         numeric_array.sort(function(a, b){return b.length-a.length;});
-
-        var yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,260]);
+        var numeric_array_size = 0;
+        var yscale;
+        if(numeric_array.length !== 0) {
+            numeric_array_size = numeric_array[0].length;
+            yscale = d3.scale.linear().domain([0,numeric_array[0].length]).range([0,260]);
+        }
         
         if(numeric_array[2]) {
             svg.append('rect')
@@ -445,12 +457,14 @@ define(function () {
             .style("font-weight","300")
             .text("repository"); 
 
-        svg.append("text")
-            .attr("x","320")
-            .attr("y","250")
-            .style("font-size","2.25em")
-            .style("font-weight","400")
-            .text(numeric_array[0][0].repo);         
+        if(numeric_array_size !==0) {
+            svg.append("text")
+                .attr("x","320")
+                .attr("y","250")
+                .style("font-size","2.25em")
+                .style("font-weight","400")
+                .text(numeric_array[0][0].repo);         
+        }
     }
 
     function drawActionRepos(svg,data) {
@@ -655,7 +669,6 @@ define(function () {
         },
         body: function (res) {
             var data = res[0];
-            console.log(data);
             drawPieChart(allsessionspie.svg,data)
                 .style("transform","translate("+300+"px,"+180+"px)");
             drawMergedByYouBar(mergedbyyoubar.svg,data);
