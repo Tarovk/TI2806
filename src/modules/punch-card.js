@@ -7,18 +7,29 @@ define(function () {
     var w = 1440;
     var h = 350;
 
-    var xScale = d3.scale.linear().domain([0, 24 * 4]).range([margin.left, w - margin.right]);
+    var xScale = d3.scale.linear().domain([0, 24]).range([margin.left, w - margin.right]);
     var yScale = d3.scale.linear().domain([6, 0]).range([margin.top, h - margin.bottom]);
     var minuteScale = d3.scale.linear().domain([0, 60]).range([0, 1]);
 
     var today = new Date().getDay();
-
 
     var RADIUS_DEFAULT = 5;
     var RADIUS_HOVER = 7;
 
     var STROKE_WIDTH_DEFAULT = 2;
     var STROKE_WIDTH_HOVER = 4;
+
+    function isInt(num) {
+        return num % 1 === 0;
+    }
+
+    function generateTickValues() {
+        var res = []; 
+        for (var i = 0; i <= 24; i += 0.25) {
+            res.push(i)
+        }
+        return res;
+    }
 
     return {
         name: "punch-card",
@@ -34,10 +45,12 @@ define(function () {
         yAxisTicks: false,
         xAxisScale: function () {
             return d3.svg.axis()
-                .ticks(24 * 4)
+                .ticks(24 * 2)
+                .tickValues(generateTickValues())
                 .tickFormat(function (d, i) {
-                    if (d % 4 == 0) {
-                        return d / 4;
+                    console.log(d);
+                    if (isInt(d)) {
+                        return d;
                     } else {
                         return "";
                     }
@@ -79,7 +92,7 @@ define(function () {
                 }
                 return res;
             }
-
+                        
             function getDifferentDays(sessions) {
                 var res = [];
                 for (var i = 0; i < sessions.length; i++) {
