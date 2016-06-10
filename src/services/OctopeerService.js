@@ -204,6 +204,21 @@ function OctopeerService() {
             });
         });
     };
+    ///api/semantic-events/<username>/<owner>/<name>/<pull_request_number>/
+    this.getSemanticEventsOfPullRequest = function (userName, owner, repo, prNr) {
+        var url = api.urlBuilder(api.endpoints.semanticEvents + '/' +
+                                userName + '/' +
+                                owner + '/' +
+                                repo + '/' +
+                                prNr);
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (events) {
+                fulfill(events.results);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
     
     this.getAPI = function () {
         return api;
