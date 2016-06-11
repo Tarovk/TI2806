@@ -109,12 +109,31 @@ define(function () {
                 return hour + minuteScale(minutes);
             }
 
+            function getPr(pr) {
+                return pr.session.pull_request;
+            }
+
             function getPrNumber(pr) {
                 return pr.session.pull_request.pull_request_number;
             }
 
             function getPrInfo(pr) {
                 return pr.session.pull_request.prInfo;
+            }
+
+            function padZero(int) {
+                if (int < 10) {
+                    return "0" + int;
+                }
+                return int;
+            }
+
+            function formatDate(date) {
+                return padZero(date.getDate()) + "/"
+                    + padZero((date.getMonth() + 1)) + "/"
+                    + (date.getYear() + 1900) + " "
+                    + padZero(date.getHours()) + ":"
+                    + padZero(date.getMinutes());
             }
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
@@ -127,14 +146,22 @@ define(function () {
                 var item = transformedData[i];
                 prs.push(getPrNumber(item.origin))
             }
-            console.log(prs);
+            console.log(transformedData);
             var sameDays = getSameDays(transformedData);
             var diffDays = getDifferentDays(transformedData);
 
             var tip = d3.tip()
                 .attr('class', 'd3-tip')
                 .html(function (d) {
-                    return '#' + getPrNumber(d.origin) + "<div class='arrow-down'></div>";
+                    console.log(getPr(d.origin))
+                    console.log(formatDate(d.start))
+                    return "<div><a style='color:black;font-size:small'" +
+                    " href='http://www.github.com/" + getPr(d.origin).repository.owner + "/" + getPr(d.origin).repository.name + "/pull/" + getPrNumber(d.origin) + "'>#" + getPrNumber(d.origin) +
+                    " <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" + getPrInfo(d.origin).author + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" + formatDate(d.start) + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" + formatDate(d.end) + "</span></a></div>" +
+                        "<div class='arrow-down'></div>";
                 })
                 .offset([-20, 0]);
 
@@ -144,7 +171,11 @@ define(function () {
             .data(diffDays)
             .enter()
             .append("g")
-            .attr("class", "diff");
+            .attr("class", "diff")
+            .style("cursor", "pointer")
+            .on("click", function (d) {
+                window.open(getPrInfo(d.origin).url);
+            });
 
             g.selectAll("g.same")
             .data(sameDays)
