@@ -47,7 +47,9 @@ function PunchCardAggregator(userName) {
                 endEvent = startEndEvents.endEvents[i];
                 sessionEndId = endEvent.session.id;
                 if (sessionStartId === sessionEndId) {
-                    obj.end = endEvent.created_at;
+                    if(new Date(endEvent.created_at) > new Date(se.created_at)) {
+                        obj.end = endEvent.created_at;
+                    }
                     startEndEvents.endEvents.splice(i, 1);
                     break;
                 }

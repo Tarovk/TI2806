@@ -5,20 +5,20 @@ function get(url, callback, bypassCash) {
     
     if (cache.hasOwnProperty(url) && !bypassCash) {
         callback(cache[url]);
+    } else {
+        $.ajax({
+            url: url,
+            type: "GET",
+            context: document.body,
+            success: function (result) {
+                cache[url] = result;
+                callback(result);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
     }
-    
-    $.ajax({
-        url: url,
-        type: "GET",
-        context: document.body,
-        success: function (result) {
-            cache[url] = result;
-            callback(result);
-        },
-        error: function (error) {
-            console.log(error);
-        }
-    });
 }
 
 function getJSON(url, callback, errorCallback, bypassCash) {
@@ -26,19 +26,18 @@ function getJSON(url, callback, errorCallback, bypassCash) {
     
     if (cache.hasOwnProperty(url) && !bypassCash) {
         callback(cache[url]);
+    } else {
+        $.getJSON({
+            url: url,
+            type: "GET",
+            context: document.body,
+            success: function (result) {
+                cache[url] = result;
+                callback(result);
+            },
+            error: function (error) {
+                errorCallback(error);
+            }
+        });
     }
-    
-    $.getJSON({
-        url: url,
-        type: "GET",
-        context: document.body,
-        success: function (result) {
-            cache[url] = result;
-            callback(result);
-        },
-        error: function (error) {
-            errorCallback(error);
-        }
-    });
 }
-
