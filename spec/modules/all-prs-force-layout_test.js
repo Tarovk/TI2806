@@ -1,5 +1,5 @@
 define(["src/modules/all-prs-force-layout"], function (module) {
-	var data = {
+	var data = [{
         "nodes" : 
             [
                 {"name":"user","type":"user","src":"https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"},
@@ -44,7 +44,7 @@ define(["src/modules/all-prs-force-layout"], function (module) {
                 {"source":14,"target":3,"value":1},
                 {"source":15,"target":3,"value":1},
             ]
-    };
+    }];
     var g = module.body(data);
     describe('Test suite for the all-prs-force-layout module', function () {
         it('Return 1 user node', function () {

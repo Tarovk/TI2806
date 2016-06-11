@@ -102,7 +102,7 @@ define(function () {
             'required': true
         }],
         body: function (res) {
-            console.log(res[0]);
+            graph = res[0];
             force
               .nodes(graph.nodes)
               .links(graph.links)
