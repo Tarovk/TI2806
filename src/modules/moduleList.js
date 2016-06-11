@@ -23,6 +23,7 @@ define([// Array of non-visualisation modules
         'aggregators/graph4aggregator.js',
         'aggregators/dashboardAggregator.js',
         'aggregators/punchCardAggregator.js',
+        'aggregators/ReviewsOnYourPrsAggregator.js',
         'example-services',
         'globals'
         ], function () {
