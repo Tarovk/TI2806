@@ -98,7 +98,7 @@ define(function () {
         yAxis: false,
         yRightAxis: false,
         data: [{
-            'serviceCall': function () { return new ForceLayoutAggregator(globalUserName); },
+            'serviceCall': function () { return new ForceLayoutAggregator(globalUserName, "GitHub"); },
             'required': true
         }],
         body: function (res) {

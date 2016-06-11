@@ -1,10 +1,10 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver, UserResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
-function ForceLayoutAggregator(userName) {
+function ForceLayoutAggregator(userName, platform) {
     "use strict";
-    var promise, prResolver = new PullRequestResolver();
+    var promise, prResolver = new PullRequestResolver(), userResolver = new UserResolver(platform);
     
     function createPullRequestsObjectFromSessions(startAndEndEvents) {
         var pullRequests = [],
@@ -78,7 +78,7 @@ function ForceLayoutAggregator(userName) {
     function preProcessPullRequests(pullRequests) {
         var user, temp = [];
         user = {
-            "username": "Borek"
+            "username": userName
         };
         user.repositories = pullRequests.map(function (pr) {
             return pr.repository;
@@ -100,10 +100,12 @@ function ForceLayoutAggregator(userName) {
             "nodes": [],
             "links": []
         }, repoCounter = 1, prCounter;
+        console.log(user);
         graphObject.nodes.push({
             "name": user.username,
             "type": "user",
-            "src": "https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"
+            "src": user.userInfo.picture,
+            "url": user.userInfo.url
         });
         user.repositories.forEach(function (repo) {
             graphObject.nodes.push({
@@ -155,6 +157,7 @@ function ForceLayoutAggregator(userName) {
             .then(orderEvents)
             .then(sumDurationOfSessionsFromPullRequests)
             .then(preProcessPullRequests)
+            .then(userResolver.resolveSingleUser)
             .then(convertToGraphObject)
             .then(fulfill);
     });
