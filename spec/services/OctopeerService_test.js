@@ -72,5 +72,19 @@ define(['libs/rsvp', 'src/settings', 'src/services/OctopeerService', 'src/servic
             expect(apispy.urlBuilder).toHaveBeenCalledWith(providedURLfromAPI, {});
             expect(RSVP.Promise).toHaveBeenCalled();
         });
+        
+        it('calls the API urlBuilder correctly and creates a Promise when executing getSemanticEventsForPullRequests()', function () {
+            var api = new OctopeerAPI();
+            var providedURLfromAPI = api.endpoints.semanticEvents + '/' +
+                                'Travis' + '/' +
+                                "thervh70" + '/' +
+                                "ContextProject_RDD" + '/' +
+                                7;
+
+            opservice.getSemanticEventsOfPullRequest("Travis", "thervh70", "ContextProject_RDD", 7);
+            expect(apispy.urlBuilder).toHaveBeenCalledWith(providedURLfromAPI);
+            expect(RSVP.Promise).toHaveBeenCalled();
+
+        });
     });
 });

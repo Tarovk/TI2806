@@ -1,5 +1,6 @@
 define(['src/pullrequestTransformer'], function (prt) {
-    describe('simple test', function () {
+    describe('A PullRequestTransformer object', function () {
+
         it('transforms a Github pull request', function () {
             var prt = new PullRequestTransformer();
             var pullrequest = {
@@ -316,6 +317,112 @@ define(['src/pullrequestTransformer'], function (prt) {
             expect(transformed.state).toEqual(pullrequest.state);
             expect(transformed.merged).toEqual(pullrequest.merged);
             expect(transformed.number).toEqual(pullrequest.number);
+        });
+
+
+        it('transforms a Github pull request', function () {
+            var prt = new PullRequestTransformer();
+            var pullrequest = {
+                "merge_commit": null,
+                "description": "* Draft version of database connection for mouse positioning\r\n\r\n* Added function which can insert a new session in the database",
+                "links": {
+                    "decline": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/decline"
+                    }, 
+                    "commits": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/commits"
+                    },
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4"
+                    }, 
+                    "comments": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/comments"
+                    }, 
+                    "merge": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/merge"
+                    }, 
+                    "html": {
+                        "href": "https://bitbucket.org/CasBs/ooc-octopeer/pull-requests/4"
+                    }, 
+                    "activity": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/activity"
+                    }, 
+                    "diff": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/diff"}, "approve": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/approve"}}, "title": "Dbconnection", "close_source_branch": false, "reviewers": [{"username": "8uurg", "display_name": "Arthur Guijt", "type": "user", "uuid": "{dbcfaadd-e373-473b-b4f5-9e156944d53e}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/8uurg"}, "html": {"href": "https://bitbucket.org/8uurg/"}, "avatar": {"href": "https://bitbucket.org/account/8uurg/avatar/32/"}}}, {"username": "tarovk", "display_name": "Thomas Overklift", "type": "user", "uuid": "{9e1b440d-bfa5-4878-8153-d3d126a64c86}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/tarovk"}, "html": {"href": "https://bitbucket.org/tarovk/"}, "avatar": {"href": "https://bitbucket.org/account/tarovk/avatar/32/"}}}, {"username": "larsstegman", "display_name": "Lars Stegman", "type": "user", "uuid": "{022e8dc5-217e-4f72-8b64-452d06616afb}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/larsstegman"}, "html": {"href": "https://bitbucket.org/larsstegman/"}, "avatar": {"href": "https://bitbucket.org/account/larsstegman/avatar/32/"}}}], "destination": {"commit": {"hash": "852bbd2e73d2", "links": {"self": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/commit/852bbd2e73d2"}}}, "repository": {"links": {"self": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer"}, "html": {"href": "https://bitbucket.org/CasBs/ooc-octopeer"}, "avatar": {"href": "https://bitbucket.org/CasBs/ooc-octopeer/avatar/32/"}}, "type": "repository", "name": "OOC-OctoPeer", "full_name": "CasBs/ooc-octopeer", "uuid": "{9847dce6-a19c-442b-a6b6-e40f29318fa5}"}, "branch": {"name": "master"}}, "state": "DECLINED", "closed_by": {"username": "CasBs", "display_name": "CasBs", "type": "user", "uuid": "{cce0b5ab-13a9-4cad-8ff4-4b83242324e2}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/CasBs"}, "html": {"href": "https://bitbucket.org/CasBs/"}, "avatar": {"href": "https://bitbucket.org/account/CasBs/avatar/32/"}}}, "source": {"commit": {"hash": "e25f7176df8d", "links": {"self": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/commit/e25f7176df8d"}}}, "repository": {"links": {"self": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer"}, "html": {"href": "https://bitbucket.org/CasBs/ooc-octopeer"}, "avatar": {"href": "https://bitbucket.org/CasBs/ooc-octopeer/avatar/32/"}}, "type": "repository", "name": "OOC-OctoPeer", "full_name": "CasBs/ooc-octopeer", "uuid": "{9847dce6-a19c-442b-a6b6-e40f29318fa5}"}, "branch": {"name": "DBConnection"}}, "comment_count": 0, "author": {"username": "CasBs", "display_name": "CasBs", "type": "user", "uuid": "{cce0b5ab-13a9-4cad-8ff4-4b83242324e2}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/CasBs"}, "html": {"href": "https://bitbucket.org/CasBs/"}, "avatar": {"href": "https://bitbucket.org/account/CasBs/avatar/32/"}}}, "created_on": "2016-04-25T09:38:31.691665+00:00", "participants": [{"role": "REVIEWER", "type": "participant", "user": {"username": "larsstegman", "display_name": "Lars Stegman", "type": "user", "uuid": "{022e8dc5-217e-4f72-8b64-452d06616afb}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/larsstegman"}, "html": {"href": "https://bitbucket.org/larsstegman/"}, "avatar": {"href": "https://bitbucket.org/account/larsstegman/avatar/32/"}}}, "approved": false}, {"role": "REVIEWER", "type": "participant", "user": {"username": "tarovk", "display_name": "Thomas Overklift", "type": "user", "uuid": "{9e1b440d-bfa5-4878-8153-d3d126a64c86}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/tarovk"}, "html": {"href": "https://bitbucket.org/tarovk/"}, "avatar": {"href": "https://bitbucket.org/account/tarovk/avatar/32/"}}}, "approved": false}, {"role": "REVIEWER", "type": "participant", "user": {"username": "8uurg", "display_name": "Arthur Guijt", "type": "user", "uuid": "{dbcfaadd-e373-473b-b4f5-9e156944d53e}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/8uurg"}, "html": {"href": "https://bitbucket.org/8uurg/"}, "avatar": {"href": "https://bitbucket.org/account/8uurg/avatar/32/"}}}, "approved": false}], "reason": "", "updated_on": "2016-04-25T09:38:46.562201+00:00", "type": "pullrequest", "id": 4, "task_count": 0}
+            var transformed = prt.transform(pullrequest, "BITBUCKET");
+
+            expect(transformed.url).toEqual(pullrequest.links.self.href);
+            expect(transformed.title).toEqual(pullrequest.title);
+            expect(transformed.author).toEqual(pullrequest.author.username);
+            expect(transformed.created_at).toEqual(pullrequest.created_on);
+            expect(transformed.updated_at).toEqual(pullrequest.updated_on);
+            expect(transformed.description).toEqual(pullrequest.description);
+            expect(transformed.state).toEqual(pullrequest.state);
+            expect(transformed.merged).toEqual((pullrequest.merge_commit !== null));
+            expect(transformed.number).toEqual(pullrequest.id);
+        });
+
+
+        it('does not know about other platforms', function () {
+            var prt = new PullRequestTransformer();
+            var pullrequest = {
+                "merge_commit": null,
+                "description": "* Draft version of database connection for mouse positioning\r\n\r\n* Added function which can insert a new session in the database",
+                "links": {
+                    "decline": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/decline"
+                    }, 
+                    "commits": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/commits"
+                    },
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4"
+                    }, 
+                    "comments": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/comments"
+                    }, 
+                    "merge": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/merge"
+                    }, 
+                    "html": {
+                        "href": "https://bitbucket.org/CasBs/ooc-octopeer/pull-requests/4"
+                    }, 
+                    "activity": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/activity"
+                    }, 
+                    "diff": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/diff"}, "approve": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/pullrequests/4/approve"}}, "title": "Dbconnection", "close_source_branch": false, "reviewers": [{"username": "8uurg", "display_name": "Arthur Guijt", "type": "user", "uuid": "{dbcfaadd-e373-473b-b4f5-9e156944d53e}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/8uurg"}, "html": {"href": "https://bitbucket.org/8uurg/"}, "avatar": {"href": "https://bitbucket.org/account/8uurg/avatar/32/"}}}, {"username": "tarovk", "display_name": "Thomas Overklift", "type": "user", "uuid": "{9e1b440d-bfa5-4878-8153-d3d126a64c86}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/tarovk"}, "html": {"href": "https://bitbucket.org/tarovk/"}, "avatar": {"href": "https://bitbucket.org/account/tarovk/avatar/32/"}}}, {"username": "larsstegman", "display_name": "Lars Stegman", "type": "user", "uuid": "{022e8dc5-217e-4f72-8b64-452d06616afb}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/larsstegman"}, "html": {"href": "https://bitbucket.org/larsstegman/"}, "avatar": {"href": "https://bitbucket.org/account/larsstegman/avatar/32/"}}}], "destination": {"commit": {"hash": "852bbd2e73d2", "links": {"self": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/commit/852bbd2e73d2"}}}, "repository": {"links": {"self": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer"}, "html": {"href": "https://bitbucket.org/CasBs/ooc-octopeer"}, "avatar": {"href": "https://bitbucket.org/CasBs/ooc-octopeer/avatar/32/"}}, "type": "repository", "name": "OOC-OctoPeer", "full_name": "CasBs/ooc-octopeer", "uuid": "{9847dce6-a19c-442b-a6b6-e40f29318fa5}"}, "branch": {"name": "master"}}, "state": "DECLINED", "closed_by": {"username": "CasBs", "display_name": "CasBs", "type": "user", "uuid": "{cce0b5ab-13a9-4cad-8ff4-4b83242324e2}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/CasBs"}, "html": {"href": "https://bitbucket.org/CasBs/"}, "avatar": {"href": "https://bitbucket.org/account/CasBs/avatar/32/"}}}, "source": {"commit": {"hash": "e25f7176df8d", "links": {"self": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer/commit/e25f7176df8d"}}}, "repository": {"links": {"self": {"href": "https://api.bitbucket.org/2.0/repositories/CasBs/ooc-octopeer"}, "html": {"href": "https://bitbucket.org/CasBs/ooc-octopeer"}, "avatar": {"href": "https://bitbucket.org/CasBs/ooc-octopeer/avatar/32/"}}, "type": "repository", "name": "OOC-OctoPeer", "full_name": "CasBs/ooc-octopeer", "uuid": "{9847dce6-a19c-442b-a6b6-e40f29318fa5}"}, "branch": {"name": "DBConnection"}}, "comment_count": 0, "author": {"username": "CasBs", "display_name": "CasBs", "type": "user", "uuid": "{cce0b5ab-13a9-4cad-8ff4-4b83242324e2}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/CasBs"}, "html": {"href": "https://bitbucket.org/CasBs/"}, "avatar": {"href": "https://bitbucket.org/account/CasBs/avatar/32/"}}}, "created_on": "2016-04-25T09:38:31.691665+00:00", "participants": [{"role": "REVIEWER", "type": "participant", "user": {"username": "larsstegman", "display_name": "Lars Stegman", "type": "user", "uuid": "{022e8dc5-217e-4f72-8b64-452d06616afb}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/larsstegman"}, "html": {"href": "https://bitbucket.org/larsstegman/"}, "avatar": {"href": "https://bitbucket.org/account/larsstegman/avatar/32/"}}}, "approved": false}, {"role": "REVIEWER", "type": "participant", "user": {"username": "tarovk", "display_name": "Thomas Overklift", "type": "user", "uuid": "{9e1b440d-bfa5-4878-8153-d3d126a64c86}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/tarovk"}, "html": {"href": "https://bitbucket.org/tarovk/"}, "avatar": {"href": "https://bitbucket.org/account/tarovk/avatar/32/"}}}, "approved": false}, {"role": "REVIEWER", "type": "participant", "user": {"username": "8uurg", "display_name": "Arthur Guijt", "type": "user", "uuid": "{dbcfaadd-e373-473b-b4f5-9e156944d53e}", "links": {"self": {"href": "https://api.bitbucket.org/2.0/users/8uurg"}, "html": {"href": "https://bitbucket.org/8uurg/"}, "avatar": {"href": "https://bitbucket.org/account/8uurg/avatar/32/"}}}, "approved": false}], "reason": "", "updated_on": "2016-04-25T09:38:46.562201+00:00", "type": "pullrequest", "id": 4, "task_count": 0}
+            var transformed = prt.transform(pullrequest, "ABACADABRA");
+            expect(transformed).not.toBeDefined();
+        });
+
+
+
+        it('only takes the necessary files from GitHub', function () {
+            var prt = new PullRequestTransformer();
+            var gitHubFiles = [
+              {
+                "sha": "bbcd538c8e72b8c175046e27cc8f907076331401",
+                "filename": "file1.txt",
+                "status": "added",
+                "additions": 103,
+                "deletions": 21,
+                "changes": 124,
+                "blob_url": "https://github.com/octocat/Hello-World/blob/6dcb09b5b57875f334f61aebed695e2e4193db5e/file1.txt",
+                "raw_url": "https://github.com/octocat/Hello-World/raw/6dcb09b5b57875f334f61aebed695e2e4193db5e/file1.txt",
+                "contents_url": "https://api.github.com/repos/octocat/Hello-World/contents/file1.txt?ref=6dcb09b5b57875f334f61aebed695e2e4193db5e",
+                "patch": "@@ -132,7 +132,7 @@ module Test @@ -1000,7 +1000,7 @@ module Test"
+              }
+            ];
+
+            var transformed = prt.transformGitHubFiles(gitHubFiles);
+            expect(transformed[0].filename).toEqual("file1.txt");
+            expect(transformed[0].additions).toEqual(103);
+            expect(transformed[0].deletions).toEqual(21);
+            expect(transformed[0].status).toEqual("added");
+
+            expect(transformed[0].patch).not.toBeDefined();
+            expect(transformed[0].contents_url).not.toBeDefined();
         });
     });
 });

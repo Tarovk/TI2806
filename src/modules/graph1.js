@@ -23,7 +23,7 @@ define(function () {
         xAxisLabelRotation: 65,
         yAxisScale: function() { return "fit"; },
         xAxisScale: function() { 
-            var domain = ['0-2', '3-5', '5-10', '<10'],
+            var domain = ['0-2', '3-5', '5-10', '>10'],
             scale = d3.scale.ordinal()
                 .domain(domain)
                 .rangePoints(
@@ -33,7 +33,7 @@ define(function () {
         },
         yAxisFitFunction: function (res) {
             var sizeData = res[0],
-            domain = ['0-2', '3-5', '5-10', '<10'],
+            domain = ['0-2', '3-5', '5-10', '>10'],
             buckets = [];
             for (var i = 0; i < domain.length; ++i) {
                 buckets.push(0);
