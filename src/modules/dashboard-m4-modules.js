@@ -155,6 +155,7 @@ define(function () {
             .data(piearcdata)
             .enter().append("g")
             .attr("class", "arc")
+            .style("transition","transform 0.2s ease")
             .on("mouseover",function(){
                 d3.select(this)
                     .style("transform","scale(1.05)");
