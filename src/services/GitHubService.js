@@ -25,8 +25,10 @@ function GitHubService() {
                                        return transformer.transform(pr, "GITHUB");
                                    });
                                    callback(transformed);
-                               }, function () {
-            callback({});
+                               }, function (error) {
+            callback({
+                "error": error
+            });
         });
     };
 
@@ -43,8 +45,10 @@ function GitHubService() {
                                        transformed.files = files;
                                        callback(transformed);
                                    });
-                               }, function () {
-            callback({});
+                               }, function (error) {
+            callback({
+                "error": error
+            });
         });
     };
 
@@ -58,14 +62,20 @@ function GitHubService() {
                                    transformer = new PullRequestTransformer();
                                    transformed = transformer.transformGitHubFiles(files);
                                    callback(transformed);
-                               }, function () {
-            callback({});
+                               }, function (error) {
+            callback({
+                "error": error
+            });
         });
     }
     
     this.getUser = function (userName, callback) {
         $.getJSON(api.urlBuilder('users/' + userName, {}), function (user) {
             callback(userTransformer(user));
+        }, function (error) {
+            callback({
+                "error": error
+            });
         });
     };
 }
