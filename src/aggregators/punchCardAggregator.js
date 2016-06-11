@@ -16,36 +16,43 @@ function PunchCardAggregator(userName) {
             });
     }
     
-    function setSemanticEvents(startEndEvents) {
-        startEndEvents.startEvents.forEach(function (se) {
-            octopeerService.getSemanticEventsOfPullRequest(userName,
-                                                          se.session.pull_request.repository.owner,
-                                                          se.session.pull_request.repository.name,
-                                                          se.session.pull_request.pull_request_number)
-                .then(function (events) {
-                    se.session.pull_request.semanticEvents = events;
-                });
+    function orderEvents(startEndEvents) {
+        console.log(startEndEvents);
+        startEndEvents.startEvents = startEndEvents.startEvents.sort(function (a, b) {
+            return new Date(a.created_at) - new Date(b.created_at);
+        });
+        startEndEvents.endEvents = startEndEvents.endEvents.sort(function (a, b) {
+            return new Date(a.created_at) - new Date(b.created_at);
         });
         return startEndEvents;
     }
     
     function createGraphObject(startEndEvents) {
         var graphObject = [],
-            counter = 0;
-        startEndEvents.startEvents.forEach(function (se) {
-            var endDate;
-            if (startEndEvents.endEvents.length > counter) {
-                endDate = startEndEvents.endEvents[counter].created_at;
-                counter += 1;
-            } else {
-                endDate = se.created_at;
-            }
-            pullRequestResolver.resolveSinglePullRequest(se.session.pull_request);
-            graphObject.push({
+            counter = 0,
+            obj,
+            sessionStartId,
+            endEvent,
+            sessionEndId,
+            i;
+        graphObject = startEndEvents.startEvents.map(function (se) {
+            obj = {
                 "start": se.created_at,
-                "end": endDate,
+                "end": se.created_at,
                 "session": se.session
-            });
+            };
+            sessionStartId = se.session.id;
+            
+            for (i = 0; i < startEndEvents.endEvents.length; i += 1) {
+                endEvent = startEndEvents.endEvents[i];
+                sessionEndId = endEvent.session.id;
+                if (sessionStartId === sessionEndId) {
+                    obj.end = endEvent.created_at;
+                    startEndEvents.endEvents.splice(i, 1);
+                    break;
+                }
+            }
+            return obj;
         });
         return graphObject;
     }
@@ -54,7 +61,7 @@ function PunchCardAggregator(userName) {
         octopeerService
             .getSemanticEventsFromUser(userName, 401)
             .then(getEndEvents)
-            .then(setSemanticEvents)
+            .then(orderEvents)
             .then(createGraphObject)
             .then(fulfill);
     });

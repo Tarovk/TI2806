@@ -4,6 +4,15 @@ function GitHubService() {
     "use strict";
     var api;
     api = new GitHubAPI();
+    
+    function userTransformer(user) {
+        console.log(user);
+        return {
+            "name": user.login,
+            "picture": user.avatar_url,
+            "url": user.url
+        };
+    }
 
     this.getPullRequests = function (owner, repo, callback) {
         $.getJSON(api.urlBuilder('repos/' +
@@ -47,4 +56,10 @@ function GitHubService() {
                                    callback(transformed);
                                });
     }
+    
+    this.getUser = function (userName, callback) {
+        $.getJSON(api.urlBuilder('users/' + userName, {}), function (user) {
+            callback(userTransformer(user));
+        });
+    };
 }
