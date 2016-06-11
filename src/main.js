@@ -159,9 +159,13 @@ define(['modules/moduleList'], function (dynModules) {
     function addCustomBody(module,outerdiv){
         if(module.prebody !== undefined) {
             $(module.prebody().node()).appendTo(outerdiv);
-            performDataRequests(module.data, module, function (objects) {
-                module.body(objects);
-            });
+            if(module.data) {
+                performDataRequests(module.data, module, function (objects) {
+                    module.body(objects);
+                });
+            } else {
+                module.body();
+            }
         } else {
             if(module.data) {
                 performDataRequests(module.data, module, function (objects) {
