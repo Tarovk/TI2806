@@ -14,6 +14,7 @@ define([// Array of non-visualisation modules
         'services/BitbucketAPI',
 	    'services/BitbucketService',
         'resolvers/pullRequestResolver',
+        'resolvers/userResolver',
         'svgCreator',
         'aggregators/pullRequestsAggregator.js',
         'aggregators/forceLayoutAggregator.js',

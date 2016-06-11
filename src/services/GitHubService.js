@@ -1,12 +1,21 @@
-/* globals PullRequestTransformer, GitHubAPI */
+/* globals PullRequestTransformer, GitHubAPI, getJSON */
 /* exported GitHubService */
 function GitHubService() {
     "use strict";
     var api;
     api = new GitHubAPI();
+    
+    function userTransformer(user) {
+        console.log(user);
+        return {
+            "name": user.login,
+            "picture": user.avatar_url,
+            "url": user.url
+        };
+    }
 
     this.getPullRequests = function (owner, repo, callback) {
-        $.getJSON(api.urlBuilder('repos/' +
+        getJSON(api.urlBuilder('repos/' +
                                owner + '/' +
                                repo +
                                '/pulls', { state: "all" }), function (pullrequests) {
@@ -20,7 +29,7 @@ function GitHubService() {
     };
 
     this.getPullRequest = function (owner, repo, number, callback) {
-        $.getJSON(api.urlBuilder('repos/' +
+        getJSON(api.urlBuilder('repos/' +
                                owner + '/' +
                                repo +
                                '/pulls' + '/' +
@@ -36,7 +45,7 @@ function GitHubService() {
     };
 
     function getFilesChanged(owner, repo, number, callback) {
-        $.getJSON(api.urlBuilder('repos/' +
+        getJSON(api.urlBuilder('repos/' +
                                owner + '/' +
                                repo +
                                '/pulls' + '/' +
@@ -47,4 +56,10 @@ function GitHubService() {
                                    callback(transformed);
                                });
     }
+    
+    this.getUser = function (userName, callback) {
+        getJSON(api.urlBuilder('users/' + userName, {}), function (user) {
+            callback(userTransformer(user));
+        });
+    };
 }

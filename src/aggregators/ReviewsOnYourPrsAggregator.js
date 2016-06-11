@@ -1,10 +1,11 @@
-/*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
-//https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
+/*exported ReviewOnYourPrsAggregator*/
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver, UserResolver*/
 /*jshint unused: false*/
-function ReviewOnYourPrsAggregator(userName) {
+function ReviewOnYourPrsAggregator(userName, platform) {
     "use strict";
-    var promise, prResolver = new PullRequestResolver();
+    var promise,
+        prResolver = new PullRequestResolver(),
+        userResolver = new UserResolver(platform);
     
     function createAllSessionsUserSessionsObject(sessions) {
         var userSessions = [],
@@ -48,12 +49,29 @@ function ReviewOnYourPrsAggregator(userName) {
         return sessions.userSessions;
     }
     
+    function resolvePeerReviewers(sessions) {
+        var promises = [];
+        sessions.forEach(function (session) {
+            promises.push(userResolver.resolveUsers(session.peerReviewers).then(function (users) {
+                session.peerReviewers = users;
+                return session;
+            }));
+        });
+        return RSVP.all(promises);
+    }
+    
     function transformToGraphObject(userSessions) {
         return userSessions.map(function (us) {
             return {
                 "pr": us.pull_request.pull_request_number,
                 "repo": us.pull_request.repository.name,
-                "reviews": us.peerReviewers
+                "reviews": us.peerReviewers.map(function (prv) {
+                    return {
+                        "username": prv.username,
+                        "picture": prv.userInfo.picture,
+                        "session_start": us.created_at
+                    };
+                })
             };
         });
     }
@@ -64,6 +82,7 @@ function ReviewOnYourPrsAggregator(userName) {
             .then(createAllSessionsUserSessionsObject)
             .then(distinctifyUserPullRequests)
             .then(addUsernamesToSessions)
+            .then(resolvePeerReviewers)
             .then(transformToGraphObject)
             .then(fulfill);
     });

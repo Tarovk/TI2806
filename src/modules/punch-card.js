@@ -1,4 +1,4 @@
-/* globals define, PunchCardAggregator */
+/* globals define, PunchCardAggregator, globalUserName */
 /* jshint unused : vars*/
 
 define(function () {
@@ -51,7 +51,7 @@ define(function () {
         xAxisFitFunction: false,
         yAxisFitFunction: false,
         data: [{
-            "serviceCall": function () { return new PunchCardAggregator("Travis", 20); },
+            "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
             "required": true
         }],
         body: function (res) {
