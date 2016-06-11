@@ -17,7 +17,6 @@ function PunchCardAggregator(userName) {
     }
     
     function orderEvents(startEndEvents) {
-        console.log(startEndEvents);
         startEndEvents.startEvents = startEndEvents.startEvents.sort(function (a, b) {
             return new Date(a.created_at) - new Date(b.created_at);
         });

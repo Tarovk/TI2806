@@ -100,7 +100,6 @@ function ForceLayoutAggregator(userName, platform) {
             "nodes": [],
             "links": []
         }, repoCounter = 1, prCounter;
-        console.log(user);
         graphObject.nodes.push({
             "name": user.username,
             "type": "user",

@@ -12,7 +12,6 @@ function DashboardAggregator(userName) {
             counter = 0,
             startEvents = startAndEndEvents[0],
             endEvents = startAndEndEvents[1];
-        console.log(startAndEndEvents);
         startEvents.forEach(function (event) {
             if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
                 dictionary[event.session.pull_request.url] = counter;
@@ -116,7 +115,6 @@ function DashboardAggregator(userName) {
                 "repo": pr.repository.name
             };
         }));
-        console.log(graphObject);
         return graphObject;
     }
     
