@@ -1,5 +1,5 @@
 define(["src/modules/reviews-on-my-prs"], function (module) {
-	var data = [
+	var data = [[
         {"pr":"17","repo":"mboom/TI2806","reviews":[
             {"username":"borek2","session_start":"2016-06-06T13:08:30Z",
                 "picture":"https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"},
@@ -30,9 +30,8 @@ define(["src/modules/reviews-on-my-prs"], function (module) {
         {"pr":"2","repo":"agudek/demo12","reviews":[]},
         {"pr":"13","repo":"agudek/demo13","reviews":[]},
         {"pr":"62","repo":"agudek/demo14","reviews":[]}
-    ];
-    var g = module.body();
-    module.body(data);
+    ]];
+    var g = module.body(data);
     describe('Test suite for the reviews-on-my-prs', function () {
         it('Return 17 rows', function () {
             expect(
