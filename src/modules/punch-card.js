@@ -1,4 +1,4 @@
-/* globals define, PunchCardAggregator */
+/* globals define, PunchCardAggregator, globalUserName */
 /* jshint unused : vars*/
 
 define(function () {
@@ -51,10 +51,11 @@ define(function () {
         xAxisFitFunction: false,
         yAxisFitFunction: false,
         data: [{
-            "serviceCall": function () { return new PunchCardAggregator("Travis", 20); },
+            "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
             "required": true
         }],
         body: function (res) {
+            console.log(res[0]);
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {
                 return (today + 7 - day) % 7;

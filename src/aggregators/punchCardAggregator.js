@@ -29,24 +29,44 @@ function PunchCardAggregator(userName) {
         return startEndEvents;
     }
     
+    function orderEvents(startEndEvents) {
+        startEndEvents.startEvents = startEndEvents.startEvents.sort(function (a, b) {
+            return new Date(a.created_at) - new Date(b.created_at);
+        });
+        startEndEvents.endEvents = startEndEvents.endEvents.sort(function (a, b) {
+            return new Date(a.created_at) - new Date(b.created_at);
+        });
+        return startEndEvents;
+    }
+    
     function createGraphObject(startEndEvents) {
         var graphObject = [],
-            counter = 0;
-        startEndEvents.startEvents.forEach(function (se) {
-            var endDate;
-            if (startEndEvents.endEvents.length > counter) {
-                endDate = startEndEvents.endEvents[counter].created_at;
-                counter += 1;
-            } else {
-                endDate = se.created_at;
-            }
-            pullRequestResolver.resolveSinglePullRequest(se.session.pull_request);
-            graphObject.push({
+            counter = 0,
+            obj,
+            sessionStartId,
+            endEvent,
+            sessionEndId,
+            i;
+        graphObject = startEndEvents.startEvents.map(function (se) {
+            obj = {
                 "start": se.created_at,
-                "end": endDate,
+                "end": se.created_at,
                 "session": se.session
-            });
+            };
+            sessionStartId = se.session.id;
+            
+            for (i = 0; i < startEndEvents.endEvents.length; i += 1) {
+                endEvent = startEndEvents.endEvents[i];
+                sessionEndId = endEvent.session.id;
+                if (sessionStartId === sessionEndId) {
+                    obj.end = endEvent.created_at;
+                    startEndEvents.endEvents.splice(i, 1);
+                    break;
+                }
+            }
+            return obj;
         });
+        console.log(graphObject);
         return graphObject;
     }
     
@@ -54,7 +74,7 @@ function PunchCardAggregator(userName) {
         octopeerService
             .getSemanticEventsFromUser(userName, 401)
             .then(getEndEvents)
-            .then(setSemanticEvents)
+            .then(orderEvents)
             .then(createGraphObject)
             .then(fulfill);
     });
