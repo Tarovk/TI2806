@@ -14,6 +14,7 @@ define([// Array of non-visualisation modules
         'services/BitbucketAPI',
 	    'services/BitbucketService',
         'resolvers/pullRequestResolver',
+        'resolvers/userResolver',
         'svgCreator',
         'aggregators/pullRequestsAggregator.js',
         'aggregators/forceLayoutAggregator.js',
@@ -23,6 +24,7 @@ define([// Array of non-visualisation modules
         'aggregators/graph4aggregator.js',
         'aggregators/dashboardAggregator.js',
         'aggregators/punchCardAggregator.js',
+        'aggregators/ReviewsOnYourPrsAggregator.js',
         'example-services',
         'globals'
         ], function () {
