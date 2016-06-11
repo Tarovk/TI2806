@@ -1,5 +1,6 @@
 /* globals define, PunchCardAggregator */
 /* jshint unused : vars*/
+/* jshint maxstatements: 35*/
 
 define(function () {
 
@@ -26,7 +27,7 @@ define(function () {
     function generateTickValues() {
         var res = [];
         for (var i = 0; i <= 24; i += 0.25) {
-            res.push(i)
+            res.push(i);
         }
         return res;
     }
@@ -129,11 +130,11 @@ define(function () {
             }
 
             function formatDate(date) {
-                return padZero(date.getDate()) + "/"
-                    + padZero((date.getMonth() + 1)) + "/"
-                    + (date.getYear() + 1900) + " "
-                    + padZero(date.getHours()) + ":"
-                    + padZero(date.getMinutes());
+                return padZero(date.getDate()) + "/" +
+                    padZero((date.getMonth() + 1)) + "/" +
+                    (date.getYear() + 1900) + " " +
+                    padZero(date.getHours()) + ":" +
+                    padZero(date.getMinutes());
             }
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
@@ -144,7 +145,7 @@ define(function () {
             var prs = [];
             for (var i = 0; i < transformedData.length; i++) {
                 var item = transformedData[i];
-                prs.push(getPrNumber(item.origin))
+                prs.push(getPrNumber(item.origin));
             }
             console.log(transformedData);
             var sameDays = getSameDays(transformedData);
@@ -153,14 +154,17 @@ define(function () {
             var tip = d3.tip()
                 .attr('class', 'd3-tip')
                 .html(function (d) {
-                    console.log(getPr(d.origin))
-                    console.log(formatDate(d.start))
                     return "<div><a style='color:black;font-size:small'" +
-                    " href='http://www.github.com/" + getPr(d.origin).repository.owner + "/" + getPr(d.origin).repository.name + "/pull/" + getPrNumber(d.origin) + "'>#" + getPrNumber(d.origin) +
+                    " href='http://www.github.com/" + getPr(d.origin).repository.owner + "/" +
+                        getPr(d.origin).repository.name + "/pull/" +
+                        getPrNumber(d.origin) + "'>#" + getPrNumber(d.origin) +
                     " <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a></div>" +
-                        "<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" + getPrInfo(d.origin).author + "</span></a></div>" +
-                        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" + formatDate(d.start) + "</span></a></div>" +
-                        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" + formatDate(d.end) + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                        getPrInfo(d.origin).author + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
+                        formatDate(d.start) + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
+                        formatDate(d.end) + "</span></a></div>" +
                         "<div class='arrow-down'></div>";
                 })
                 .offset([-20, 0]);
@@ -192,9 +196,7 @@ define(function () {
             .attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
             .attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
             .attr("r", RADIUS_DEFAULT)
-            .attr("class", "circle-start")
-            
-               
+            .attr("class", "circle-start");
 
             g.selectAll(".same")
             .append("circle")
