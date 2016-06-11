@@ -77,12 +77,14 @@ function DashboardAggregator(userName) {
                     sessionEndId = endEvent.session.id;
                     if (sessionStartId === sessionEndId) {
                         pr.sessionEnds.splice(i, 1);
-                        pr.totalDuration += sessionEndDate - sessionStartDate;
+                        if (sessionEndDate > sessionStartDate) {
+                            pr.totalDuration += sessionEndDate - sessionStartDate;
+                        }
                         break;
                     }
                 }
             });
-            pr.totalDuration = pr.totalDuration / 1000;
+            pr.totalDuration = Math.ceil(pr.totalDuration / 1000 / 60);
         });
         return pullRequests;
     }
