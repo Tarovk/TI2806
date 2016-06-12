@@ -95,6 +95,16 @@ function ForceLayoutAggregator(userName, platform) {
         return user;
     }
     
+    function stateOf(prInfo) {
+        var state = 0;
+        if (prInfo.state === "merged") {
+            state = 2;
+        } else if (prInfo.state === "closed") {
+            state = 1;
+        }
+        return state;
+    }
+    
     function convertToGraphObject(user) {
         var graphObject = {
             "nodes": [],
@@ -129,12 +139,12 @@ function ForceLayoutAggregator(userName, platform) {
                     "id": pr.pull_request_number,
                     "type": "pr",
                     "name": pr.prInfo.title,
-                    "size": Math.max(Math.min(pr.totalDuration, 10), 1),
-                    "status": pr.prInfo.state,
+                    "size": Math.max(Math.min(pr.totalDuration, 30), 5),
+                    "status": stateOf(pr.prInfo),
                     "repo": pr.repository.name
                 };
+                
             }));
-            
             repoCounter += prCounter - 1;
         });
         return graphObject;

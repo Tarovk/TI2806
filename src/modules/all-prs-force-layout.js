@@ -103,6 +103,7 @@ define(function () {
         }],
         body: function (res) {
             graph = res[0];
+            console.log(graph);
             force
               .nodes(graph.nodes)
               .links(graph.links)
