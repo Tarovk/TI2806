@@ -1,12 +1,5 @@
-/* globals define */
+/* globals define, BehaviourAggregator, globalUserName */
 define(function () {
-
-    var data = {"keystrokes":20762,
-        "clicks":{"total":513, "merge":113, "close":113},
-        "scrolls":932,
-        "comments": {"pr":94,"inline":153,"edits":12}
-    };
-
     var w = 600,
         h = 360;
 
@@ -252,6 +245,10 @@ define(function () {
         size: "m12 l12",
         parentSelector: '#behaviour-modules',
         customContainer: true,
+        data: [{
+            "serviceCall": function () { return new BehaviourAggregator(globalUserName); },
+            "required": true
+        }],
         prebody: function() {
             var ret = d3.select(document.createElement('div'))
                 .attr("class","row")
@@ -272,8 +269,8 @@ define(function () {
 
             return ret;
         },
-        body: function (){//res) {
-            //var data = res[0];
+        body: function (res) {
+            var data = res[0];
             drawTotals(generalActions.svg,data);
             drawClicksPie(definitiveClicks.svg,data)
                 .style("transform","translate("+300+"px,"+180+"px)");

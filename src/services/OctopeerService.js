@@ -204,7 +204,7 @@ function OctopeerService() {
             });
         });
     };
-    ///api/semantic-events/<username>/<owner>/<name>/<pull_request_number>/
+    
     this.getSemanticEventsOfPullRequest = function (userName, owner, repo, prNr) {
         var url = api.urlBuilder(api.endpoints.semanticEvents + '/' +
                                 userName + '/' +
@@ -214,6 +214,17 @@ function OctopeerService() {
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (events) {
                 fulfill(events.results);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
+    
+    this.getCountOfEndpoint = function (endPoint, parameters) {
+         var url = api.urlBuilder(endPoint, parameters);
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (items) {
+                fulfill(items.count);
             }, function (error) {
                 reject(error);
             });
