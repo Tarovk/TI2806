@@ -167,7 +167,7 @@ define(function () {
         xAxis: false,
         yAxis: false,
         yRightAxis: false,
-        customSVGSize:[width,height],
+        customSVGSize:{w:width,h:height},
         SVGoverflow:'hidden',
         data: [{
             "serviceCall": function () { return new ReviewOnYourPrsAggregator(globalUserName, "GitHub"); },
