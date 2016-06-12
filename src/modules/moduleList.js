@@ -25,6 +25,7 @@ define([// Array of non-visualisation modules
         'aggregators/dashboardAggregator.js',
         'aggregators/punchCardAggregator.js',
         'aggregators/ReviewsOnYourPrsAggregator.js',
+        'aggregators/behaviourAggregator.js',
         'example-services',
         'globals'
         ], function () {
