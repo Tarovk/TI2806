@@ -33,51 +33,109 @@ function ForceLayoutAggregator(userName) {
         return pullRequests;
     }
     
-    function sumDurationOfSessionsFromPullRequests(pullRequests) {
+    function orderEvents(pullRequests) {
         pullRequests.forEach(function (pr) {
-            pr.totalDuration = 0;
-            pr.sessionStarts.forEach(function (session) {
-                var endSessionFound = false;
-                pr.sessionEnds.forEach(function (sessionEnd) {
-                    if (session.session.id === sessionEnd.session.id) {
-                        pr.totalDuration = session.created_at - sessionEnd.create_at;
-                        endSessionFound = true;
-                    }
-                });
-                if (!endSessionFound) {
-                    pr.totalDuration = 1;
-                }
+            pr.sessionStarts = pr.sessionStarts.sort(function (a, b) {
+                return new Date(a.created_at) - new Date(b.created_at);
+            });
+            pr.sessionEnds = pr.sessionEnds.sort(function (a, b) {
+                return new Date(a.created_at) - new Date(b.created_at);
             });
         });
         return pullRequests;
     }
     
-    function convertToGraphObject(pullRequests) {
+    function sumDurationOfSessionsFromPullRequests(pullRequests) {
+        var sessionStartId,
+            endEvent,
+            sessionEndId,
+            i,
+            sessionStartDate,
+            sessionEndDate;
+        pullRequests.forEach(function (pr) {
+            pr.totalDuration = 0;
+            pr.sessionStarts.forEach(function (se) {
+                sessionStartId = se.session.id;
+                sessionStartDate = new Date(se.created_at);
+                for (i = 0; i < pr.sessionEnds.length; i += 1) {
+                    endEvent = pr.sessionEnds[i];
+                    sessionEndDate = new Date(endEvent.created_at);
+                    sessionEndId = endEvent.session.id;
+                    if (sessionStartId === sessionEndId) {
+                        pr.sessionEnds.splice(i, 1);
+                        if (sessionEndDate > sessionStartDate) {
+                            pr.totalDuration += sessionEndDate - sessionStartDate;
+                        }
+                        break;
+                    }
+                }
+            });
+            pr.totalDuration = pr.totalDuration / 1000 / 60;
+        });
+        return pullRequests;
+    }
+    
+    function preProcessPullRequests(pullRequests) {
+        var user, temp = [];
+        user = {
+            "username": "Borek"
+        };
+        user.repositories = pullRequests.map(function (pr) {
+            return pr.repository;
+        });
+        user.repositories = user.repositories.filter(function (repo) {
+            return temp.indexOf(repo.url) === -1 &&
+                temp.push(repo.url);
+        });
+        user.repositories.forEach(function (repo) {
+            repo.pullRequests = pullRequests.filter(function (pr) {
+                return pr.repository.url === repo.url;
+            });
+        });
+        return user;
+    }
+    
+    function convertToGraphObject(user) {
         var graphObject = {
             "nodes": [],
             "links": []
-        };
+        }, repoCounter = 1, prCounter;
         graphObject.nodes.push({
-            "name": "user",
+            "name": user.username,
             "type": "user",
             "src": "https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"
         });
-        graphObject.nodes.push({
-            "name": "repo1",
-            "type": "repo",
-            "title": "bla"
+        user.repositories.forEach(function (repo) {
+            graphObject.nodes.push({
+                "name": repo.owner,
+                "type": "repo",
+                "title": repo.name
+            });
+            graphObject.links.push({
+                "source": repoCounter,
+                "target": 0,
+                "value": 1
+            });
+            prCounter = repoCounter + 1;
+            graphObject.nodes = graphObject.nodes.concat(repo.pullRequests.map(function (pr) {
+                graphObject.links.push({
+                    "source": prCounter,
+                    "target": repoCounter,
+                    "value": 1
+                });
+                prCounter += 1;
+                return {
+                    "id": pr.pull_request_number,
+                    "type": "pr",
+                    "name": pr.prInfo.title,
+                    "size": Math.max(Math.min(pr.totalDuration, 10), 1),
+                    "status": pr.prInfo.state,
+                    "repo": pr.repository.name
+                };
+            }));
+            
+            repoCounter += prCounter - 1;
         });
-        graphObject.nodes = graphObject.nodes.concat(pullRequests.map(function (pr) {
-            return {
-                "id": "1",
-                "type": "pr",
-                "name": pr.prInfo.title,
-                "size": pr.totalDuration,
-                "status": 1,
-                "repo": pr.repository.name
-            };
-        }));
-
         return graphObject;
     }
     
@@ -85,8 +143,18 @@ function ForceLayoutAggregator(userName) {
         octopeerService
             .getSessionEventsFromUser(userName)
             .then(createPullRequestsObjectFromSessions)
+            .then(function (pullRequests) {
+                //max 10 because of big blob
+                if (pullRequests.length > 10) {
+                    return pullRequests.splice(0, 10);
+                } else {
+                    return pullRequests;
+                }
+            })
             .then(prResolver.resolvePullRequests)
+            .then(orderEvents)
             .then(sumDurationOfSessionsFromPullRequests)
+            .then(preProcessPullRequests)
             .then(convertToGraphObject)
             .then(fulfill);
     });
