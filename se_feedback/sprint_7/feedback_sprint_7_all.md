@@ -23,6 +23,9 @@ Total: ****
 | reflection            |     |
 
 ## Notes
+* Good job!
+* Your estimation seems a bit off since the points to hours conversion doesn't quite match up (it's about 1 to 1)
+* Add notes (and/or problems) to explain what happened
 
 #Code Evolution Quality Feedback
 
