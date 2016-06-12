@@ -1,86 +1,9 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver, UserResolver*/
-//https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver, DataAggregatorHelperFunctions, UserResolver */
 /*jshint unused: false*/
 function ForceLayoutAggregator(userName, platform) {
     "use strict";
     var promise, prResolver = new PullRequestResolver(), userResolver = new UserResolver(platform);
-    
-    function createPullRequestsObjectFromSessions(startAndEndEvents) {
-        var pullRequests = [],
-            dictionary = {},
-            counter = 0,
-            startEvents,
-            endEvents;
-        if (startAndEndEvents[0].length > 1 || startAndEndEvents[1].length > 1) {
-            startEvents = startAndEndEvents[0];
-            endEvents = startAndEndEvents[1];
-            startEvents.forEach(function (event) {
-                if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                    dictionary[event.session.pull_request.url] = counter;
-                    pullRequests.push(event.session.pull_request);
-                    pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
-                    pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
-                    counter += 1;
-                }
-                pullRequests[dictionary[event.session.pull_request.url]].sessionStarts.push(event);
-            });
-            endEvents.forEach(function (event) {
-                if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                    dictionary[event.session.pull_request.url] = counter;
-                    pullRequests.push(event.session.pull_request);
-                    pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
-                    pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
-                    counter += 1;
-                }
-                pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
-            });
-        }
-        return pullRequests;
-    }
-    
-    function orderEvents(pullRequests) {
-        pullRequests.forEach(function (pr) {
-            pr.sessionStarts = pr.sessionStarts.sort(function (a, b) {
-                return new Date(a.created_at) - new Date(b.created_at);
-            });
-            pr.sessionEnds = pr.sessionEnds.sort(function (a, b) {
-                return new Date(a.created_at) - new Date(b.created_at);
-            });
-        });
-        return pullRequests;
-    }
-    
-    function sumDurationOfSessionsFromPullRequests(pullRequests) {
-        var sessionStartId,
-            endEvent,
-            sessionEndId,
-            i,
-            sessionStartDate,
-            sessionEndDate;
-        pullRequests.forEach(function (pr) {
-            pr.totalDuration = 0;
-            pr.sessionStarts.forEach(function (se) {
-                sessionStartId = se.session.id;
-                sessionStartDate = new Date(se.created_at);
-                for (i = 0; i < pr.sessionEnds.length; i += 1) {
-                    endEvent = pr.sessionEnds[i];
-                    sessionEndDate = new Date(endEvent.created_at);
-                    sessionEndId = endEvent.session.id;
-                    if (sessionStartId === sessionEndId) {
-                        pr.sessionEnds.splice(i, 1);
-                        if (sessionEndDate > sessionStartDate) {
-                            pr.totalDuration += sessionEndDate - sessionStartDate;
-                        }
-                        break;
-                    }
-                }
-            });
-            pr.totalDuration = pr.totalDuration / 1000 / 60;
-        });
-        
-        return pullRequests;
-    }
     
     function preProcessPullRequests(pullRequests) {
         var user, temp = [];
@@ -161,7 +84,7 @@ function ForceLayoutAggregator(userName, platform) {
     promise = new RSVP.Promise(function (fulfill) {
         octopeerService
             .getSessionEventsFromUser(userName)
-            .then(createPullRequestsObjectFromSessions)
+            .then(DataAggregatorHelperFunctions.pullRequestsFromStartAndEndEvents)
             .then(function (pullRequests) {
                 //max 10 because of big blob
                 if (pullRequests.length > 10) {
@@ -171,8 +94,8 @@ function ForceLayoutAggregator(userName, platform) {
                 }
             })
             .then(prResolver.resolvePullRequests)
-            .then(orderEvents)
-            .then(sumDurationOfSessionsFromPullRequests)
+            .then(DataAggregatorHelperFunctions.orderEvents)
+            .then(DataAggregatorHelperFunctions.sumDurationPullRequests)
             .then(preProcessPullRequests)
             .then(userResolver.resolveSingleUser)
             .then(convertToGraphObject)

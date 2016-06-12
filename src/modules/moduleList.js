@@ -16,6 +16,7 @@ define([// Array of non-visualisation modules
         'resolvers/pullRequestResolver',
         'resolvers/userResolver',
         'svgCreator',
+        'aggregators/DataAggregatorHelperFunctions.js',
         'aggregators/pullRequestsAggregator.js',
         'aggregators/forceLayoutAggregator.js',
         'aggregators/graph1aggregator.js',
