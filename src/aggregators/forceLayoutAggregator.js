@@ -1,35 +1,41 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver, UserResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
-function ForceLayoutAggregator(userName) {
+function ForceLayoutAggregator(userName, platform) {
     "use strict";
-    var promise, prResolver = new PullRequestResolver();
+    var promise, prResolver = new PullRequestResolver(), userResolver = new UserResolver(platform);
     
     function createPullRequestsObjectFromSessions(startAndEndEvents) {
         var pullRequests = [],
             dictionary = {},
             counter = 0,
-            startEvents = startAndEndEvents[0],
+            startEvents,
+            endEvents;
+        if (startAndEndEvents[0].length > 1 || startAndEndEvents[1].length > 1) {
+            startEvents = startAndEndEvents[0];
             endEvents = startAndEndEvents[1];
-        startEvents.forEach(function (event) {
-            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                dictionary[event.session.pull_request.url] = counter;
-                pullRequests.push(event.session.pull_request);
-                pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
-                pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
-                counter += 1;
-            }
-            pullRequests[dictionary[event.session.pull_request.url]].sessionStarts.push(event);
-        });
-        endEvents.forEach(function (event) {
-            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                dictionary[event.session.pull_request.url] = counter;
-                pullRequests.push(event.session.pull_request);
-                counter += 1;
-            }
-            pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
-        });
+            startEvents.forEach(function (event) {
+                if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
+                    dictionary[event.session.pull_request.url] = counter;
+                    pullRequests.push(event.session.pull_request);
+                    pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
+                    pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
+                    counter += 1;
+                }
+                pullRequests[dictionary[event.session.pull_request.url]].sessionStarts.push(event);
+            });
+            endEvents.forEach(function (event) {
+                if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
+                    dictionary[event.session.pull_request.url] = counter;
+                    pullRequests.push(event.session.pull_request);
+                    pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
+                    pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
+                    counter += 1;
+                }
+                pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
+            });
+        }
         return pullRequests;
     }
     
@@ -72,13 +78,14 @@ function ForceLayoutAggregator(userName) {
             });
             pr.totalDuration = pr.totalDuration / 1000 / 60;
         });
+        
         return pullRequests;
     }
     
     function preProcessPullRequests(pullRequests) {
         var user, temp = [];
         user = {
-            "username": "Borek"
+            "username": userName
         };
         user.repositories = pullRequests.map(function (pr) {
             return pr.repository;
@@ -92,7 +99,18 @@ function ForceLayoutAggregator(userName) {
                 return pr.repository.url === repo.url;
             });
         });
+        
         return user;
+    }
+    
+    function stateOf(prInfo) {
+        var state = 0;
+        if (prInfo.state === "merged") {
+            state = 2;
+        } else if (prInfo.state === "closed") {
+            state = 1;
+        }
+        return state;
     }
     
     function convertToGraphObject(user) {
@@ -103,7 +121,8 @@ function ForceLayoutAggregator(userName) {
         graphObject.nodes.push({
             "name": user.username,
             "type": "user",
-            "src": "https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"
+            "src": user.userInfo.picture,
+            "url": user.userInfo.url
         });
         user.repositories.forEach(function (repo) {
             graphObject.nodes.push({
@@ -128,12 +147,12 @@ function ForceLayoutAggregator(userName) {
                     "id": pr.pull_request_number,
                     "type": "pr",
                     "name": pr.prInfo.title,
-                    "size": Math.max(Math.min(pr.totalDuration, 10), 1),
-                    "status": pr.prInfo.state,
+                    "size": Math.max(Math.min(pr.totalDuration, 30), 5),
+                    "status": stateOf(pr.prInfo),
                     "repo": pr.repository.name
                 };
+                
             }));
-            
             repoCounter += prCounter - 1;
         });
         return graphObject;
@@ -155,6 +174,7 @@ function ForceLayoutAggregator(userName) {
             .then(orderEvents)
             .then(sumDurationOfSessionsFromPullRequests)
             .then(preProcessPullRequests)
+            .then(userResolver.resolveSingleUser)
             .then(convertToGraphObject)
             .then(fulfill);
     });

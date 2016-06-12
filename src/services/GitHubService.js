@@ -6,7 +6,6 @@ function GitHubService() {
     api = new GitHubAPI();
     
     function userTransformer(user) {
-        console.log(user);
         return {
             "name": user.login,
             "picture": user.avatar_url,

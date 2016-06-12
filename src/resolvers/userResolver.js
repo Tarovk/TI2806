@@ -8,7 +8,7 @@ function UserResolver(platform) {
     
     function resolveUser(user) {
         var promise = new RSVP.Promise(function (fulfill) {
-            if (platform === "GitHub") {
+            if (platform.toLowerCase() === "github") {
                 ghService.getUser(user.username, function (ghUser) {
                     user.userInfo = ghUser;
                     fulfill(user);

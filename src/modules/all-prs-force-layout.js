@@ -1,4 +1,4 @@
-/* globals define, ForceLayoutAggregator, globalUserName */
+/* globals define, ForceLayoutAggregator, globalUserName, globalPlatform */
 define(function () {
     var graph = {
         "nodes" : 
@@ -98,7 +98,7 @@ define(function () {
         yAxis: false,
         yRightAxis: false,
         data: [{
-            'serviceCall': function () { return new ForceLayoutAggregator(globalUserName); },
+            'serviceCall': function () { return new ForceLayoutAggregator(globalUserName, globalPlatform); },
             'required': true
         }],
         body: function (res) {
