@@ -10,26 +10,32 @@ function ForceLayoutAggregator(userName, platform) {
         var pullRequests = [],
             dictionary = {},
             counter = 0,
-            startEvents = startAndEndEvents[0],
+            startEvents,
+            endEvents;
+        if (startAndEndEvents[0].length > 1 || startAndEndEvents[1].length > 1) {
+            startEvents = startAndEndEvents[0];
             endEvents = startAndEndEvents[1];
-        startEvents.forEach(function (event) {
-            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                dictionary[event.session.pull_request.url] = counter;
-                pullRequests.push(event.session.pull_request);
-                pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
-                pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
-                counter += 1;
-            }
-            pullRequests[dictionary[event.session.pull_request.url]].sessionStarts.push(event);
-        });
-        endEvents.forEach(function (event) {
-            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                dictionary[event.session.pull_request.url] = counter;
-                pullRequests.push(event.session.pull_request);
-                counter += 1;
-            }
-            pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
-        });
+            startEvents.forEach(function (event) {
+                if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
+                    dictionary[event.session.pull_request.url] = counter;
+                    pullRequests.push(event.session.pull_request);
+                    pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
+                    pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
+                    counter += 1;
+                }
+                pullRequests[dictionary[event.session.pull_request.url]].sessionStarts.push(event);
+            });
+            endEvents.forEach(function (event) {
+                if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
+                    dictionary[event.session.pull_request.url] = counter;
+                    pullRequests.push(event.session.pull_request);
+                    pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
+                    pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
+                    counter += 1;
+                }
+                pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
+            });
+        }
         return pullRequests;
     }
     
@@ -72,6 +78,7 @@ function ForceLayoutAggregator(userName, platform) {
             });
             pr.totalDuration = pr.totalDuration / 1000 / 60;
         });
+        
         return pullRequests;
     }
     
@@ -92,6 +99,7 @@ function ForceLayoutAggregator(userName, platform) {
                 return pr.repository.url === repo.url;
             });
         });
+        
         return user;
     }
     
