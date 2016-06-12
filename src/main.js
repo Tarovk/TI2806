@@ -3,7 +3,6 @@
 //http://stackoverflow.com/questions/17446844/dynamic-require-in-requirejs-getting-module-name-has-not-been-loaded-yet-for-c
 define(['modules/moduleList'], function (dynModules) {
 
-
     require(dynModules[0], function (module) {
         octopeerHelper.defaultModule = module;
     });
@@ -31,23 +30,23 @@ define(['modules/moduleList'], function (dynModules) {
             var svgSize = octopeerHelper.getSafeModuleValue(module, "customSVGSize");
             var margin = octopeerHelper.getSafeModuleValue(module, "margin");
 
-            axis.scale().range([svgSize.h - margin.left - margin.top, 0]).nice();
+            axis.scale().range([svgSize.h - margin.bottom - margin.top, 0]).nice();
             if (axisname === "x") {
 
                 axis.orient("bottom");
-                axis.scale().range([svgSize.w - margin.right - margin.bottom, 0]);
+                axis.scale().range([svgSize.w - margin.right - margin.left, 0]);
                 if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(-svgSize.h + margin.left + margin.top);
+                    axis.tickSize(-svgSize.h + margin.bottom + margin.top);
                 }
             } else if (axisname === "y") {
                 axis.orient("left");
                 if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(-svgSize.w + margin.right + margin.bottom);
+                    axis.tickSize(-svgSize.w + margin.right + margin.left);
                 }
             } else {
                 axis.orient("right");
                 if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(svgSize.w - margin.right - margin.bottom);
+                    axis.tickSize(svgSize.w - margin.right - margin.left);
                 }
             }
 
@@ -63,17 +62,17 @@ define(['modules/moduleList'], function (dynModules) {
             if (axisname === "x") {
                 axis.orient("bottom");
                 if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(-svgSize.h + margin.left + margin.bottom);
+                    axis.tickSize(-svgSize.h + margin.top + margin.bottom);
                 }
             } else if (axisname === "y") {
                 axis.orient("left");
                 if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(-svgSize.w + margin.right + margin.top);
+                    axis.tickSize(-svgSize.w + margin.right + margin.left);
                 }
             } else {
                 axis.orient("right");
                 if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(svgSize.w - margin.left - margin.bottom);
+                    axis.tickSize(svgSize.w - margin.left - margin.right);
                 }
             }
 
