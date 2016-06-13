@@ -90,6 +90,7 @@ define(function () {
                 { 'val': 28, 'text': 'last 4 weeks' },
                 { 'val': 365, 'text': 'last 12 months' }
             ];
+            var module = this;
             function updateData(dat) {
 
             }
@@ -100,10 +101,10 @@ define(function () {
                 .style({ 'display': 'inline-block', 'margin-left': '10px', 'width': '150px' })
                 .on('change', function () {
                     var timespan = octopeerHelper.getTimespan(this.children[this.selectedIndex].value);
-                    //alert('start: ' + timespan.start + ', end: ' + timespan.end);
-                    RSVP.when(function () { return new Aggregator(); }).then(function (dat) {
+                    RSVP.when(new Aggregator()).then(function (dat) {
                         updateData(dat);
                         redrawGraph();
+                        octopeerHelper.scaleAxes(module, dat);
                     });
                 })
                 .selectAll('option').data(optns).enter()
