@@ -1,4 +1,4 @@
-/* globals define */
+/* globals define, TimeSpentSizePrAggregator, globalUserName */
 /* jshint unused : vars*/
 
 define(function () {
@@ -6,7 +6,8 @@ define(function () {
             h = 350,
             pad = 50,
             padTop = 10,
-            padBottom = 50;
+            padBottom = 50,
+            timeData;
     return {
     	name: "time-spent-on-pr",
         title: "Time spent on pr",
