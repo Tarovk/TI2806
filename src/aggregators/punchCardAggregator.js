@@ -1,4 +1,4 @@
-/*exported Graph1Aggregator*/
+/*exported PunchCardAggregator*/
 /*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
@@ -17,7 +17,6 @@ function PunchCardAggregator(userName) {
     }
     
     function orderEvents(startEndEvents) {
-        console.log(startEndEvents);
         startEndEvents.startEvents = startEndEvents.startEvents.sort(function (a, b) {
             return new Date(a.created_at) - new Date(b.created_at);
         });

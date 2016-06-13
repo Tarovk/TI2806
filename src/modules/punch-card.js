@@ -76,6 +76,7 @@ define(function () {
             "required": true
         }],
         body: function (res) {
+
             for (var i = 0 ; i < 4; i++) {
                 console.log(JSON.stringify(res[0][i]));
             }
