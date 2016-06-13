@@ -1,4 +1,4 @@
-/* globals define, ForceLayoutAggregator, globalUserName */
+/* globals define, ForceLayoutAggregator, globalUserName, globalPlatform */
 define(function () {
     var graph = {
         "nodes" : 
@@ -92,17 +92,17 @@ define(function () {
     return {
         name: 'all-prs-force-layout',
         title: 'Peer reviews by you',
-        size: "l12",
+        size: "m8",
         parentSelector: '#dashboard-modules',
         xAxis: false,
         yAxis: false,
         yRightAxis: false,
         data: [{
-            'serviceCall': function () { return new ForceLayoutAggregator(globalUserName); },
+            'serviceCall': function () { return new ForceLayoutAggregator(globalUserName, globalPlatform); },
             'required': true
         }],
         body: function (res) {
-            console.log(res[0]);
+            graph = res[0];
             force
               .nodes(graph.nodes)
               .links(graph.links)

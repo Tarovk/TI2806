@@ -27,6 +27,7 @@ function PullRequestTransformer() {
         return {
             "url": pullrequest.html_url,
             "title": pullrequest.title,
+            "merged_by": pullrequest.merged_by,
             "author": pullrequest.user.login,
             "created_at": pullrequest.created_at,
             "updated_at": pullrequest.updated_at,
@@ -40,13 +41,15 @@ function PullRequestTransformer() {
     function transformBitbucketPullrequest(pullrequest) {
         var merged = (pullrequest.merge_commit !== null);
         return {
+            "url": pullrequest.links.self.href,
             "title": pullrequest.title,
             "author": pullrequest.author.username,
             "created_at": pullrequest.created_on,
             "updated_at": pullrequest.updated_on,
             "description": pullrequest.description,
             "state": pullrequest.state,
-            "merged": merged
+            "merged": merged,
+            "number": pullrequest.id
         };
     }
 

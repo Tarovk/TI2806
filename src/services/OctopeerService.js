@@ -14,6 +14,21 @@ function OctopeerService() {
     settings = new Settings();
     api = new OctopeerAPI();
     //var caller = new DummyCaller(settings.host);
+    
+    function getAllPages(results) {
+        var promise = new RSVP.Promise(function (fulfill) {
+            if (results.next === null) {
+                fulfill(results.results);
+            } else {
+                getJSON(results.next, function (result) {
+                    getAllPages(result).then(function (rest) {
+                        fulfill(results.results.concat(rest));
+                    });
+                });
+            }
+        });
+        return promise;
+    }
 
     this.getUsers = function () {
         var url, promise;
@@ -33,7 +48,7 @@ function OctopeerService() {
 
         promise = new RSVP.Promise(function (fulfill) {
             getJSON(url, function (sessions) {
-                fulfill(sessions.results);
+                fulfill(getAllPages(sessions));
             });
         });
         return promise;
@@ -158,12 +173,16 @@ function OctopeerService() {
             });
         promises.push(new RSVP.Promise(function (fulfill) {
             getJSON(startSessionsUrl, function (events) {
-                fulfill(events.results);
+                getAllPages(events).then(function (a) {
+                    fulfill(a);
+                });
             });
         }));
         promises.push(new RSVP.Promise(function (fulfill) {
             getJSON(endSessionsUrl, function (events) {
-                fulfill(events.results);
+                getAllPages(events).then(function (a) {
+                    fulfill(a);
+                });
             });
         }));
         
@@ -175,9 +194,37 @@ function OctopeerService() {
             "event_type": eventType,
             "element_type": elementType
         });
+        return new RSVP.Promise(function (fulfill) {
+            getJSON(url, function (events) {
+                getAllPages(events).then(function (a) {
+                    fulfill(a);
+                });
+            }, function (error) {
+                RSVP.reject(error);
+            });
+        });
+    };
+    
+    this.getSemanticEventsOfPullRequest = function (userName, owner, repo, prNr) {
+        var url = api.urlBuilder(api.endpoints.semanticEvents + '/' +
+                                userName + '/' +
+                                owner + '/' +
+                                repo + '/' +
+                                prNr);
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (events) {
                 fulfill(events.results);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
+    
+    this.getCountOfEndpoint = function (endPoint, parameters) {
+         var url = api.urlBuilder(endPoint, parameters);
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (items) {
+                fulfill(items.count);
             }, function (error) {
                 reject(error);
             });

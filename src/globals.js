@@ -18,7 +18,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
 //Global modules list for if the module objects are needed elsewhere.
 var modules = [];
 
-//Global helper objectss
+//Global helper objects
 var octopeerHelper = new OctopeerHelper();
 var octopeerService = new OctopeerService();
 var gitHubService = new GitHubService();
@@ -26,6 +26,10 @@ var bitbucketService = new BitbucketService();
 //var dataAggregator = new DataAggregator();
 var svgCreator = new SvgCreator();
 var globalUserName = getUrlParameter("userName");
+var globalPlatform = getUrlParameter("platform");
 if (globalUserName === undefined) {
     globalUserName = "Travis";
+}
+if (globalPlatform === undefined) {
+    globalPlatform = "GitHub";
 }

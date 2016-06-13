@@ -14,14 +14,19 @@ define([// Array of non-visualisation modules
         'services/BitbucketAPI',
 	    'services/BitbucketService',
         'resolvers/pullRequestResolver',
+        'resolvers/userResolver',
         'svgCreator',
+        'aggregators/DataAggregatorHelperFunctions.js',
         'aggregators/pullRequestsAggregator.js',
         'aggregators/forceLayoutAggregator.js',
         'aggregators/graph1aggregator.js',
         'aggregators/graph2aggregator.js',
         'aggregators/graph3aggregator.js',
         'aggregators/graph4aggregator.js',
+        'aggregators/dashboardAggregator.js',
         'aggregators/punchCardAggregator.js',
+        'aggregators/ReviewsOnYourPrsAggregator.js',
+        'aggregators/behaviourAggregator.js',
         'example-services',
         'globals'
         ], function () {
@@ -32,17 +37,27 @@ define([// Array of non-visualisation modules
         //so that they can be used in the visualistaion modules without problems
         ['modules/default-module-values'],
 	    [// Array of visualisation modules
-    	'modules/pull-requests',
-    	'modules/time-and-pr-size',
-    	'modules/time-spent-on-pr',
+        //DASHBOARD
+        'modules/all-prs-force-layout',
+        'modules/reviews-on-my-prs',
+        'modules/dashboard-m4-modules',
+
+        //PERSONAL
+        'modules/time-and-pr-size',
+        'modules/time-spent-on-pr',
+        'modules/average-comment-size-compared',
+        'modules/average-comment-size-yours',
+        'modules/punch-card',
+
+        //BEHAVIOUR
+        'modules/behaviour-m4-modules',
+        //PROJECT
     	'modules/pr-size',
-    	'modules/average-comment-size-compared',
-    	'modules/average-comment-size-yours',
     	'modules/average-comment-size-total',
         'modules/graph1.js',
-        'modules/all-prs-force-layout',
-        'modules/punch-card',
-        'modules/graph2.js'
+        'modules/graph2.js',
+
+        //DEVELOPMENT
     	]
     ]; 
 });
