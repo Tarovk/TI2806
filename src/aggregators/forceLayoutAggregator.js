@@ -1,84 +1,14 @@
 /*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver*/
-//https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver, DataAggregatorHelperFunctions, UserResolver */
 /*jshint unused: false*/
-function ForceLayoutAggregator(userName) {
+function ForceLayoutAggregator(userName, platform) {
     "use strict";
-    var promise, prResolver = new PullRequestResolver();
-    
-    function createPullRequestsObjectFromSessions(startAndEndEvents) {
-        var pullRequests = [],
-            dictionary = {},
-            counter = 0,
-            startEvents = startAndEndEvents[0],
-            endEvents = startAndEndEvents[1];
-        startEvents.forEach(function (event) {
-            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                dictionary[event.session.pull_request.url] = counter;
-                pullRequests.push(event.session.pull_request);
-                pullRequests[dictionary[event.session.pull_request.url]].sessionStarts = [];
-                pullRequests[dictionary[event.session.pull_request.url]].sessionEnds = [];
-                counter += 1;
-            }
-            pullRequests[dictionary[event.session.pull_request.url]].sessionStarts.push(event);
-        });
-        endEvents.forEach(function (event) {
-            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                dictionary[event.session.pull_request.url] = counter;
-                pullRequests.push(event.session.pull_request);
-                counter += 1;
-            }
-            pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
-        });
-        return pullRequests;
-    }
-    
-    function orderEvents(pullRequests) {
-        pullRequests.forEach(function (pr) {
-            pr.sessionStarts = pr.sessionStarts.sort(function (a, b) {
-                return new Date(a.created_at) - new Date(b.created_at);
-            });
-            pr.sessionEnds = pr.sessionEnds.sort(function (a, b) {
-                return new Date(a.created_at) - new Date(b.created_at);
-            });
-        });
-        return pullRequests;
-    }
-    
-    function sumDurationOfSessionsFromPullRequests(pullRequests) {
-        var sessionStartId,
-            endEvent,
-            sessionEndId,
-            i,
-            sessionStartDate,
-            sessionEndDate;
-        pullRequests.forEach(function (pr) {
-            pr.totalDuration = 0;
-            pr.sessionStarts.forEach(function (se) {
-                sessionStartId = se.session.id;
-                sessionStartDate = new Date(se.created_at);
-                for (i = 0; i < pr.sessionEnds.length; i += 1) {
-                    endEvent = pr.sessionEnds[i];
-                    sessionEndDate = new Date(endEvent.created_at);
-                    sessionEndId = endEvent.session.id;
-                    if (sessionStartId === sessionEndId) {
-                        pr.sessionEnds.splice(i, 1);
-                        if (sessionEndDate > sessionStartDate) {
-                            pr.totalDuration += sessionEndDate - sessionStartDate;
-                        }
-                        break;
-                    }
-                }
-            });
-            pr.totalDuration = pr.totalDuration / 1000 / 60;
-        });
-        return pullRequests;
-    }
+    var promise, prResolver = new PullRequestResolver(), userResolver = new UserResolver(platform);
     
     function preProcessPullRequests(pullRequests) {
         var user, temp = [];
         user = {
-            "username": "Borek"
+            "username": userName
         };
         user.repositories = pullRequests.map(function (pr) {
             return pr.repository;
@@ -92,7 +22,18 @@ function ForceLayoutAggregator(userName) {
                 return pr.repository.url === repo.url;
             });
         });
+        
         return user;
+    }
+    
+    function stateOf(prInfo) {
+        var state = 0;
+        if (prInfo.state === "merged") {
+            state = 2;
+        } else if (prInfo.state === "closed") {
+            state = 1;
+        }
+        return state;
     }
     
     function convertToGraphObject(user) {
@@ -103,7 +44,8 @@ function ForceLayoutAggregator(userName) {
         graphObject.nodes.push({
             "name": user.username,
             "type": "user",
-            "src": "https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"
+            "src": user.userInfo.picture,
+            "url": user.userInfo.url
         });
         user.repositories.forEach(function (repo) {
             graphObject.nodes.push({
@@ -128,12 +70,12 @@ function ForceLayoutAggregator(userName) {
                     "id": pr.pull_request_number,
                     "type": "pr",
                     "name": pr.prInfo.title,
-                    "size": Math.max(Math.min(pr.totalDuration, 10), 1),
-                    "status": pr.prInfo.state,
+                    "size": Math.max(Math.min(pr.totalDuration, 30), 5),
+                    "status": stateOf(pr.prInfo),
                     "repo": pr.repository.name
                 };
+                
             }));
-            
             repoCounter += prCounter - 1;
         });
         return graphObject;
@@ -142,7 +84,7 @@ function ForceLayoutAggregator(userName) {
     promise = new RSVP.Promise(function (fulfill) {
         octopeerService
             .getSessionEventsFromUser(userName)
-            .then(createPullRequestsObjectFromSessions)
+            .then(DataAggregatorHelperFunctions.pullRequestsFromStartAndEndEvents)
             .then(function (pullRequests) {
                 //max 10 because of big blob
                 if (pullRequests.length > 10) {
@@ -152,9 +94,10 @@ function ForceLayoutAggregator(userName) {
                 }
             })
             .then(prResolver.resolvePullRequests)
-            .then(orderEvents)
-            .then(sumDurationOfSessionsFromPullRequests)
+            .then(DataAggregatorHelperFunctions.orderEvents)
+            .then(DataAggregatorHelperFunctions.sumDurationPullRequests)
             .then(preProcessPullRequests)
+            .then(userResolver.resolveSingleUser)
             .then(convertToGraphObject)
             .then(fulfill);
     });

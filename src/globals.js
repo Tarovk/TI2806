@@ -26,6 +26,10 @@ var bitbucketService = new BitbucketService();
 //var dataAggregator = new DataAggregator();
 var svgCreator = new SvgCreator();
 var globalUserName = getUrlParameter("userName");
+var globalPlatform = getUrlParameter("platform");
 if (globalUserName === undefined) {
     globalUserName = "Travis";
+}
+if (globalPlatform === undefined) {
+    globalPlatform = "GitHub";
 }

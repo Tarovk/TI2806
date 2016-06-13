@@ -55,7 +55,6 @@ define(function () {
             "required": true
         }],
         body: function (res) {
-            console.log(res[0]);
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {
                 return (today + 7 - day) % 7;
