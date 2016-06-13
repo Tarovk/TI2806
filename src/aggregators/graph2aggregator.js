@@ -1,5 +1,5 @@
 /*exported Graph2Aggregator*/
-/*globals OctopeerService, RSVP, PullRequestResolver, ObjectResolver*/
+/*globals OctopeerService, RSVP, PullRequestResolver, ObjectResolver, DataAggregatorHelperFunctions*/
 //https://docs.google.com/document/d/1QUu1MP9uVMH9VlpEFx2SG99j9_TgxlhHo38_bgkUNKk/edit?usp=sharing
 /*jshint unused: false*/
 function Graph2Aggregator(userName, amountOfPr) {
@@ -26,7 +26,7 @@ function Graph2Aggregator(userName, amountOfPr) {
                             sessionLengths.push((sessionEndDate - sessionStartDate) / 1000 / 60);
                         }
                         found = true;
-                        pr.sessionEnds.splice(i, 1)[0]
+                        pr.sessionEnds.splice(i, 1);
                         break;
                     }
                 }
