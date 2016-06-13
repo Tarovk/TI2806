@@ -61,3 +61,9 @@ Total: ****
 | Code Review            |      |
 
 ##Notes
+* Good that you increased the test coverage!
+* Keep up the peer reviews!
+* `graph1.js` + `graph2.js` are not a proper names
+* Thanks for renaming `time.js`!
+* `SvgCreator` + services (everything in `main.js`) + `Settings` seems like a good candidate for a Singleton but isn't
+* `cache.js` - use cache not cash in naming and comments
