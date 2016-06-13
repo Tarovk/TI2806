@@ -64,9 +64,6 @@ define(function () {
                 });
             g.call(tip);
 
-            var OWNER = "mboom";
-            var REPO_NAME = "TI2806";
-
             g.selectAll("rect").data(timeData).enter()
                 .append("rect")
                 .attr("x", function (d) { return xTimeScale(d.x) + 9; })
@@ -74,7 +71,7 @@ define(function () {
                 .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
                 .attr("height", function (d) { return yTimeScale(d.y); })
                 .on("click", function (d) {
-                    window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
+                    window.open(d.url);
                 })
                 .attr("style", "fill:rgb(77, 136, 255);")
                 .on("mouseover", function (d) {

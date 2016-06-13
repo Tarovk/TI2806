@@ -61,8 +61,6 @@ define(function () {
                 });
             g.call(tip);
 
-            var OWNER = "mboom";
-            var REPO_NAME = "TI2806";
             var DATA_POINT_RADIUS_DEFAULT = 4;
             var DATA_POINT_RADIUS_HOVER = 6;
 

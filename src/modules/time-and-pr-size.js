@@ -117,8 +117,6 @@ define(function () {
                     )
                 .attr("style", "stroke:rgb(212, 51, 51);fill:none;stroke-width: 3px;");
 
-            var OWNER = "mboom";
-            var REPO_NAME = "TI2806";
             var DATA_POINT_RADIUS_DEFAULT = 4;
             var DATA_POINT_RADIUS_HOVER = 6;
 
@@ -130,7 +128,7 @@ define(function () {
                 .attr("style", "fill:rgb(212, 51, 51);stroke-width: 3px;")
                 .style("cursor", "pointer")
                 .on("click", function (d) {
-                    window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
+                    window.open(d.url);
                 })
                 .on("mouseover", function (d) {
                     d3.select(this).attr("r", DATA_POINT_RADIUS_HOVER);
