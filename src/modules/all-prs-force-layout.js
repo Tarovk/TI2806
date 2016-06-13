@@ -4,16 +4,6 @@ define(function () {
     var width = 720,
         height = 350;
 
-    function tick() {
-        link.attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
-
-        node.attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
-    }
-
     var force = d3.layout.force()
         .charge(-400)
         .linkDistance(40)
@@ -70,19 +60,19 @@ define(function () {
             'required': true
         }],
         body: function (res) {
-            graph = res[0];
+            var graph = res[0];
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
 
             if(graph === []) {
                 return g;
             }
-            
+
             force
               .nodes(graph.nodes)
               .links(graph.links)
               .start();
 
-            var prScale = d3.scale.linear().domain([0,maxDuration(graph)]).range([3,25])
+            var prScale = d3.scale.linear().domain([0,maxDuration(graph)]).range([3,25]);
             
 
             g.call(tip);
@@ -199,7 +189,7 @@ define(function () {
                 .attr("y",25)
                 .style("font-size","0.6em")
                 .style("text-anchor","middle")
-                .text(function(d) {return d.name})
+                .text(function(d) {return d.name;});
 
             force.on("tick", function() {
                 links.attr("x1", function(d) { return d.source.x; })
