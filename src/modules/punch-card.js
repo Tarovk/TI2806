@@ -76,6 +76,9 @@ define(function () {
             "required": true
         }],
         body: function (res) {
+            for (var i = 0 ; i < 4; i++) {
+                console.log(JSON.stringify(res[0][i]));
+            }
 
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {
@@ -143,8 +146,8 @@ define(function () {
             });
 
             var prs = [];
-            for (var i = 0; i < transformedData.length; i++) {
-                var item = transformedData[i];
+            for (var ii = 0; ii < transformedData.length; ii++) {
+                var item = transformedData[ii];
                 prs.push(getPrNumber(item.origin));
             }
             console.log(transformedData);
