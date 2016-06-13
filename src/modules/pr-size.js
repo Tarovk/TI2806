@@ -1,4 +1,4 @@
-/* globals define, octopeerHelper */
+/* globals define, octopeerHelper, TimeSpentSizePrAggregator, globalUserName */
 define(function () {
     return {
     	name: "pr-size",
@@ -11,44 +11,18 @@ define(function () {
         xAxisTicks: false,
         yAxisTicks: true,
         xAxisLabelRotation: 65,
-        xAxisScale: function() { 
+        xAxisFitFunction: function(data) { 
             var axisScale = d3.scale.ordinal()
-                .domain([
-                    "pr0", "pr1", "pr2", "pr3",
-                    "pr4", "pr5", "pr6", "pr7",
-                    "pr8", "pr9", "pr10", "pr11",
-                    "pr12", "pr13", "pr14", "pr15",
-                    "pr16", "pr17", "pr18", "pr19"
-                ])
+                .domain(data[0].sizeData.map(function (pr) {
+                    return pr.x;
+                }))
                 .rangePoints([0.35*50, 720-2.3*50]);
             return d3.svg.axis().scale(axisScale);
         },
-        yAxisFitFunction: function() {
-            var sizeData = [
-                    {"x":0, "y":461},
-                    {"x":1, "y":3},
-                    {"x":2, "y":43},
-                    {"x":3, "y":342},
-                    {"x":4, "y":6452},
-                    {"x":5, "y":5},
-                    {"x":6, "y":64},
-                    {"x":7, "y":412},
-                    {"x":8, "y":762},
-                    {"x":9, "y":342},
-                    {"x":10, "y":1521},
-                    {"x":11, "y":312},
-                    {"x":12, "y":454},
-                    {"x":13, "y":642},
-                    {"x":14, "y":1542},
-                    {"x":15, "y":1752},
-                    {"x":16, "y":242},
-                    {"x":17, "y":142},
-                    {"x":18, "y":717},
-                    {"x":19, "y":4772}
-                ];
+        yAxisFitFunction: function(data) {
             return d3.svg.axis().scale(
                 d3.scale.linear()
-                    .domain([0,Math.max.apply(Math,sizeData.map(function(o){return o.y;}))])
+                    .domain([0,Math.max.apply(Math,data[0].sizeData.map(function(o){return o.y;}))])
             );
         },
         legend: [
@@ -58,34 +32,17 @@ define(function () {
                 "text":"Number of lines changed"
             }
         ],
-        body: function () {
+        data: [{
+            "serviceCall": function () { return new TimeSpentSizePrAggregator(globalUserName); },
+            "required": true
+        }],
+        body: function (data) {
             var w = 720,
                 h = 350,
                 pad = 50,
                 padTop = 10,
                 padBottom = 50,
-                sizeData = [
-                    {"x":0, "y":461},
-                    {"x":1, "y":3},
-                    {"x":2, "y":43},
-                    {"x":3, "y":342},
-                    {"x":4, "y":6452},
-                    {"x":5, "y":5},
-                    {"x":6, "y":64},
-                    {"x":7, "y":412},
-                    {"x":8, "y":762},
-                    {"x":9, "y":342},
-                    {"x":10, "y":1521},
-                    {"x":11, "y":312},
-                    {"x":12, "y":454},
-                    {"x":13, "y":642},
-                    {"x":14, "y":1542},
-                    {"x":15, "y":1752},
-                    {"x":16, "y":242},
-                    {"x":17, "y":142},
-                    {"x":18, "y":717},
-                    {"x":19, "y":4772}
-                ];
+                sizeData = data[0].sizeData;
 
             var xSizeScale = d3.scale.linear()
                 .domain([0,sizeData.length])
@@ -129,7 +86,7 @@ define(function () {
                 .attr("style", "fill:rgb(212, 51, 51);stroke-width: 3px;")
                 .style("cursor", "pointer")
                 .on("click", function (d) {
-                    window.open("https://www.github.com/" + OWNER + "/" + REPO_NAME + "/pull/" + d.x);
+                    window.open(d.url);
                 })
                 .on("mouseover", function (d) {
                     d3.select(this).attr("r", DATA_POINT_RADIUS_HOVER);
