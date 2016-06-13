@@ -77,10 +77,6 @@ define(function () {
         }],
         body: function (res) {
 
-            for (var i = 0 ; i < 4; i++) {
-                console.log(JSON.stringify(res[0][i]));
-            }
-
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {
                 return (today + 7 - day) % 7;
@@ -151,7 +147,6 @@ define(function () {
                 var item = transformedData[ii];
                 prs.push(getPrNumber(item.origin));
             }
-            console.log(transformedData);
             var sameDays = getSameDays(transformedData);
             var diffDays = getDifferentDays(transformedData);
 
@@ -162,14 +157,15 @@ define(function () {
                     " href='http://www.github.com/" + getPr(d.origin).repository.owner + "/" +
                         getPr(d.origin).repository.name + "/pull/" +
                         getPrNumber(d.origin) + "'>#" + getPrNumber(d.origin) +
-                    " <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a></div>" +
-                        "<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
-                        getPrInfo(d.origin).author + "</span></a></div>" +
+                        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
+                        "</div>" +
+                        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                        //getPrInfo(d.origin).author + "</span></a></div>" +
                         "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
                         formatDate(d.start) + "</span></a></div>" +
                         "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
                         formatDate(d.end) + "</span></a></div>" +
-                        "<div class='arrow-down'></div>";
+                        "<div class='arrow-down'></div></div>";
                 })
                 .offset([-20, 0]);
 
