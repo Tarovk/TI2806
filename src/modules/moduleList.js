@@ -51,6 +51,8 @@ define([// Array of non-visualisation modules
 
         //BEHAVIOUR
         'modules/behaviour-m4-modules',
+        'modules/super-punch-card',
+
         //PROJECT
     	'modules/pr-size',
     	'modules/average-comment-size-total',
