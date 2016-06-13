@@ -1,3 +1,4 @@
+/* globals octopeerHelper */
 /* exported OctopeerHelper */
 /*jshint esnext: true */
 
