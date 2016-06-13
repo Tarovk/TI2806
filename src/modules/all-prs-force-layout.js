@@ -51,9 +51,19 @@ define(function () {
     var width = 720,
         height = 350;
 
+    function tick() {
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+
+        node.attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; });
+    }
+
     var force = d3.layout.force()
-        .charge(-120)
-        .linkDistance(50)
+        .charge(-400)
+        .linkDistance(40)
         .size([width, height]);
 
     var statusHTML = function(status) {
@@ -68,6 +78,7 @@ define(function () {
                 "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>"+
                 "<i style='color: #E44A4A;margin-left: 5px;transform:rotate(-90deg);'"+
                 " class='material-icons'>&#xE14A;</i>";
+            default : return "<span style='color:rgb(77, 136, 255)'>unknown</span>";
         }
     };
 
