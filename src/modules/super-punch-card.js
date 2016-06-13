@@ -4,6 +4,36 @@
 
 define(function () {
 
+    var data = {
+        "sem-sessions" : [
+            { "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z", "session": { 
+                "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": { 
+                    "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": { 
+                        "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub" 
+                        }, "pull_request_number": 7 
+                    }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" } 
+                } 
+            },
+        ]
+    };
+
+    var semdata = {
+        "sem-events" : [
+            {
+                "events" : [
+                    {"event-id" : 1, "eventType" : 101, "elementType" : 104, "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z", "session": { 
+                        "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": { 
+                            "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": { 
+                                "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub" 
+                                }, "pull_request_number": 7 
+                            }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" } 
+                        }
+                    }
+                ]
+            } 
+        ]
+    }
+
     var margin = { left: 50, right: 50, top: 10, bottom: 50 };
     var w = 1440;
     var h = 350;
