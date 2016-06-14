@@ -239,8 +239,40 @@ define(function () {
             d3.select('#super-punch-card')
                 .select('.yAxis')
                 .selectAll('text')
-                .style("cursor", "pointer")
-                .on("click", function (d) { console.log(d); });
+                .attr("class", "clickable")
+                .on("mouseover", function (d, i) {
+                    var selection = d3.select('#super-punch-card')
+                    .select('.yAxis')
+                    .selectAll('text')[0][i];
+                    setTextHoverState(d3.select(selection));
+                    selection = d3.select('#super-punch-card').selectAll("rect")[0][i];
+                    setRectHoverState(d3.select(selection));
+                })
+                .on("mouseout", function (d, i) {
+                    var selection = d3.select('#super-punch-card')
+                    .select('.yAxis')
+                    .selectAll('text')[0][i];
+                    setTextUnHoverState(d3.select(selection))
+                    selection = d3.select('#super-punch-card').selectAll("rect")[0][i];
+                    setRectUnHoverState(d3.select(selection));
+                });
+
+            function setTextUnHoverState(selection) {
+                selection.style("font-weight", "initial");
+            }
+            function setTextHoverState(selection) {
+                selection.style("font-weight", "bold")
+                    .style("cursor", "pointer");
+            }
+
+            function setRectHoverState(selection) {
+                selection.style("cursor", "pointer")
+                    .attr("stroke", "gray");
+            }
+
+            function setRectUnHoverState(selection) {
+                selection.attr("stroke", "white");
+            }
 
             var rectData = [6, 5, 4, 3, 2, 1, 0];
 
@@ -250,6 +282,7 @@ define(function () {
             .data(rectData)
             .enter()
             .append("rect")
+            .attr("class", "clickable")
             .attr("y", function (d) { return yScale(d) - rectHeight / 2; })
             .attr("x", xScale(0))
             .attr("height", rectHeight)
@@ -258,9 +291,21 @@ define(function () {
             .attr("ry", 6)
             .attr("fill", "white")
             .attr("stroke-width", 3)
-            .on("click", function (d) { console.log(d); })
-            .on("mouseover", function () { d3.select(this).style("cursor", "pointer").attr("stroke", "gray");})
-            .on("mouseout", function () { d3.select(this).style("cursor", "default").attr("stroke", "white"); });
+            .on("mouseover", function (d, i) {
+                var selection = d3.select('#super-punch-card')
+                .select('.yAxis')
+                .selectAll('text')[0][i];
+                setTextHoverState(d3.select(selection));
+                setRectHoverState(d3.select(this));
+                
+            })
+            .on("mouseout", function (d, i) {
+                var selection = d3.select('#super-punch-card')
+                .select('.yAxis')
+                .selectAll('text')[0][i];
+                setTextUnHoverState(d3.select(selection));
+                setRectUnHoverState(d3.select(this));
+            });
 
             g.selectAll("g.diff")
             .data(diffDays)
@@ -303,6 +348,7 @@ define(function () {
             // draw full lines on the same day
             g.selectAll(".same")
             .append("line")
+            .attr("class", "clickable")
             .attr("x1", function (d) { return xScale(getHoursAndMinutes(d.start)); })
             .attr("y1", function (d) { return yScale(transformDay(d.start.getDay())); })
             .attr("x2", function (d) { return xScale(getHoursAndMinutes(d.end)); })
@@ -358,6 +404,16 @@ define(function () {
             .style("stroke", function (d) {
                 return getColor(d);
             });
+
+            console.log(d3.selectAll(".clickable"));
+
+            d3.selectAll(".clickable")
+            .on("click", function (d) { console.log(d); })
+            .style("cursor", "pointer");
+
+            g.selectAll(".clickable")
+            .on("click", function (d) { console.log(d); })
+            .style("cursor", "pointer");
 
             var module = this;
             function drawDay(nrpr) {
