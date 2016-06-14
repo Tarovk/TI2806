@@ -1,5 +1,5 @@
-/* globals OctopeerHelper, OctopeerService, GitHubService, BitbucketService, SvgCreator */
-/* exported modules, octopeerHelper, octopeerService, gitHubService, bitbucketService, svgCreator */
+/* globals OctopeerHelper, OctopeerService, GitHubService, BitbucketService, SvgCreator, TimeHelper */
+/* exported modules, octopeerHelper, octopeerService, gitHubService, bitbucketService, svgCreator, timeHelper */
 
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -23,6 +23,7 @@ var octopeerHelper = new OctopeerHelper();
 var octopeerService = new OctopeerService();
 var gitHubService = new GitHubService();
 var bitbucketService = new BitbucketService();
+var timeHelper = new TimeHelper();
 //var dataAggregator = new DataAggregator();
 var svgCreator = new SvgCreator();
 var globalUserName = getUrlParameter("userName");

@@ -1,4 +1,4 @@
-/* globals define, PunchCardAggregator, globalUserName */
+/* globals define, PunchCardAggregator, globalUserName, timeHelper */
 /* jshint unused : vars*/
 /* jshint maxstatements: 35*/
 
