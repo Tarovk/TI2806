@@ -6,6 +6,7 @@ define([// Array of non-visualisation modules
         'apicallers',
         'pullrequestTransformer',
         'OctopeerHelper',
+        'TimeHelper',
         'resolvers/objectResolver',
         'services/OctopeerAPI',
         'services/OctopeerService',
