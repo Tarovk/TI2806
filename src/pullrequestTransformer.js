@@ -25,6 +25,8 @@ function PullRequestTransformer() {
     function transformGitHubPullrequest(pullrequest) {
         var merged = (pullrequest.merged_at !== null);
         return {
+            "additions": pullrequest.additions,
+            "deletions": pullrequest.deletions,
             "url": pullrequest.html_url,
             "title": pullrequest.title,
             "merged_by": pullrequest.merged_by,

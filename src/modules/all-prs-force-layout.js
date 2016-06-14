@@ -1,59 +1,12 @@
 /* globals define, ForceLayoutAggregator, globalUserName, globalPlatform */
 define(function () {
-    var graph = {
-        "nodes" : 
-            [
-                {"name":"user","type":"user","src":"https://avatars2.githubusercontent.com/u/2778466?v=3&s=460"},
-
-                {"name":"repo1","type":"repo","title":"mboom/TI2806"},
-                {"name":"repo2","type":"repo","title":"agudek/repo0"},
-                {"name":"repo3","type":"repo","title":"agudek/demo"},
-
-                {"id":"2","name":"Grunt init for jquery","type":"pr","size":5,"status":1,"repo":"mboom/TI2806"},
-                {"id":"185","name":"Created test file for a module to test if it works",
-                    "type":"pr","size":7,"status":2,"repo":"mboom/TI2806"},
-                {"id":"26","name":"Architecture design","type":"pr","size":13,"status":1,"repo":"mboom/TI2806"},
-
-                {"id":"pr1","name":"repo0","type":"pr","size":2,"status":11,"repo":"agudek/repo0"},
-                {"id":"pr4","name":"repo0","type":"pr","size":5,"status":1,"repo":"agudek/repo0"},
-                {"id":"pr7","name":"repo0","type":"pr","size":9,"status":21,"repo":"agudek/repo0"},
-                {"id":"pr13","name":"repo0","type":"pr","size":3,"status":0,"repo":"agudek/repo0"},
-                {"id":"pr21","name":"repo0","type":"pr","size":15,"status":1,"repo":"agudek/repo0"},
-                {"id":"pr26","name":"repo0","type":"pr","size":12,"status":0,"repo":"agudek/repo0"},
-                {"id":"pr37","name":"repo0","type":"pr","size":5,"status":1,"repo":"agudek/repo0"},
-
-                {"id":"pr53","name":"demo","type":"pr","size":25,"status":1,"repo":"agudek/demo"},
-                {"id":"pr79","name":"demo","type":"pr","size":15,"status":1,"repo":"agudek/demo"}
-            ],
-        "links" :
-            [
-                {"source":1,"target":0,"value":1},
-                {"source":2,"target":0,"value":1},
-                {"source":3,"target":0,"value":1},
-
-                {"source":4,"target":1,"value":1},
-                {"source":5,"target":1,"value":1},
-                {"source":6,"target":1,"value":1},
-
-                {"source":7,"target":2,"value":1},
-                {"source":8,"target":2,"value":1},
-                {"source":9,"target":2,"value":1},
-                {"source":10,"target":2,"value":1},
-                {"source":11,"target":2,"value":1},
-                {"source":12,"target":2,"value":1},
-                {"source":13,"target":2,"value":1},
-
-                {"source":14,"target":3,"value":1},
-                {"source":15,"target":3,"value":1},
-            ]
-    };
 
     var width = 720,
         height = 350;
 
     var force = d3.layout.force()
-        .charge(-120)
-        .linkDistance(50)
+        .charge(-400)
+        .linkDistance(40)
         .size([width, height]);
 
     var statusHTML = function(status) {
@@ -68,6 +21,7 @@ define(function () {
                 "<span style='color:lightgray;font-size:small;font-weight:bold;'> by you</span>"+
                 "<i style='color: #E44A4A;margin-left: 5px;transform:rotate(-90deg);'"+
                 " class='material-icons'>&#xE14A;</i>";
+            default : return "<span style='color:rgb(77, 136, 255)'>unknown</span>";
         }
     };
 
@@ -89,6 +43,10 @@ define(function () {
         }
     );
 
+    function maxDuration(data) {
+        return d3.max($.map(data.nodes, function(el) { return el.size; }));
+    }
+
     return {
         name: 'all-prs-force-layout',
         title: 'Peer reviews by you',
@@ -102,13 +60,20 @@ define(function () {
             'required': true
         }],
         body: function (res) {
-            graph = res[0];
+            var graph = res[0];
+            var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
+
+            if(graph === []) {
+                return g;
+            }
+
             force
               .nodes(graph.nodes)
               .links(graph.links)
               .start();
+
+            var prScale = d3.scale.linear().domain([0,maxDuration(graph)]).range([3,25]);
             
-            var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
 
             g.call(tip);
 
@@ -130,19 +95,20 @@ define(function () {
                 .append("circle")
                     .attr("cx", 0)
                     .attr("cy", 0)
-                    .attr("r",function(d) { return d.size; })
+                    .attr("r",function(d) { return prScale(d.size); })
                     .style("fill", function(d) { 
                         if(d.status === 1 || d.status === 11) {
                             return "#61B361";
                         } else if(d.status === 2 || d.status === 21) {
                             return "#E44A4A";
-                        } else {
+                        } else if(d.status === 0){
                             return "#F5E661";
+                        } else {
+                            return "rgb(77, 136, 255)";
                         }
                     })
-                    .style("cursor", "pointer")
-      .on('mouseover', function(d) { return tip.show(d);})
-      .on('mouseout', tip.hide);
+                    .on('mouseover', function(d) { return tip.show(d);})
+                    .on('mouseout', tip.hide);
 
             g.selectAll(".pr")
                     .append("text")
@@ -151,10 +117,9 @@ define(function () {
                         .attr("text-anchor", "middle")
                         .style("font-size", "10px")
                         .style("-webkit-user-select", "none")
-                        .style("cursor", "pointer")
                         .style("pointer-events", "none")
                         .style("font-weight","300")
-                        .text(function(d) { return d.size; });
+                        .text(function(d) { return "#"+d.id; });
 
             g.selectAll(".repo")
                 .append("a")
@@ -203,15 +168,28 @@ define(function () {
 
             g.selectAll(".user")
                 .append("a")
-                    .attr("xlink:href", "http://www.github.com/agudek" )
+                    .attr("xlink:href", function(d) {return d.url;} )
                 .append("image")
-                    .attr("xlink:href", function(d) { return d.src; })
+                    .attr("xlink:href", function(d) { 
+                        if(d.src !== undefined) {
+                            return d.src; 
+                        } else {
+                            return "../resources/anonymous.png";
+                        }
+                    })
                     .attr("x", -16)
                     .attr("y", -16)
                     .attr("width", 32)
                     .attr("height", 32)
                     .attr("clip-path","url(#all-prs-force-layout-user-clip")
                     .style("cursor", "pointer");
+
+            g.selectAll(".user")
+                .append("text")
+                .attr("y",25)
+                .style("font-size","0.6em")
+                .style("text-anchor","middle")
+                .text(function(d) {return d.name;});
 
             force.on("tick", function() {
                 links.attr("x1", function(d) { return d.source.x; })
