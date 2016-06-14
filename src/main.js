@@ -8,104 +8,9 @@ define(['modules/moduleList'], function (dynModules) {
     });
     /*jshint maxstatements:34*/
     require(dynModules[1], function () {
+
         // Set global modules variable to a list of all imported modules after converting pseudo-array to array
         modules = Array.prototype.slice.call(arguments);
-
-        function setAxisTransition(module, axisname, axis) {
-            d3.select(module.svg).select("." + axisname + "Axis")
-                    .transition()
-                    .duration(500)
-                    .ease("sin-in-out")
-                    .call(axis);
-        }
-
-        function setAxisLabelRotation(module, axisname) {
-            d3.select(module.svg).select("." + axisname + "Axis")
-                    .selectAll("text")
-                    .attr("transform",
-                        "rotate(" + octopeerHelper.getSafeModuleValue(module, axisname + "AxisLabelRotation") + ")");
-        }
-
-        function setStandardAxisValues(module, axisname, axis) {
-            var svgSize = octopeerHelper.getSafeModuleValue(module, "customSVGSize");
-            var margin = octopeerHelper.getSafeModuleValue(module, "margin");
-
-            axis.scale().range([svgSize.h - margin.bottom - margin.top, 0]).nice();
-            if (axisname === "x") {
-
-                axis.orient("bottom");
-                axis.scale().range([svgSize.w - margin.right - margin.left, 0]);
-                if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(-svgSize.h + margin.bottom + margin.top);
-                }
-            } else if (axisname === "y") {
-                axis.orient("left");
-                if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(-svgSize.w + margin.right + margin.left);
-                }
-            } else {
-                axis.orient("right");
-                if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(svgSize.w - margin.right - margin.left);
-                }
-            }
-
-            setAxisTransition(module, axisname, axis);
-            setAxisLabelRotation(module, axisname);
-        }
-
-        function setOrdinalAxisValues(module, axisname, axis) {
-
-            var svgSize = octopeerHelper.getSafeModuleValue(module, "customSVGSize");
-            var margin = octopeerHelper.getSafeModuleValue(module, "margin");
-
-            if (axisname === "x") {
-                axis.orient("bottom");
-                if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(-svgSize.h + margin.top + margin.bottom);
-                }
-            } else if (axisname === "y") {
-                axis.orient("left");
-                if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(-svgSize.w + margin.right + margin.left);
-                }
-            } else {
-                axis.orient("right");
-                if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisTicks")) {
-                    axis.tickSize(svgSize.w - margin.left - margin.right);
-                }
-            }
-
-            setAxisTransition(module, axisname, axis);
-            setAxisLabelRotation(module, axisname);
-        }
-
-        function setAxisValues(module, axisname, scaletype, axis) {
-            switch (scaletype) {
-                case "linear": case "log": case "time": setStandardAxisValues(module, axisname, axis); break;
-                case "ordinal": setOrdinalAxisValues(module, axisname, axis); break;
-            }
-        }
-
-        function scaleAxis(module, objects, axisname) {
-            /*jshint maxcomplexity:7 */
-            if (octopeerHelper.getSafeModuleValue(module, axisname + "AxisScale")() === "fit") {
-                var axis = octopeerHelper.getSafeModuleValue(module, axisname + "AxisFitFunction")(objects);
-                setAxisValues(module, axisname, octopeerHelper.getScaleType(axis.scale()), axis);
-            }
-        }
-
-        function scaleAxes(module, objects) {
-            if (octopeerHelper.getSafeModuleValue(module, "xAxis")) {
-                scaleAxis(module, objects, "x");
-            }
-            if (octopeerHelper.getSafeModuleValue(module, "yAxis")) {
-                scaleAxis(module, objects, "y");
-            }
-            if (octopeerHelper.getSafeModuleValue(module, "yRightAxis")) {
-                scaleAxis(module, objects, "yRight");
-            }
-        }
 
         function performDataRequests(data, module, callback) {
             var promises = [];
@@ -218,7 +123,7 @@ define(['modules/moduleList'], function (dynModules) {
                 svg = svgCreator.createSVG(module);
             }
             svg.append('g')
-                .attr("class", "content");
+                .attr("class","content");
             module.svg = svg.node();
             $(module.svg).appendTo(outerdiv);
             drawLegend(module);
@@ -226,13 +131,13 @@ define(['modules/moduleList'], function (dynModules) {
             if (module.data) {
                 performDataRequests(module.data, module, function (objects) {
                     $(module.body(objects).node()).appendTo($(module.svg).find('g.content'));
-                    scaleAxes(module, objects);
+                    octopeerHelper.scaleAxes(module, objects);
                     outerdiv.find(".spinner").addClass("hidden");
                 });
             } else {
                 //Expects the modules to return a d3 encapsulated element
                 $(module.body().node()).appendTo($(module.svg).find('g.content'));
-                scaleAxes(module, null);
+                octopeerHelper.scaleAxes(module, null);
                 outerdiv.find(".spinner").addClass("hidden");
             }
         }
