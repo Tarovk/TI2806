@@ -24,6 +24,7 @@ define([// Array of non-visualisation modules
         'aggregators/graph4aggregator.js',
         'aggregators/dashboardAggregator.js',
         'aggregators/punchCardAggregator.js',
+        'aggregators/extendedPunchCardAggregator.js',
         'aggregators/ReviewsOnYourPrsAggregator.js',
         'aggregators/behaviourAggregator.js',
         'aggregators/timeSpentSizePrAggregator.js',
