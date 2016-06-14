@@ -7,7 +7,7 @@ define(function () {
     var data = {
         "sem_sessions": [
             {
-                "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z", "session": {
+                "start": "2016-06-13T12:08:30Z", "end": "2016-06-13T20:08:30Z", "session": {
                     "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": {
                         "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
                             "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
@@ -16,7 +16,7 @@ define(function () {
                 }
             },
             {
-                "start": "2016-06-05T12:08:30Z", "end": "2016-06-05T20:08:30Z", "session": {
+                "start": "2016-06-14T12:08:30Z", "end": "2016-06-14T20:08:30Z", "session": {
                     "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 2, "pull_request": {
                         "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
                             "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
@@ -115,7 +115,20 @@ define(function () {
             "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
             "required": true
         }],
-        body: function (res) { 
+        body: function (res) {
+
+            function getSessionsOfDay(nrDaysAgo) {
+                var res = [];
+                var name = timeHelper.getNameOfDaysAgo(nrDaysAgo);
+                for (var i = 0; i < data.sem_sessions.length; i++) {
+                    var item = data.sem_sessions[i];
+                    var startDate = item.start;
+                    if (timeHelper.getDayOfTimestamp(new Date(startDate)) === name) {
+                        res.push(item);
+                    }
+                }
+                return res;
+            }
 
             function getPrNumbers(array) {
                 var numbers = [];
@@ -164,6 +177,8 @@ define(function () {
             }
 
             function getPrNumber(pr) {
+                console.log("pr: ")
+                console.log(pr)
                 return pr.session.pull_request.pull_request_number;
             }
 
@@ -327,22 +342,6 @@ define(function () {
             .style("fill", function (d) { return color(getColor(d)); });
             //.style("fill", function (d) { return c10(getPrNumber(d)); });
 
-
-            //g.selectAll(".same")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
-            //.attr("r", RADIUS_DEFAULT)
-            //.attr("class", "circle-start")
-            //.style("fill", function (d, i) { return c10(i); });
-
-            //g.selectAll(".same")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.end)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.end.getDay())); })
-            //.attr("r", RADIUS_DEFAULT)
-            //.attr("class", "circle-end");
-
             // draw full lines on the same day
             g.selectAll(".same")
             .append("line")
@@ -359,12 +358,6 @@ define(function () {
             .attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
             .attr("r", RADIUS_DEFAULT)
             .attr("class", "circle-start");
-
-            //g.selectAll(".diff")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.end)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.end.getDay())); })
-            //.attr("r", RADIUS_DEFAULT);
 
             // draw lines for code review up to midnight
             g.selectAll(".diff")
@@ -406,31 +399,52 @@ define(function () {
             console.log(d3.selectAll(".clickable"));
 
             d3.selectAll(".clickable")
-            .on("click", function (d) { console.log(d); })
+            .on("click", function (d) { drawDay(d); })
             .style("cursor", "pointer");
 
             g.selectAll(".clickable")
-            .on("click", function (d) { console.log(d); })
+            .on("click", function (d) { drawDay(d); })
             .style("cursor", "pointer");
 
             var module = this;
-            function drawDay(nrpr) {
+            function drawDay(daysAgo) {
+                console.log("check");
+                var sessions = getSessionsOfDay(daysAgo);
+                console.log(sessions);
                 var y = h;
-                for (var i = 0; i < nrpr; ++i) {
-                    y += 20;
-                    g.insert('rect')
-                        .attr("style", "display: block; fill: rgb(77, 136, 255);")
-                        .attr('height', 10)
-                        .attr('width', 500)
-                        .attr('x', margin.left)
-                        .attr('y', y);
-                    y += 20;
-                }
-                var vbHeight = y + margin.top;
+                g.selectAll('day')
+                .data(sessions)
+                .enter()
+                .append('line')
+                .attr('x1', xScale(0))
+                .attr('x2', function (d) {
+                    return xScale(getHoursAndMinutes(new Date(d.end)) - getHoursAndMinutes(new Date(d.start)));
+                })
+                .attr('y1', y + 10)
+                .attr('y2', y + 10)
+                .style("stroke", function (d) {
+                    var id = d.session.pull_request.pull_request_number;
+                    return color(prNumbers.indexOf(id));
+                })
+                .attr('stroke-width', 20)
+                .attr('stroke', 'black');
+                console.log("drawn")
+
+                //for (var i = 0; i < nrpr; ++i) {
+                //    y += 20;
+                //    g.insert('rect')
+                //        .attr("style", "display: block; fill: rgb(77, 136, 255);")
+                //        .attr('height', 10)
+                //        .attr('width', 500)
+                //        .attr('x', margin.left)
+                //        .attr('y', y);
+                //    y += 20;
+                //}
+                var vbHeight = y + 20 * sessions.length + margin.top;
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + vbHeight);
             }
 
-            drawDay(3);
+            //drawDay(3);
             return g;
         }
     };
