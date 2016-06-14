@@ -33,11 +33,9 @@ define(function () {
     // look at code
     // look at commits tab
 
-
-
     var semdata = [
                         {
-            "conversation": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
+            "view_conversation": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "write_comment": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "write_inline_comment": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "view_code": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
@@ -191,20 +189,13 @@ define(function () {
             }
 
             function getColor(session) {
-                console.log(session);
                 var id = getPrNumber(session.origin);
-                console.log(id);
-                console.log(prNumbers.indexOf(id));
                 return color(prNumbers.indexOf(id));
             }
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
 
-            console.log(data.sem_sessions);
-
             var prNumbers = getPrNumbers(data.sem_sessions)
-            console.log(prNumbers);
-            console.log(prNumbers.length);
 
             var color = d3.scale.category10();
 
@@ -215,13 +206,6 @@ define(function () {
             var transformedData = data.sem_sessions.map(function (item) {
                 return { start: new Date(item.start), end: new Date(item.end), origin: item };
             });
-
-            console.log(color);
-
-            for (var i = 0; i < 10; i++) {
-                console.log(color(i));
-
-            }
 
             var prs = [];
             for (var ii = 0; ii < transformedData.length; ii++) {
@@ -352,8 +336,6 @@ define(function () {
 
             g.selectAll("line")
             .style("stroke", function (d) {
-                console.log(d);
-                console.log(getColor(d));
                 return getColor(d);
             });
 
