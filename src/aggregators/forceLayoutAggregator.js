@@ -72,7 +72,8 @@ function ForceLayoutAggregator(userName, platform) {
                     "name": pr.prInfo.title,
                     "size": Math.max(Math.min(pr.totalDuration, 30), 5),
                     "status": stateOf(pr.prInfo),
-                    "repo": pr.repository.name
+                    "repo": pr.repository.name,
+                    "prurl": pr.prInfo.url
                 };
                 
             }));
