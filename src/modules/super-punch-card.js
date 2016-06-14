@@ -376,7 +376,6 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + vbHeight);
             }
 
-            var week = new Week();
             function Week() {
                 var weekday = new Array(7);
                 weekday[0] = "Sunday";
@@ -410,7 +409,8 @@ define(function () {
                 this.getDayOfTimestamp = function (timestamp) {
                     for (var i = 0; i < weekday.length; ++i) {
                         var timespan = this.getTimespanOfDay(weekday[i]);
-                        if (timespan.start.getTime() <= timestamp.getTime() && timestamp.getTime() <= timespan.end.getTime()) {
+                        if (timespan.start.getTime() <= timestamp.getTime()
+                            && timestamp.getTime() <= timespan.end.getTime()) {
                             return weekday[i];
                         }
                     }
@@ -424,11 +424,11 @@ define(function () {
                         day += 7;
                     }
                     return weekday[day];
-                }
+                };
 
                 this.getTimespanOfDaysAgo = function (dif) {
                     return this.getTimespanOfDay(this.getNameOfDaysAgo(dif));
-                }
+                };
             }
 
             drawDay(3);
