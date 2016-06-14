@@ -1,4 +1,4 @@
-/* globals define, PunchCardAggregator, globalUserName*/
+/* globals define, PunchCardAggregator, globalUserName, timeHelper */
 /* jshint unused : vars*/
 /* jshint maxstatements: 50*/
 
@@ -414,7 +414,7 @@ define(function () {
             .style("cursor", "pointer");
 
             var module = this;
-            function drawDay(nrpr) {
+            /*function drawDay(nrpr) {
                 var y = h;
                 for (var i = 0; i < nrpr; ++i) {
                     y += 20;
@@ -426,11 +426,47 @@ define(function () {
                         .attr('y', y);
                     y += 20;
                 }
-                var vbHeight = y + margin.top;
-                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + vbHeight);
+                y += margin.top;
+                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
+            }*/
+            function drawDay(day) {
+                var timespan = timeHelper.getTimespanOfDay(day);
+                var PRs = [
+                    { 'id': 0, 'start': new Date(), 'end': new Date(), 'url': 'https://google.nl' }
+                ]
+                var selectedPRs = [];
+                for (var i = 0; i < PRs.length; ++i) {
+                    if (timeHelper.getDayOfTimestamp(PRs[i].start) == day || timeHelper.getDayOfTimestamp(PRs[i].end) == day) {
+                        selectedPRs.push(PRs[i]);
+                    }
+                }
+
+                var y = h;
+                for (var i = 0; i < selectedPRs.length; ++i) {
+                    y += 20;
+                    g.data([selectedPRs[i]]).append('rect')
+                        .attr('style', 'fill: rgba(77, 136, 255, 1.00);')
+                        .attr('height', 10)
+                        .attr('width', 500)
+                        .attr('x', margin.left)
+                        .attr('y', y)
+                        .on('click', function (d) {
+                            window.open(d.url);
+                        })
+                        .on('mousehover', function () {
+                            d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
+                        })
+                        .on('mouseout', function () {
+                            d3.select(this).style('fill', 'rgba(77, 136, 255, 1.00)');
+                        })
+                        .style('cursor', 'pointer');
+                    y += 20;
+                }
+                y += margin.top;
+                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 
-            drawDay(3);
+            drawDay('Tuesday');
             return g;
         }
     };
