@@ -67,7 +67,7 @@ function DashboardAggregator(userName) {
             .then(DataAggregatorHelperFunctions.pullRequestsFromStartAndEndEvents)
             .then(prResolver.resolvePullRequests)
             .then(checkIfClosedByUser)
-            .then(DataAggregatorHelperFunctions.orderEvents)
+            .then(DataAggregatorHelperFunctions.orderEventsInPullRequests)
             .then(DataAggregatorHelperFunctions.sumDurationPullRequests)
             .then(convertToGraphObject)
             .then(fulfill);
