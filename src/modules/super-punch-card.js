@@ -5,32 +5,43 @@
 define(function () {
 
     var data = {
-        "sem-sessions" : [
-            { "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z", "session": { 
-                "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": { 
-                    "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": { 
-                        "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub" 
-                        }, "pull_request_number": 7 
-                    }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" } 
-                } 
+        "sem_sessions": [
+            {
+                "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z", "session": {
+                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": {
+                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
+                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
+                        }, "pull_request_number": 7
+                    }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" }
+                }
+            },
+            {
+                "start": "2016-06-05T12:08:30Z", "end": "2016-06-05T20:08:30Z", "session": {
+                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 2, "pull_request": {
+                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
+                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
+                        }, "pull_request_number": 9
+                    }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" }
+                }
             },
         ]
     };
 
     var semdata = {
-        "sem-events" : [
+        "sem_events": [
             {
-                "events" : [
-                    {"event-id" : 1, "eventType" : 101, "elementType" : 104, "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z", "session": { 
-                        "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": { 
-                            "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": { 
-                                "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub" 
-                                }, "pull_request_number": 7 
-                            }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" } 
+                "events": [
+                    {
+                        "event-id": 1, "eventType": 101, "elementType": 104, "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z", "session": {
+                            "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": {
+                                "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
+                                    "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
+                                }, "pull_request_number": 7
+                            }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" }
                         }
                     }
                 ]
-            } 
+            }
         ]
     }
 
@@ -47,8 +58,8 @@ define(function () {
     var RADIUS_DEFAULT = 5;
     var RADIUS_HOVER = 7;
 
-    var STROKE_WIDTH_DEFAULT = 5;
-    var STROKE_WIDTH_HOVER = 10;
+    var STROKE_WIDTH_DEFAULT = 10;
+    var STROKE_WIDTH_HOVER = 15;
 
     function isInt(num) {
         return num % 1 === 0;
@@ -106,14 +117,16 @@ define(function () {
             "required": true
         }],
         body: function (res) {
-            var c10 = d3.scale.category10();
+
+            console.log(data);
 
             function getPrNumbers(array) {
                 var numbers = [];
                 for (var i = 0; i < array.length; i++) {
+                    var pr = array[i];
                     numbers.push(getPrNumber(pr));
                 }
-                console.log(numbers);
+                return Array.from(new Set(numbers));
             }
 
             // given a day gets the amount of days that have passed since then.
@@ -176,11 +189,38 @@ define(function () {
                     padZero(date.getMinutes());
             }
 
+            function getColor(session) {
+                console.log(session);
+                var id = getPrNumber(session.origin);
+                console.log(id);
+                console.log(prNumbers.indexOf(id));
+                return color(prNumbers.indexOf(id));
+            }
+
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
-            var transformedData = res[0].map(function (item) {
+
+            console.log(data.sem_sessions);
+
+            var prNumbers = getPrNumbers(data.sem_sessions)
+            console.log(prNumbers);
+            console.log(prNumbers.length);
+
+            var color = d3.scale.category10();
+
+            if (prNumbers.length > 10) {
+                color = d3.scale.category20();
+            }
+
+            var transformedData = data.sem_sessions.map(function (item) {
                 return { start: new Date(item.start), end: new Date(item.end), origin: item };
             });
 
+            console.log(color);
+
+            for (var i = 0; i < 10; i++) {
+                console.log(color(i));
+
+            }
 
             var prs = [];
             for (var ii = 0; ii < transformedData.length; ii++) {
@@ -230,17 +270,17 @@ define(function () {
             .on("click", function (d) {
                 window.open(getPrInfo(d.origin).url);
             })
-            .style("fill", function (d) { return "green"; });
+            .style("fill", function (d) { return color(getColor(d)); });
             //.style("fill", function (d) { return c10(getPrNumber(d)); });
 
 
-            g.selectAll(".same")
-            .append("circle")
-            .attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
-            .attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
-            .attr("r", RADIUS_DEFAULT)
-            .attr("class", "circle-start")
-            .style("fill", function (d, i) { return c10(i); });
+            //g.selectAll(".same")
+            //.append("circle")
+            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
+            //.attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
+            //.attr("r", RADIUS_DEFAULT)
+            //.attr("class", "circle-start")
+            //.style("fill", function (d, i) { return c10(i); });
 
             //g.selectAll(".same")
             //.append("circle")
@@ -288,8 +328,6 @@ define(function () {
             .attr("y2", function (d) { return yScale(transformDay(d.end.getDay())); })
             .attr("stroke-width", STROKE_WIDTH_DEFAULT);
 
-
-
             g.selectAll("g")
             //.style("fill", "green")
             .style("stroke", "black")
@@ -307,7 +345,9 @@ define(function () {
 
             g.selectAll("line")
             .style("stroke", function (d) {
-                return "green";
+                console.log(d);
+                console.log(getColor(d));
+                return getColor(d);
             });
 
             return g;
