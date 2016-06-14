@@ -2,7 +2,6 @@
 define([// Array of non-visualisation modules
         // These must be loaded in before the visualisation modules
         'settings',
-        'cache',
         'apicallers',
         'pullrequestTransformer',
         'OctopeerHelper',

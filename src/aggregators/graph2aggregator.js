@@ -49,9 +49,9 @@ function Graph2Aggregator(userName, amountOfPr) {
             .getSessionEventsFromUser(userName)
             .then(DataAggregatorHelperFunctions.pullRequestsFromStartAndEndEvents)
             .then(prResolver.resolvePullRequests)
-            .then(DataAggregatorHelperFunctions.orderEvents)
+            .then(DataAggregatorHelperFunctions.orderEventsInPullRequests)
             .then(DataAggregatorHelperFunctions.sumDurationPullRequests)
-            .then(DataAggregatorHelperFunctions.orderEvents)
+            .then(DataAggregatorHelperFunctions.orderEventsInPullRequests)
             .then(graphObject)
             .then(fulfill);
     });
