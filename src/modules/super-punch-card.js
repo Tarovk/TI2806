@@ -1,9 +1,9 @@
-/* globals define, PunchCardAggregator, globalUserName, timeHelper */
+/* globals define, PunchCardAggregator, globalUserName*/
 /* jshint unused : vars*/
-/* jshint maxstatements: 35*/
+/* jshint maxstatements: 50*/
 
 define(function () {
-
+    /*jshint ignore:start*/
     var data = {
         "sem_sessions": [
             {
@@ -43,7 +43,7 @@ define(function () {
             "session_id": 1
                         }
                   ];
-
+    /*jshint ignore:end*/
     var margin = { left: 50, right: 50, top: 10, bottom: 50 };
     var w = 1440;
     var h = 350;
@@ -115,9 +115,7 @@ define(function () {
             "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
             "required": true
         }],
-        body: function (res) {
-
-            console.log(data);
+        body: function (res) { 
 
             function getPrNumbers(array) {
                 var numbers = [];
@@ -195,7 +193,7 @@ define(function () {
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
 
-            var prNumbers = getPrNumbers(data.sem_sessions)
+            var prNumbers = getPrNumbers(data.sem_sessions); /*jshint ignore:line*/
 
             var color = d3.scale.category10();
 
@@ -203,7 +201,7 @@ define(function () {
                 color = d3.scale.category20();
             }
 
-            var transformedData = data.sem_sessions.map(function (item) {
+            var transformedData = data.sem_sessions.map(function (item) {  /*jshint ignore:line*/
                 return { start: new Date(item.start), end: new Date(item.end), origin: item };
             });
 
@@ -252,7 +250,7 @@ define(function () {
                     var selection = d3.select('#super-punch-card')
                     .select('.yAxis')
                     .selectAll('text')[0][i];
-                    setTextUnHoverState(d3.select(selection))
+                    setTextUnHoverState(d3.select(selection));
                     selection = d3.select('#super-punch-card').selectAll("rect")[0][i];
                     setRectUnHoverState(d3.select(selection));
                 });
