@@ -16,7 +16,9 @@ define(function () {
 
     var pieArc = d3.svg.arc()
         .outerRadius(170 - 10)
-        .innerRadius(0);
+        .innerRadius(95)
+        .startAngle( function ( d ) { return isNaN( d.startAngle ) ? 0 : d.startAngle; })
+        .endAngle( function ( d ) { return isNaN( d.endAngle ) ? 0 : d.endAngle; });
 
     function createCard(parent, id) {
         return parent.append('div')
@@ -176,12 +178,6 @@ define(function () {
                     return "#61B361";
                 }
             });
-
-        g.append('circle')
-            .attr('cx','0')
-            .attr('cy','0')
-            .attr('r','90')
-            .style('fill','white');
 
         addPieChartText(g, data, piedata);
         addPieChartLines(g, data, piearcdata);
