@@ -358,17 +358,23 @@ define(function () {
             });
 
             var module = this;
-            function drawDay() {
-                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 550');
-                g.insert('rect')
-                    .attr("style", "display: block; fill: rgb(77, 136, 255);")
-                    .attr('height', 10)
-                    .attr('width', 500)
-                    .attr('x', margin.left)
-                    .attr('y', h + margin.bottom);
+            function drawDay(nrpr) {
+                var y = h;
+                for (var i = 0; i < nrpr; ++i) {
+                    y += 20;
+                    g.insert('rect')
+                        .attr("style", "display: block; fill: rgb(77, 136, 255);")
+                        .attr('height', 10)
+                        .attr('width', 500)
+                        .attr('x', margin.left)
+                        .attr('y', y);
+                    y += 20;
+                }
+                var vbHeight = y + margin.top;
+                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + vbHeight);
             }
 
-            drawDay();
+            drawDay(3);
             return g;
         }
     };
