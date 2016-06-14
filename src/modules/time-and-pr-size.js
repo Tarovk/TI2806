@@ -1,10 +1,11 @@
 /* globals define, octopeerHelper, TimeSpentSizePrAggregator, globalUserName */
-/* jshint unused : vars*/
+/* jshint unused: vars*/
+/* jshint esnext: true */
 
 define(function () {
     return {
         name: "time-and-pr-size",
-        title: "Time spent + size pr",
+        title: "Pull request review times and sizes",
         parentSelector: "#personal-modules",
         yRightAxis: true,
         xAxisLabel: "Pull request",
@@ -76,7 +77,6 @@ define(function () {
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
             var tip = d3.tip()
-                .attr('class', 'd3-tip')
                 .direction("e")
                 .offset([0, 5])
                 .html(function (d) {
@@ -86,6 +86,7 @@ define(function () {
 
             g.selectAll("rect").data(timeData).enter()
                 .append("rect")
+                .attr("class", "time-and-pr-size-time-spent")
                 .attr("x", function (d) { return xTimeScale(d.x) + 9; })
                 .attr("y", h - padBottom)
                 .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
@@ -109,6 +110,7 @@ define(function () {
                 .concat([{ "x": sizeData.length - 0.5, "y": 0 }]);
 
             g.append("path")
+                .attr("id", "time-and-pr-size-lines-changed")
                 .attr("d",
                     octopeerHelper.line(
                         tempSizeData, "cardinal-open", function (x) { return xSizeScale(x + 0.5); }, ySizeScale
@@ -121,6 +123,7 @@ define(function () {
 
             g.selectAll("circle").data(sizeData).enter()
                 .append("circle")
+                .attr("class", "time-and-pr-size-lines-changed-circle")
                 .attr("cx", function (d) { return xSizeScale(d.x + 0.5); })
                 .attr("cy", function (d) { return ySizeScale(d.y); })
                 .attr("r", DATA_POINT_RADIUS_DEFAULT)
@@ -137,6 +140,52 @@ define(function () {
                     d3.select(this).attr("r", DATA_POINT_RADIUS_DEFAULT);
                     tip.hide();
                 });
+
+            var optns = [
+                { 'val': 'both', 'text': 'show both' },
+                { 'val': 'lineschanged', 'text': 'only show lines changed' },
+                { 'val': 'timespent', 'text': 'only show time spent' }
+            ];
+
+            function showLinesChanged(show = true) {
+                var opacity = show ? 1 : 0;
+                d3.select("#time-and-pr-size-lines-changed").transition().style("opacity", opacity);
+                d3.selectAll(".time-and-pr-size-lines-changed-circle").transition().style("opacity", opacity);
+            }
+
+            function showTimeSpent(show = true) {
+                var opacity = show ? 1 : 0;
+                d3.selectAll(".time-and-pr-size-time-spent").transition().style("opacity", opacity);
+            }
+
+            d3.select('#' + this.name).select('.card-content').insert('div', ':first-child')
+                .style({ 'display': 'inline-block', 'position': 'relative', 'right': '0px', 'margin-right': '1em',
+                    'width': '150px', 'height': '30px', 'float': 'right', 'font-size': '0.8em' })
+                .insert('select')
+                .style({ 'display': 'inline-block', 'margin-left': '10px', 'right': '0px', 'width': '150px',
+                    'height': '30px' })
+                .on('change', function () {
+                    switch(this.value) {
+                        case 'lineschanged':
+                            showLinesChanged(true);
+                            showTimeSpent(false);
+
+                            break;
+                        case 'timespent':
+                            showTimeSpent(true);
+                            showLinesChanged(false);
+
+                            break;
+                        default:
+                            showTimeSpent(true);
+                            showLinesChanged(true);
+                    }
+                })
+                .selectAll('option').data(optns).enter()
+                .append('option')
+                .attr('value', function (d) { return d.val; })
+                .text(function (d) { return d.text; });
+
             return g;
         }
     };
