@@ -58,6 +58,10 @@ define(function () {
                 "text":"Total average comment sizes"
             }
         ],
+        data: [{
+            "serviceCall": function () { return new CommentSizeAggregator(globalUserName, globalPlatform); },
+            "required": true
+        }],
         body: function () {
             var w = 720,
                 h = 350,

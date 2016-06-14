@@ -127,7 +127,7 @@ function OctopeerService() {
         
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (sessions) {
-                fulfill(sessions.results);
+                getAllPages(sessions).then(fulfill);
             }, function (error) {
                 reject(error);
             });
@@ -221,10 +221,35 @@ function OctopeerService() {
     };
     
     this.getCountOfEndpoint = function (endPoint, parameters) {
-         var url = api.urlBuilder(endPoint, parameters);
+        var url = api.urlBuilder(endPoint, parameters);
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (items) {
                 fulfill(items.count);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
+    
+    this.getKeyStrokesFromSession = function (sessionId) {
+        var url = api.urlBuilder(api.endpoints.keyStrokeEvents, {
+            "session_id": sessionId
+        });
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (strokes) {
+                getAllPages(strokes).then(fulfill);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
+    
+    this.getKeyStrokesFromUser = function (userName) {
+        var url = api.urlBuilder(api.endpoints.keyStrokeEvents + '/' +
+                                userName);
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (strokes) {
+                getAllPages(strokes).then(fulfill);
             }, function (error) {
                 reject(error);
             });

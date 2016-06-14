@@ -29,6 +29,7 @@ define([// Array of non-visualisation modules
         'aggregators/ReviewsOnYourPrsAggregator',
         'aggregators/behaviourAggregator',
         'aggregators/timeSpentSizePrAggregator',
+       	'aggregators/commentSizeAggregator',
         'example-services',
         'globals'
         ], function () {
