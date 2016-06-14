@@ -10,7 +10,7 @@ define(function () {
         }
     );
     return {
-        name: 'graph1',
+        name: 'no-of-pr-per-comment-sizes',
         title: 'Number of pull-request per number of comments',
         parentSelector: '#project-modules',
         xAxisLabel: "Number of comments",

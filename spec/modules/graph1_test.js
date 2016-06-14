@@ -1,4 +1,4 @@
-define(["src/modules/graph1"], function (module) {
+define(["src/modules/no-of-pr-per-comment-sizes"], function (module) {
 	var data = [
         {"x":0,"y":8},
         {"x":1,"y":2},

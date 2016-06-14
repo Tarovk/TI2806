@@ -54,8 +54,8 @@ define([// Array of non-visualisation modules
         //PROJECT
     	'modules/pr-size',
     	'modules/average-comment-size-total',
-        'modules/graph1.js',
-        'modules/graph2.js',
+        'modules/no-of-pr-per-comment-sizes.js',
+        'modules/session-duration-per-pr.js',
 
         //DEVELOPMENT
     	]

@@ -69,7 +69,7 @@ define(function () {
     }
 
     return {
-        name: 'graph2',
+        name: 'session-duration-per-pr',
         title: 'Session durations per pull-request',
         xAxisLabel: 'Pull-requests',
         yAxisLabel: 'Sessions and session duration',
