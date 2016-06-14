@@ -45,7 +45,8 @@ var DataAggregatorHelperFunctions = {
             sessionEndId,
             i,
             sessionStartDate,
-            sessionEndDate;
+            sessionEndDate,
+            savedEndSessions = [];
         pullRequests.forEach(function (pr) {
             pr.totalDuration = 0;
             pr.sessionStarts.forEach(function (se) {
@@ -56,7 +57,7 @@ var DataAggregatorHelperFunctions = {
                     sessionEndDate = new Date(endEvent.created_at);
                     sessionEndId = endEvent.session.id;
                     if (sessionStartId === sessionEndId) {
-                        pr.sessionEnds.splice(i, 1);
+                        savedEndSessions.push(pr.sessionEnds.splice(i, 1)[0]);
                         if (sessionEndDate > sessionStartDate) {
                             pr.totalDuration += sessionEndDate - sessionStartDate;
                         }
@@ -64,6 +65,7 @@ var DataAggregatorHelperFunctions = {
                     }
                 }
             });
+            pr.sessionEnds = pr.sessionEnds.concat(savedEndSessions);
             pr.totalDuration = Math.ceil(pr.totalDuration / 1000 / 60);
         });
         return pullRequests;

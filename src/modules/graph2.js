@@ -88,7 +88,6 @@ define(function () {
             return d3.svg.axis().scale(y);
         },
         body: function (res) {
-            console.log(res);
             updateData(res[0]);
 
             // create canvas
