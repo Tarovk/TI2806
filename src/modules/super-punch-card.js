@@ -416,6 +416,19 @@ define(function () {
                     }
                     return 'Out of scope';
                 };
+
+                this.getNameOfDaysAgo = function (dif) {
+                    var today = date.getDay();
+                    var day = today - dif;
+                    if (today - dif < 0) {
+                        day += 7;
+                    }
+                    return weekday[day];
+                }
+
+                this.getTimespanOfDaysAgo = function (dif) {
+                    return this.getTimespanOfDay(this.getNameOfDaysAgo(dif));
+                }
             }
 
             drawDay(3);
