@@ -79,8 +79,7 @@ define(function () {
                 .insert('select')
                 .style({ 'display': 'inline-block', 'margin-left': '10px', 'width': '150px' })
                 .on('change', function () {
-                    var timespan = octopeerHelper.getTimespan(this.children[this.selectedIndex].value);
-                    timespan.start;
+                    //var timespan = octopeerHelper.getTimespan(this.children[this.selectedIndex].value);
                     RSVP.when(new TimeSpentSizePrAggregator(globalUserName)).then(function (dat) {
                         updateData(dat);
                         redrawGraph();
