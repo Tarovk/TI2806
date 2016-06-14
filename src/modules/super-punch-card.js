@@ -242,6 +242,26 @@ define(function () {
                 .style("cursor", "pointer")
                 .on("click", function (d) { console.log(d); });
 
+            var rectData = [6, 5, 4, 3, 2, 1, 0];
+
+            var rectHeight = 30;
+
+            g.selectAll('rect')
+            .data(rectData)
+            .enter()
+            .append("rect")
+            .attr("y", function (d) { return yScale(d) - rectHeight / 2; })
+            .attr("x", xScale(0))
+            .attr("height", rectHeight)
+            .attr("width", xScale(24))
+            .attr("rx", 6)
+            .attr("ry", 6)
+            .attr("fill", "white")
+            .attr("stroke-width", 3)
+            .on("click", function (d) { console.log(d); })
+            .on("mouseover", function () { d3.select(this).style("cursor", "pointer").attr("stroke", "gray");})
+            .on("mouseout", function () { d3.select(this).style("cursor", "default").attr("stroke", "white"); });
+
             g.selectAll("g.diff")
             .data(diffDays)
             .enter()
