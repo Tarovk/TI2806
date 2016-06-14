@@ -1,3 +1,5 @@
+/* exported TimeHelper */
+
 function TimeHelper() {
     var weekday = new Array(7);
     weekday[0] = "Sunday";
@@ -31,8 +33,8 @@ function TimeHelper() {
     this.getDayOfTimestamp = function (timestamp) {
         for (var i = 0; i < weekday.length; ++i) {
             var timespan = this.getTimespanOfDay(weekday[i]);
-            if (timespan.start.getTime() <= timestamp.getTime()
-                && timestamp.getTime() <= timespan.end.getTime()) {
+            if (timespan.start.getTime() <= timestamp.getTime() &&
+                timestamp.getTime() <= timespan.end.getTime()) {
                 return weekday[i];
             }
         }
