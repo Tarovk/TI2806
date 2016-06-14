@@ -22,7 +22,7 @@ function TimeHelper() {
     this.getTimespanOfDay = function (dayName) {
         var day = weekday.indexOf(dayName);
         var dif = date.getDay() - day;
-        if (day > date.getDay()) {
+        if (dif < 0) {
             dif += 7;
         }
         var start = new Date(date.getTime() - getMSeconds() - dif * 86400000);
@@ -44,7 +44,7 @@ function TimeHelper() {
     this.getNameOfDaysAgo = function (dif) {
         var today = date.getDay();
         var day = today - dif;
-        if (today - dif < 0) {
+        if (day < 0) {
             day += 7;
         }
         return weekday[day];
