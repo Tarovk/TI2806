@@ -8,12 +8,13 @@ define(function () {
         comments;
 
     var pieLayout = d3.layout.pie()
-        .sort(null)
         .value(function(d) { return d; });
 
     var pieArc = d3.svg.arc()
         .outerRadius(170 - 10)
-        .innerRadius(0);
+        .innerRadius(95)
+        .startAngle( function ( d ) { return isNaN( d.startAngle ) ? 0 : d.startAngle; })
+        .endAngle( function ( d ) { return isNaN( d.endAngle ) ? 0 : d.endAngle; });
 
     function createCard(parent, id) {
         return parent.append('div')
@@ -79,7 +80,11 @@ define(function () {
     }
 
     function createPieData(data) { 
-        return [data.clicks.merge, data.clicks.close];
+        if(!data.clicks || data.clicks.merge+data.clicks.close===0) {
+            return [0,0,1];
+        } else {
+            return [data.clicks.merge, data.clicks.close];
+        }
     }
 
     function addPieChartText(g, data, piedata) {
@@ -89,14 +94,14 @@ define(function () {
             .style('font-size','5em')
             .style('font-weight','700')
             .style('fill','#484848')
-            .text(data.clicks.total);
+            .text(piedata[0]+piedata[1]);
 
         g.append('text')
             .attr('y','35')
             .style('text-anchor','middle')
             .style('font-size','1.6em')
             .style('fill','#484848')
-            .text("Total clicks");
+            .text("Decisive clicks");
 
         g.append('text')
             .attr('x','-220')
@@ -150,22 +155,19 @@ define(function () {
                 d3.select(this)
                     .style("transform","scale(1)");
             });
-
+console.log(piearcdata);
+console.log(pieArc);
         arcs.append("path")
             .attr("d", pieArc)
             .style("fill", function(d,i) { 
                 if(i === 0) {
                     return "rgb(228, 74, 74)"; 
-                } else {
+                } else if (i === 1) {
                     return "#61B361";
+                } else {
+                    return 'lightgray';
                 }
             });
-
-        g.append('circle')
-            .attr('cx','0')
-            .attr('cy','0')
-            .attr('r','90')
-            .style('fill','white');
 
         addPieChartText(g, data, piedata);
         return g;
