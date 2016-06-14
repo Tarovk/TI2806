@@ -56,7 +56,6 @@ define(function () {
                 return { x: ii, y: d[i + 1] };
             });
         });
-        console.log(maxY);
         stacked = d3.layout.stack()(remapped);
         x = d3.scale.ordinal()
             .domain(stacked[0].map(function (d) { return d.x; }))
@@ -80,11 +79,9 @@ define(function () {
             'required': true
         }],
         xAxisFitFunction: function () {
-            console.log("x1");
             return d3.svg.axis().scale(x);
         },
         yAxisFitFunction: function () {
-            console.log("y1");
             return d3.svg.axis().scale(y);
         },
         body: function (res) {

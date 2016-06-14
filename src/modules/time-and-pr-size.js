@@ -89,8 +89,7 @@ define(function () {
                 .attr("x", function (d) { return xTimeScale(d.x) + 9; })
                 .attr("y", h - padBottom)
                 .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
-                .attr("height", function (d) { 
-                console.log(d);
+                .attr("height", function (d) {
                 return yTimeScale(d.y); })
                 .attr("style", "fill:rgb(77, 136, 255);")
                 .on("click", function (d) {
