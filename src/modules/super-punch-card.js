@@ -350,6 +350,18 @@ define(function () {
                 return getColor(d);
             });
 
+            var module = this;
+            function drawDay() {
+                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 550');
+                g.insert('rect')
+                    .attr("style", "display: block; fill: rgb(77, 136, 255);")
+                    .attr('height', 10)
+                    .attr('width', 500)
+                    .attr('x', margin.left)
+                    .attr('y', h + margin.bottom);
+            }
+
+            drawDay();
             return g;
         }
     };
