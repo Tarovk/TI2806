@@ -251,6 +251,12 @@ define(function () {
 
             g.call(tip);
 
+            d3.select('#super-punch-card')
+                .select('.yAxis')
+                .selectAll('text')
+                .style("cursor", "pointer")
+                .on("click", function (d) { console.log(d); });
+
             g.selectAll("g.diff")
             .data(diffDays)
             .enter()
