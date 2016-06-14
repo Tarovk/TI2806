@@ -1,10 +1,11 @@
 /* globals define, octopeerHelper, TimeSpentSizePrAggregator, globalUserName */
-/* jshint unused : vars*/
+/* jshint unused: vars*/
+/* jshint esnext: true */
 
 define(function () {
     return {
         name: "time-and-pr-size",
-        title: "Time spent + size pr",
+        title: "Pull request review times and sizes",
         parentSelector: "#personal-modules",
         yRightAxis: true,
         xAxisLabel: "Pull request",
@@ -85,6 +86,7 @@ define(function () {
 
             g.selectAll("rect").data(timeData).enter()
                 .append("rect")
+                .attr("class", "time-and-pr-size-time-spent")
                 .attr("x", function (d) { return xTimeScale(d.x) + 9; })
                 .attr("y", h - padBottom)
                 .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
@@ -121,6 +123,7 @@ define(function () {
 
             g.selectAll("circle").data(sizeData).enter()
                 .append("circle")
+                .attr("class", "time-and-pr-size-lines-changed-circle")
                 .attr("cx", function (d) { return xSizeScale(d.x + 0.5); })
                 .attr("cy", function (d) { return ySizeScale(d.y); })
                 .attr("r", DATA_POINT_RADIUS_DEFAULT)
@@ -143,30 +146,39 @@ define(function () {
                 { 'val': 'lineschanged', 'text': 'only show lines changed' },
                 { 'val': 'timespent', 'text': 'only show time spent' }
             ];
-            var module = this;
+
+            function showLinesChanged(show = true) {
+                var opacity = show ? 1 : 0;
+                d3.select("#time-and-pr-size-lines-changed").transition().style("opacity", opacity);
+                d3.selectAll(".time-and-pr-size-lines-changed-circle").transition().style("opacity", opacity);
+            }
+
+            function showTimeSpent(show = true) {
+                var opacity = show ? 1 : 0;
+                d3.selectAll(".time-and-pr-size-time-spent").transition().style("opacity", opacity);
+            }
 
             d3.select('#' + this.name).select('.card-content').insert('div', ':first-child')
-                .style({ 'display': 'inline-block', 'position': 'relative', 'right': '0px', 'margin-right': '1em', 'width': '150px', 'height': '30px', 'float': 'right', 'font-size': '0.8em' })
+                .style({ 'display': 'inline-block', 'position': 'relative', 'right': '0px', 'margin-right': '1em',
+                    'width': '150px', 'height': '30px', 'float': 'right', 'font-size': '0.8em' })
                 .insert('select')
-                .style({ 'display': 'inline-block', 'margin-left': '10px', 'right': '0px', 'width': '150px', 'height': '30px' })
+                .style({ 'display': 'inline-block', 'margin-left': '10px', 'right': '0px', 'width': '150px',
+                    'height': '30px' })
                 .on('change', function () {
                     switch(this.value) {
                         case 'lineschanged':
-                            console.log("Only lines changed");
-                            var active   = d3.select("#time-and-pr-size-lines-changed").active ? false : true,
-                            newOpacity = active ? 0 : 1;
-                            // Hide or show the elements
-                            d3.select("#time-and-pr-size-lines-changed").style("opacity", newOpacity);
-                            d3.selectAll(".time-and-pr-size-lines-changed-tip").style("display", "none !absolute");
-                            //d3.select("#blueAxis").style("opacity", newOpacity);
-                            // Update whether or not the elements are active
-                            d3.select("#time-and-pr-size-lines-changed").active = active;
+                            showLinesChanged(true);
+                            showTimeSpent(false);
+
                             break;
                         case 'timespent':
-                            console.log("Only time spent");
+                            showTimeSpent(true);
+                            showLinesChanged(false);
+
                             break;
                         default:
-                            console.log("All");
+                            showTimeSpent(true);
+                            showLinesChanged(true);
                     }
                 })
                 .selectAll('option').data(optns).enter()
