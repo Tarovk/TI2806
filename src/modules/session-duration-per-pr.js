@@ -53,7 +53,11 @@ define(function () {
         }
         remapped = mapping.map(function (dat, i) {
             return matrix.map(function (d, ii) {
-                return { x: ii, y: d[i + 1] };
+                var yval = d[i + 1];
+                if(yval === undefined){
+                    yval = 0;
+                }
+                return { x: ii, y: yval };
             });
         });
         stacked = d3.layout.stack()(remapped);
@@ -103,8 +107,12 @@ define(function () {
             .data(function (d) { return d; })
             .enter().append('svg:rect')
             .attr('x', function (d) { return x(d.x); })
-            .attr('y', function (d) { return h - padBottom - y(d.y0) - y(d.y); })
-            .attr('height', function (d) { return y(d.y); })
+            .attr('y', function (d) { 
+                return h - padBottom - y(d.y0) - y(d.y); 
+            })
+            .attr('height', function (d) { 
+                return y(d.y); 
+            })
             .attr('width', 50);
 
             return g;

@@ -155,8 +155,6 @@ define(function () {
                 d3.select(this)
                     .style("transform","scale(1)");
             });
-console.log(piearcdata);
-console.log(pieArc);
         arcs.append("path")
             .attr("d", pieArc)
             .style("fill", function(d,i) { 
