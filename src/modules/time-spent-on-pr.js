@@ -1,4 +1,4 @@
-/* globals define, TimeSpentSizePrAggregator, globalUserName */
+/* globals define, TimeSpentSizePrAggregator, globalUserName, RSVP, octopeerHelper */
 /* jshint unused : vars*/
 
 define(function () {
@@ -80,6 +80,7 @@ define(function () {
                 .style({ 'display': 'inline-block', 'margin-left': '10px', 'width': '150px' })
                 .on('change', function () {
                     var timespan = octopeerHelper.getTimespan(this.children[this.selectedIndex].value);
+                    timespan.start;
                     RSVP.when(new TimeSpentSizePrAggregator(globalUserName)).then(function (dat) {
                         updateData(dat);
                         redrawGraph();
