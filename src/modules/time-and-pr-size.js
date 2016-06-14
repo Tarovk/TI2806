@@ -76,7 +76,6 @@ define(function () {
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
             var tip = d3.tip()
-                .attr('class', 'd3-tip')
                 .direction("e")
                 .offset([0, 5])
                 .html(function (d) {
@@ -109,6 +108,7 @@ define(function () {
                 .concat([{ "x": sizeData.length - 0.5, "y": 0 }]);
 
             g.append("path")
+                .attr("id", "time-and-pr-size-lines-changed")
                 .attr("d",
                     octopeerHelper.line(
                         tempSizeData, "cardinal-open", function (x) { return xSizeScale(x + 0.5); }, ySizeScale
@@ -137,6 +137,43 @@ define(function () {
                     d3.select(this).attr("r", DATA_POINT_RADIUS_DEFAULT);
                     tip.hide();
                 });
+
+            var optns = [
+                { 'val': 'both', 'text': 'show both' },
+                { 'val': 'lineschanged', 'text': 'only show lines changed' },
+                { 'val': 'timespent', 'text': 'only show time spent' }
+            ];
+            var module = this;
+
+            d3.select('#' + this.name).select('.card-content').insert('div', ':first-child')
+                .style({ 'display': 'inline-block', 'position': 'relative', 'right': '0px', 'margin-right': '1em', 'width': '150px', 'height': '30px', 'float': 'right', 'font-size': '0.8em' })
+                .insert('select')
+                .style({ 'display': 'inline-block', 'margin-left': '10px', 'right': '0px', 'width': '150px', 'height': '30px' })
+                .on('change', function () {
+                    switch(this.value) {
+                        case 'lineschanged':
+                            console.log("Only lines changed");
+                            var active   = d3.select("#time-and-pr-size-lines-changed").active ? false : true,
+                            newOpacity = active ? 0 : 1;
+                            // Hide or show the elements
+                            d3.select("#time-and-pr-size-lines-changed").style("opacity", newOpacity);
+                            d3.selectAll(".time-and-pr-size-lines-changed-tip").style("display", "none !absolute");
+                            //d3.select("#blueAxis").style("opacity", newOpacity);
+                            // Update whether or not the elements are active
+                            d3.select("#time-and-pr-size-lines-changed").active = active;
+                            break;
+                        case 'timespent':
+                            console.log("Only time spent");
+                            break;
+                        default:
+                            console.log("All");
+                    }
+                })
+                .selectAll('option').data(optns).enter()
+                .append('option')
+                .attr('value', function (d) { return d.val; })
+                .text(function (d) { return d.text; });
+
             return g;
         }
     };
