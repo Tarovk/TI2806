@@ -376,6 +376,48 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + vbHeight);
             }
 
+            var week = new Week();
+            function Week() {
+                var weekday = new Array(7);
+                weekday[0] = "Sunday";
+                weekday[1] = "Monday";
+                weekday[2] = "Tuesday";
+                weekday[3] = "Wednesday";
+                weekday[4] = "Thursday";
+                weekday[5] = "Friday";
+                weekday[6] = "Saturday";
+                var date = new Date();
+
+                function getMSeconds() {
+                    var hours = date.getHours() * 3600000;
+                    var minutes = date.getMinutes() * 60000;
+                    var seconds = date.getSeconds() * 1000;
+                    var mseconds = date.getMilliseconds();
+                    return hours + minutes + seconds + mseconds;
+                }
+
+                this.getTimespanOfDay = function (dayName) {
+                    var day = weekday.indexOf(dayName);
+                    var dif = date.getDay() - day;
+                    if (day > date.getDay()) {
+                        dif += 7;
+                    }
+                    var start = new Date(date.getTime() - getMSeconds() - dif * 86400000);
+                    var end = new Date(start.getTime() + 86400000);
+                    return { 'start': start, 'end': end };
+                };
+
+                this.getDayOfTimestamp = function (timestamp) {
+                    for (var i = 0; i < weekday.length; ++i) {
+                        var timespan = this.getTimespanOfDay(weekday[i]);
+                        if (timespan.start.getTime() <= timestamp.getTime() && timestamp.getTime() <= timespan.end.getTime()) {
+                            return weekday[i];
+                        }
+                    }
+                    return 'Out of scope';
+                };
+            }
+
             drawDay(3);
             return g;
         }
