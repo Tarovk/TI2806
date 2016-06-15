@@ -79,10 +79,10 @@ define(function () {
     var eventData = [{"viewData":[{"start":"2016-06-15T07:54:47.965Z","end":"2016-06-15T08:41:38.806Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"},{"viewData":[{"start":"2016-06-15T07:42:38.598Z","end":"2016-06-15T07:49:35.681Z","type":"view_conversation"},{"start":"2016-06-15T07:49:48.005Z","end":"2016-06-15T07:53:49.171Z","type":"view_conversation"},{"start":"2016-06-15T07:49:35.681Z","end":"2016-06-15T07:49:43.912Z","type":"view_code"},{"start":"2016-06-15T07:49:43.912Z","end":"2016-06-15T07:49:48.005Z","type":"view_commits"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T07:42:38.598Z"},{"viewData":[{"start":"2016-06-15T07:56:31.609Z","end":"2016-06-15T08:08:43.809Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T07:56:31.609Z"},{"viewData":[{"start":"2016-06-15T08:08:48.738Z","end":"2016-06-15T08:09:32.268Z","type":"view_conversation"},{"start":"2016-06-15T08:09:32.268Z","end":"2016-06-15T08:10:27.085Z","type":"view_code"}],"writeData":[{"start":"2016-06-15T08:09:42.373Z","end":"2016-06-15T08:09:48.235Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T08:08:48.738Z"},{"viewData":[{"start":"2016-06-15T08:10:31.155Z","end":"2016-06-15T08:13:36.806Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T08:10:34.549Z","end":"2016-06-15T08:10:36.131Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T08:10:31.155Z"},{"viewData":[{"start":"2016-06-15T08:26:39.245Z","end":"2016-06-15T08:26:42.728Z","type":"view_conversation"},{"start":"2016-06-15T08:26:42.728Z","end":"2016-06-15T08:38:18.260Z","type":"view_code"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T08:26:39.245Z"},{"viewData":[{"start":"2016-06-15T08:44:05.849Z","end":"2016-06-15T08:44:10.308Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T08:44:05.849Z"},{"viewData":[{"start":"2016-06-15T08:44:10.972Z","end":"2016-06-15T08:44:13.098Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T08:44:10.972Z"},{"viewData":[{"start":"2016-06-15T08:45:11.093Z","end":"2016-06-15T08:46:49.985Z","type":"view_conversation"}],"writeData":[],"session_id":2,"earliest":"2016-06-15T08:45:11.093Z"},{"viewData":[{"start":"2016-06-15T08:52:57.915Z","end":"2016-06-15T08:52:59.057Z","type":"view_conversation"},{"start":"2016-06-15T08:52:59.057Z","end":"2016-06-15T08:53:02.619Z","type":"view_code"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T08:52:57.915Z"},{"viewData":[{"start":"2016-06-15T09:44:36.491Z","end":"2016-06-15T09:44:46.299Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:44:36.491Z"},{"viewData":[{"start":"2016-06-15T09:45:19.009Z","end":"2016-06-15T09:46:07.250Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T09:45:23.925Z","end":"2016-06-15T09:46:07.250Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T09:45:19.009Z"},{"viewData":[{"start":"2016-06-15T09:46:35.235Z","end":"2016-06-15T09:47:38.100Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:46:35.235Z"},{"viewData":[{"start":"2016-06-15T09:47:57.413Z","end":"2016-06-15T10:00:48.340Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:47:57.413Z"},{"viewData":[{"start":"2016-06-15T10:28:53.760Z","end":"2016-06-15T10:29:46.005Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T10:28:53.760Z"},{"viewData":[{"start":"2016-06-15T10:52:12.292Z","end":"2016-06-15T10:54:52.564Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T10:52:28.208Z","end":"2016-06-15T10:52:30.564Z","type":"write_inline_comment"},{"start":"2016-06-15T10:52:49.950Z","end":"2016-06-15T10:54:52.564Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T10:52:12.292Z"},{"viewData":[{"start":"2016-06-15T11:00:44.042Z","end":"2016-06-15T11:05:55.269Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T11:00:44.042Z"},{"viewData":[{"start":"2016-06-15T11:20:15.267Z","end":"2016-06-15T11:36:33.730Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T11:20:15.267Z"}]
     /*jshint ignore:end*/
 
-    function getViewDataFromSessionId(sid) {
+    function getViewDataFromSessionId(sid, list) {
         var viewOnly = [];
-        for (var i = 0; i < eventData.length; i++) {
-            var item = eventData[i];
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
             var session = item.session_id
             var earliest = item.earliest;
             if (item.session_id === sid) {
@@ -98,21 +98,29 @@ define(function () {
         return viewOnly;
     }
 
-    function getWriteDataFromSessionId(sid) {
+    function getWriteDataFromSessionId(sid, list) {
         var writeOnly = [];
-        for (var i = 0; i < eventData.length; i++) {
-            var item = eventData[i];
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+            var session = item.session_id
+            var earliest = item.earliest;
             if (item.session_id === sid) {
-                writeOnly = writeOnly.concat(item.writeData);
+                for (var j = 0; j < item.writeData.length; j++) {
+                    var vd = item.writeData[j]
+                    var start = vd.start;
+                    var end = vd.end;
+                    var type = vd.type;
+                    writeOnly.push({ "start": start, "end": end, "type": type, "session_id": session, "earliest": earliest });
+                }
             }
         }
         return writeOnly;
     }
 
-    function getSessionIdList() {
+    function getSessionIdList(list) {
         var res = [];
-        for (var i = 0; i < eventData.length; i++) {
-            var session = eventData[i].session_id;
+        for (var i = 0; i < list.length; i++) {
+            var session = list[i].session_id;
             if (res.indexOf(session) === -1) {
                 res.push(session);
             }
@@ -120,9 +128,25 @@ define(function () {
         return res.sort();
     }
 
-    console.log(getViewDataFromSessionId(1))
+    function getAllViewData(list) {
+        var res = [];
+        var sessions = getSessionIdList(list);
+        for (var i = 0; i < sessions.length; i++) {
+            var id = 
+            res = res.concat(getViewDataFromSessionId(sessions[i], list));
+        }
+        return res;
+    }
 
-
+    function getAllWriteData(list) {
+        var res = [];
+        var sessions = getSessionIdList(list);
+        for (var i = 0; i < sessions.length; i++) {
+            var id =
+            res = res.concat(getWriteDataFromSessionId(sessions[i], list));
+        }
+        return res;
+    }
 
     var margin = { left: 50, right: 50, top: 10, bottom: 50 };
     var w = 1440;
@@ -138,6 +162,8 @@ define(function () {
 
     var STROKE_WIDTH_DEFAULT = 10;
     var STROKE_WIDTH_HOVER = 15;
+
+    var EVENT_TYPES = ['view_conversation', 'view_commits', 'view_code', 'write_inline_comment', 'write_comment'];
 
     function isInt(num) {
         return num % 1 === 0;
@@ -461,72 +487,25 @@ define(function () {
             var module = this;
             function drawDay(daysAgo) {
 
-                var sessionNumbers = getSessionIdList();
-
-                console.log('called')
                 var timespan = timeHelper.getTimespanOfDay(timeHelper.getNameOfDaysAgo(daysAgo));
-                var epca = new ExtendedPunchCardAggregator('Travis', 'GitHub', timespan.start, timespan.end).then(function (a) { console.log(JSON.stringify(a)); });
+                g.selectAll('.day').remove();
+
+                // REAL DATA
+                var epca = new ExtendedPunchCardAggregator('Travis', 'GitHub', timespan.start, timespan.end).then(function (a) {
+                    drawViewEvents(getAllViewData(a));
+                    drawWriteEvents(getAllWriteData(a));
+                });
+
+                // DATA AS CACHED ABOVE
+                //drawViewEvents(getAllViewData(eventData));
+                //drawWriteEvents(getAllWriteData(eventData));
+
                 var y = h;
                 var day = timeHelper.getNameOfDaysAgo(daysAgo);
                 var dummy = {"viewData":[{"start":"2016-06-15T07:34:47.965Z","end":"2016-06-15T07:41:38.806Z","type":"view_conversation"}],
                              "writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"}
-                //g.selectAll('#pr-bar').remove();
-                var session = 1; //TODO
-                var eventTypes = ['view_conversation', 'view_commits', 'view_code'];
-                g.selectAll('#pr-bar')
-                //{"viewData":[{"start":"2016-06-15T07:34:47.965Z","end":"2016-06-15T07:41:38.806Z","type":"view_conversation"}],
-                // "writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"}
-                .data(getViewDataFromSessionId(session).concat(getViewDataFromSessionId(2)))
-                .enter()
-                .append('line')
-                .attr('x1', xScale(0))
-                .attr('x2', function (d, i) {
-                    console.log(d);
-                    console.log(i);
 
-                    return xScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
-                })
-                .attr('y1', function (d, i) { return y + i * 30})//sessionNumbers.indexOf(d.session_id) * 30; })
-                .attr('y2', function (d, i) { return y + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
-                .style("stroke", function (d) {
-                    return color(eventTypes.indexOf(d.type));
-                })
-                .attr('stroke-width', 20)
-                .attr('stroke', 'black');
-                //.enter()
-                //.append('line')
-                //.attr('id', 'pr-bar')
-                //.attr('x1', xScale(0))
-                //.attr('x2', function (d) {
-                //    console.log(dateDiff(d.viewData.start, d.earliest));
-                //    return xScale(dateDiff(d.viewData.start, d.earliest));
-                //})
-                //.attr('y1', function (d, i) { return y + i * 30; })
-                //.attr('y2', function (d, i) { return y + i * 30; })
-                //.style("stroke", function (d) {
-                //    var id = d.session.pull_request.pull_request_number;
-                //    return color(prNumbers.indexOf(id));
-                //})
-                //.attr('stroke-width', 20)
-                //.attr('stroke', 'black');
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + (y + 2000 * dummy.viewData.length));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 //var tip2 = d3.tip()
                 //    .attr('class', 'd3-tip')
@@ -550,6 +529,58 @@ define(function () {
                 //g.call(tip2);
 
                 
+            }
+
+            function drawViewEvents(vdata) {
+                var sessionNumbers = getSessionIdList(vdata);
+                var y = h;
+
+                //g.selectAll('#pr-bar').remove();
+                g.selectAll('#pr-bar-view')
+                .data(vdata)
+                .enter()
+                .append('line')
+                .attr('class', 'day')
+                .attr('x1', xScale(0))
+                .attr('x2', function (d, i) {
+                    console.log(d);
+                    console.log(i);
+
+                    return xScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
+                })
+                .attr('y1', function (d, i) { return y + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
+                .attr('y2', function (d, i) { return y + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
+                .style("stroke", function (d) {
+                    return color(EVENT_TYPES.indexOf(d.type));
+                })
+                .attr('stroke-width', 20);
+            }
+
+            function drawWriteEvents(wdata) {
+
+                var sessionNumbers = getSessionIdList(wdata);
+                var y = h;
+
+                //g.selectAll('#pr-bar').remove();
+                g.selectAll('#pr-bar-write')
+                .data(wdata)
+                .enter()
+                .append('line')
+                .attr('class', 'day')
+                .attr('x1', xScale(0))
+                .attr('x2', function (d, i) {
+                    console.log(d);
+                    console.log(i);
+
+                    return xScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
+                })
+                .attr('y1', function (d, i) { return y + 5 + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
+                .attr('y2', function (d, i) { return y + 5 + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
+                .style("stroke", function (d) {
+                    return color(EVENT_TYPES.indexOf(d.type));
+                })
+                .attr('stroke-width', 10);
+
             }
 
             return g;
