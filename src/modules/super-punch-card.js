@@ -501,7 +501,7 @@ define(function () {
                                 url += 'github.com/' +
                                     d.session.pull_request.repository.owner + '/' +
                                     d.session.pull_request.repository.name + '/pull/' +
-                                    d.session.pull_request.pull_request_number
+                                    d.session.pull_request.pull_request_number;
                             }
                             window.open(url);
                         })
@@ -520,7 +520,7 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 
-            //drawDay('Wednesday');
+            drawDay('Wednesday');
             return g;
         }
     };
