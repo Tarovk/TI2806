@@ -1,7 +1,7 @@
 /* globals define, globalUserName, ReviewOnYourPrsAggregator */
 define(function () {
     var width = 720,
-        height = 755;
+        height = 810;
 
     var yTransform = 0;
     var yScrollTransform = 0;
@@ -166,7 +166,7 @@ define(function () {
                 .attr('x',715)
                 .attr('y',10)
                 .attr('width',6)
-                .attr('height',735)
+                .attr('height',790)
                 .style('fill','lightgray');
 
             p.append('rect')
@@ -176,9 +176,9 @@ define(function () {
                 .attr('width',6)
                 .attr('height', function () {
                     if(d.length>5) {
-                        return 5+730*Math.pow(0.5,0.2*d.length-1);
+                        return 5+785*Math.pow(0.5,0.2*d.length-1);
                     } else {
-                        return 735;
+                        return 790;
                     }
                 })
                 .style('fill','gray');
@@ -207,7 +207,7 @@ define(function () {
                 .attr('x',0)
                 .attr('y',0)
                 .attr('width',720)
-                .attr('height',750)
+                .attr('height',height)
                 .style('fill','transparent');
 
             container = g.append('g')
@@ -226,8 +226,8 @@ define(function () {
                 var scrollhandle = g.selectAll('.reviews-on-my-prs-scroll-handle');
                 var scrollhandleheight = parseInt(scrollhandle.attr('height'));
                 var scrolltransition = scrollhandle.transition().duration(100);
-                var scrolldistance = 735-scrollhandleheight;
-                var scrolldelta = -delta*(scrolldistance/(755-150*data.length));
+                var scrolldistance = height-20-scrollhandleheight;
+                var scrolldelta = -delta*(scrolldistance/(height-150*data.length));
                 yScrollTransform+=scrolldelta;
 
                 if(delta < 0 && yTransform-delta > 0) {
@@ -235,7 +235,7 @@ define(function () {
                     scrolltransition.attr('y',10);
                 } else if(delta > 0 && yTransform-delta > 150*(data.length-5)){
                     yTransform = -150*(data.length-5);
-                    scrolltransition.attr('y',745-scrollhandleheight);
+                    scrolltransition.attr('y',height-10-scrollhandleheight);
                 } else {
                     yTransform -= delta;
                     scrolltransition.attr('y',yScrollTransform);
