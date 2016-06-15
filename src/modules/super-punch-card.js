@@ -299,11 +299,11 @@ define(function () {
 
             function setRectHoverState(selection) {
                 selection.style("cursor", "pointer")
-                    .attr("stroke", "gray");
+                    .style("fill", "rgba(211, 211, 211, 0.5)");
             }
 
             function setRectUnHoverState(selection) {
-                selection.attr("stroke", "white");
+                selection.style("fill", "white");
             }
 
             var rectData = [6, 5, 4, 3, 2, 1, 0];
@@ -319,10 +319,10 @@ define(function () {
             .attr("x", xScale(0))
             .attr("height", rectHeight)
             .attr("width", xScale(24)-xScale(0))
-            .attr("rx", 6)
-            .attr("ry", 6)
-            .attr("fill", "white")
-            .attr("stroke-width", 3)
+            //.attr("rx", 6)
+            //.attr("ry", 6)
+            .style("fill", "white")
+            .style("stroke-width", 3)
             .on("mouseover", function (d, i) {
                 var selection = d3.select('#super-punch-card')
                 .select('.yAxis')
