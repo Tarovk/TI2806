@@ -4,7 +4,18 @@
 /*jshint unused: false*/
 function PunchCardAggregator(userName) {
     "use strict";
-    var promise, pullRequestResolver = new PullRequestResolver();
+    var promise, pullRequestResolver = new PullRequestResolver(), prInfos = {};
+    
+    function getPullRequest(pullRequest) {
+        console.log(pullRequest);
+        if (prInfos.hasOwnProperty(pullRequest.url)) {
+            pullRequest.prInfo = prInfos[pullRequest.url];
+        } else {
+            pullRequestResolver.resolveSinglePullRequest(pullRequest).then(function (pr) {
+                prInfos[pullRequest.url] = pr;
+            });
+        }
+    }
     
     function getEndEvents(startEvents) {
         return octopeerService.getSemanticEventsFromUser(userName, 402)
@@ -24,11 +35,10 @@ function PunchCardAggregator(userName) {
             filling = false,
             sessionEvent;
         events.forEach(function (event) {
-            console.log(event.event_type);
-            console.log(semanticEvents);
             /*jshint maxcomplexity:1000 */
             if (event.event_type === 401 && !filling) {
                 filling = true;
+                getPullRequest(event.session.pull_request);
                 semanticEvents.push({
                     "start": event.created_at,
                     "end": event.created_at,
@@ -42,6 +52,7 @@ function PunchCardAggregator(userName) {
                 }
             }
         });
+        console.log(semanticEvents);
         return semanticEvents;
     }
     
