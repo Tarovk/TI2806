@@ -27,12 +27,9 @@ function BitbucketService() {
                                repo +
                                '/pullrequests/' +
                                number, {}), function (pullrequests) {
-            var transformer, transformed;
+            var transformer;
             transformer = new PullRequestTransformer();
-            transformed = pullrequests.values.map(function (item) {
-                return transformer.transform(item, "BITBUCKET");
-            });
-            callback(transformed);
+            callback(transformer.transform(pullrequests, "BITBUCKET"));
         }, function () {
             callback({});
         });
