@@ -51,7 +51,8 @@ function ForceLayoutAggregator(userName, platform) {
             graphObject.nodes.push({
                 "name": repo.owner,
                 "type": "repo",
-                "title": repo.name
+                "title": repo.name,
+                "rep_url": DataAggregatorHelperFunctions.getRepoUrl(repo)
             });
             graphObject.links.push({
                 "source": repoCounter,
@@ -73,7 +74,8 @@ function ForceLayoutAggregator(userName, platform) {
                     "size": Math.max(Math.min(pr.totalDuration, 30), 5),
                     "status": stateOf(pr.prInfo),
                     "repo": pr.repository.name,
-                    "prurl": pr.prInfo.url
+                    "prurl": pr.prInfo.url,
+                    "rep_url": DataAggregatorHelperFunctions.getRepoUrl(repo)
                 };
                 
             }));

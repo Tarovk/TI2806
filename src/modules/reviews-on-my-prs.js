@@ -10,7 +10,7 @@ define(function () {
 
     function addText(p, d) {
         p.append('a')
-            .attr('href','http://www.github.com/'+d.repo+'/pull/'+d.pr)
+            .attr('href',d.pr_url)
             .append('text')
                 .attr('x',0)
                 .attr('y',80)
@@ -19,7 +19,7 @@ define(function () {
                 .text(d.pr);
 
         p.append('a')
-            .attr('href','http://www.github.com/'+d.repo)
+            .attr('href',d.rep_url)
             .append('text')
                 .attr('x',0)
                 .attr('y',110)
