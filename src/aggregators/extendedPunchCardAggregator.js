@@ -7,6 +7,11 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
         prResolver = new PullRequestResolver(),
         userResolver = new UserResolver(platform);
     
+    console.log(userName);
+    console.log(platform);
+    console.log(from);
+    console.log(to);
+    
     //1. Get semantic events user x
     //2. filter op datum (from, to) x
     //3. order op datum van vroeg naar laat x
@@ -15,6 +20,7 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
     //6. sla start en end op, en 
     
     function filterEventsOnDate(events) {
+        console.log(events);
         return events.filter(function (event) {
             return new Date(event.created_at) > from &&
                 new Date(event.created_at) < to;
@@ -27,13 +33,32 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
         });
     }
     
+    function startArrayIfAble(array, startDate) {
+        var allowed = true;
+        if (array.length > 0 && !array[array.length - 1].hasOwnProperty("end")) {
+            allowed = false;
+        } else {
+            array.push({
+                start: startDate
+            });
+        }
+        return allowed;
+    }
+    
+    function endArrayIfAble(array, endDate) {
+        console.log(array, endDate);
+        if (array.length > 0 && !array[array.length - 1].hasOwnProperty("end")) {
+            console.log(array, endDate);
+            console.log(array[array.length - 1], endDate);
+            array[array.length - 1].end = endDate;
+        }
+    }
+    
     function findSemanticSessions(events) {
         var semanticEvents = [],
             filling = false,
             sessionEvent;
-        var counter = 0;
         events.forEach(function (event) {
-            counter += 1;
             if (event.event_type === 401 && !filling) {
                 filling = true;
                 semanticEvents.push({
@@ -49,114 +74,43 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
             } else if (event.event_type === 402) {
                 filling = false;
                 sessionEvent = semanticEvents[semanticEvents.length - 1];
-                if (sessionEvent.view_conversation.length > 0 && 
-                    !sessionEvent.view_conversation[sessionEvent.view_conversation.length - 1].hasOwnProperty("end")) {
-                    sessionEvent.view_conversation[sessionEvent.view_conversation.length - 1].end = new Date(event.created_at);
-                }
-                if (sessionEvent.write_comment.length > 0 && 
-                    !sessionEvent.write_comment[sessionEvent.write_comment.length - 1].hasOwnProperty("end")) {
-                    sessionEvent.write_comment[sessionEvent.write_comment.length - 1].end = new Date(event.created_at);
-                }
-                if (sessionEvent.write_inline_comment.length > 0 && 
-                    !sessionEvent.write_inline_comment[sessionEvent.write_inline_comment.length - 1].hasOwnProperty("end")) {
-                    sessionEvent.write_inline_comment[sessionEvent.write_inline_comment.length - 1].end = new Date(event.created_at);
-                }
-                if (sessionEvent.view_code.length > 0 && 
-                    !sessionEvent.view_code[sessionEvent.view_code.length - 1].hasOwnProperty("end")) {
-                    sessionEvent.view_code[sessionEvent.view_code.length - 1].end = new Date(event.created_at);
-                }
-                if (sessionEvent.view_commits.length > 0 && 
-                    !sessionEvent.view_commits[sessionEvent.view_commits.length - 1].hasOwnProperty("end")) {
-                    sessionEvent.view_commits[sessionEvent.view_commits.length - 1].end = new Date(event.created_at);
-                }
+                endArrayIfAble(sessionEvent.view_conversation, new Date(event.created_at));
+                endArrayIfAble(sessionEvent.write_comment, new Date(event.created_at));
+                endArrayIfAble(sessionEvent.view_code, new Date(event.created_at));
+                endArrayIfAble(sessionEvent.view_commits, new Date(event.created_at));
+                endArrayIfAble(sessionEvent.write_inline_comment, new Date(event.created_at));
             } else if (filling) {
                 sessionEvent = semanticEvents[semanticEvents.length - 1];
                 if (event.element_type === 201 && event.event_type === 201) { //Watching conversation tab
-                    if (sessionEvent.view_conversation.length > 0 && 
-                       !sessionEvent.view_conversation[sessionEvent.view_conversation.length - 1].hasOwnProperty("end")) {
-                        
-                    } else {
-                        sessionEvent.view_conversation.push({
-                            start: new Date(event.created_at)
-                        });
-                    }
-                } else if ((event.element_type === 202 || //leaves conversation tab
-                           event.element_type === 203) &&
+                    startArrayIfAble(sessionEvent.view_conversation, new Date(event.created_at));
+                } else if ((event.element_type === 202 || event.element_type === 203) &&
                            event.event_type === 201) {
-                    if (sessionEvent.view_conversation.length > 0 && 
-                       !sessionEvent.view_conversation[sessionEvent.view_conversation.length - 1].hasOwnProperty("end")) {
-                        sessionEvent.view_conversation[sessionEvent.view_conversation.length - 1]
-                        .end = new Date(event.created_at);
-                    }
+                    endArrayIfAble(sessionEvent.view_conversation, new Date(event.created_at));
                 }
                 if (event.element_type === 203 && event.event_type === 201) { //Watching code tab
-                    if (sessionEvent.view_code.length > 0 && 
-                       !sessionEvent.view_code[sessionEvent.view_code.length - 1].hasOwnProperty("end")) {
-                        
-                    } else {
-                        sessionEvent.view_code.push({
-                            start: new Date(event.created_at)
-                        });
-                    }
-                } else if ((event.element_type === 201 || //leaves code tab
-                           event.element_type === 202) &&
+                    startArrayIfAble(sessionEvent.view_code, new Date(event.created_at));
+                } else if ((event.element_type === 201 || event.element_type === 202) &&
                            event.event_type === 201) {
-                    if (sessionEvent.view_code.length > 0 && 
-                       !sessionEvent.view_code[sessionEvent.view_code.length - 1].hasOwnProperty("end")) {
-                        sessionEvent.view_code[sessionEvent.view_code.length - 1]
-                        .end = new Date(event.created_at);
-                    }
+                    endArrayIfAble(sessionEvent.view_code, new Date(event.created_at));
                 }
                 if (event.element_type === 202 && event.event_type === 201) { //Watching commits tab
-                    if (sessionEvent.view_commits.length > 0 && 
-                       !sessionEvent.view_commits[sessionEvent.view_commits.length - 1].hasOwnProperty("end")) {
-                        
-                    } else {
-                        sessionEvent.view_commits.push({
-                            start: new Date(event.created_at)
-                        });
-                    }
-                } else if ((event.element_type === 201 || //leaves commits tab
-                           event.element_type === 203) &&
+                    startArrayIfAble(sessionEvent.view_commits, new Date(event.created_at));
+                } else if ((event.element_type === 201 || event.element_type === 203) &&
                            event.event_type === 201) {
-                    if (sessionEvent.view_commits.length > 0 && 
-                       !sessionEvent.view_commits[sessionEvent.view_commits.length - 1].hasOwnProperty("end")) {
-                        sessionEvent.view_commits[sessionEvent.view_commits.length - 1]
-                        .end = new Date(event.created_at);
-                    }
+                    endArrayIfAble(sessionEvent.view_commits, new Date(event.created_at));
                 }
                 if (event.element_type === 501 && event.event_type === 201) { //start commenting
-                    if (sessionEvent.write_comment.length > 0 && 
-                       !sessionEvent.write_comment[sessionEvent.write_comment.length - 1].hasOwnProperty("end")) {
-                        
-                    } else {
-                        sessionEvent.write_comment.push({
-                            start: new Date(event.created_at)
-                        });
-                    }
-                } else if ((event.element_type === 113 || //done commenting
-                           event.element_type === 114 ||
-                           event.element_type === 115) &&
-                           event.event_type === 201) {
-                    sessionEvent.write_comment[sessionEvent.write_comment.length - 1]
-                        .end = new Date(event.created_at);
+                    startArrayIfAble(sessionEvent.write_comment, new Date(event.created_at));
+                } else if ((event.element_type === 113 || event.element_type === 114 ||
+                           event.element_type === 115) && event.event_type === 201) {
+                    endArrayIfAble(sessionEvent.write_comment, new Date(event.created_at));
                 }
-                if ((event.element_type === 502 ||
-                     event.element_type === 105) 
-                    && event.event_type === 201) { //start inline commenting
-                    if (sessionEvent.write_inline_comment.length > 0 && 
-                       !sessionEvent.write_inline_comment[sessionEvent.write_inline_comment.length - 1].hasOwnProperty("end")) {
-                        
-                    } else {
-                        sessionEvent.write_inline_comment.push({
-                            start: new Date(event.created_at)
-                        });
-                    }
-                } else if ((event.element_type === 103 || //done inline commenting
-                           event.element_type === 104) &&
+                if ((event.element_type === 502 || event.element_type === 105)
+                        && event.event_type === 201) { //start inline commenting
+                    startArrayIfAble(sessionEvent.write_inline_comment, new Date(event.created_at));
+                } else if ((event.element_type === 103 || event.element_type === 104) &&
                            event.event_type === 201) {
-                    sessionEvent.write_inline_comment[sessionEvent.write_inline_comment.length - 1]
-                        .end = new Date(event.created_at);
+                    endArrayIfAble(sessionEvent.write_inline_comment, new Date(event.created_at));
                 }
             }
         });
@@ -164,15 +118,11 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
         return semanticEvents;
     }
     
-//    this.getDetail = function (from, to) {
-        return new RSVP.Promise(function (fulfill, reject) {
-            octopeerService.getSemanticEventsFromUser(userName)
-                .then(filterEventsOnDate)
-                .then(orderEvents)
-                .then(findSemanticSessions)
-                .then(fulfill);
-        });
-//    };
-    
-    //return new PunchCardAggregator(userName);
+    return new RSVP.Promise(function (fulfill, reject) {
+        octopeerService.getSemanticEventsFromUser(userName)
+            .then(filterEventsOnDate)
+            .then(orderEvents)
+            .then(findSemanticSessions)
+            .then(fulfill);
+    });
 }
