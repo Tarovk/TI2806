@@ -458,14 +458,11 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }*/
             function drawDay(day) {
-                var timespan = timeHelper.getTimespanOfDay(day);
-                var PRs = [
-                    { 'id': 0, 'start': new Date(), 'end': new Date(), 'url': 'https://google.nl' }
-                ]
-                var selectedPRs = [];
-                for (var i = 0; i < PRs.length; ++i) {
-                    if (timeHelper.getDayOfTimestamp(PRs[i].start) == day || timeHelper.getDayOfTimestamp(PRs[i].end) == day) {
-                        selectedPRs.push(PRs[i]);
+                var selectedSessions = [];
+                for (var i = 0; i < data.sem_sessions.length; ++i) {
+                    if (timeHelper.getDayOfTimestamp(data.sem_sessions[i].start) === day ||
+                        timeHelper.getDayOfTimestamp(data.sem_sessions[i].end) === day) {
+                        selectedSessions.push(data.sem_sessions[i]);
                     }
                 }
 
@@ -473,9 +470,9 @@ define(function () {
                 .attr('class', 'd3-tip')
                 .html(function (d) {
                     return "<div><a style='color:black;font-size:small'" +
-                    " href='http://www.github.com/" + getPr(d.origin).repository.owner + "/" +
-                        getPr(d.origin).repository.name + "/pull/" +
-                        getPrNumber(d.origin) + "'>#" + getPrNumber(d.origin) +
+                    " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
+                        d.session.pull_request.repository.name + "/pull/" +
+                        d.session.pull_request.pull_request_number + "'>#" + d.session.pull_request.pull_request_number +
                         //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
                         "</div>" +
                         //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
@@ -490,18 +487,25 @@ define(function () {
                 g.call(tip2);
 
                 var y = h;
-                for (var i = 0; i < selectedPRs.length; ++i) {
+                for (i = 0; i < selectedSessions.length; ++i) {
                     y += 20;
-                    g.data([selectedPRs[i]]).append('rect')
+                    g.data([selectedSessions[i]]).append('rect')
                         .attr('style', 'fill: rgba(77, 136, 255, 1.00);')
                         .attr('height', 10)
                         .attr('width', 500)
                         .attr('x', margin.left)
                         .attr('y', y)
                         .on('click', function (d) {
-                            window.open(d.url);
+                            var url = 'https://';
+                            if (d.session.pull_request.repository.platform === 'GitHub') {
+                                url += 'github.com/' +
+                                    d.session.pull_request.repository.owner + '/' +
+                                    d.session.pull_request.repository.name + '/pull/' +
+                                    d.session.pull_request.pull_request_number
+                            }
+                            window.open(url);
                         })
-                        .on('mousehover', function () {
+                        .on('mousehover', function (d) {
                             d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
                             tip2.show(d);
                         })
@@ -516,7 +520,7 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 
-            drawDay('Wednesday');
+            //drawDay('Wednesday');
             return g;
         }
     };
