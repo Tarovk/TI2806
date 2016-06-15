@@ -3,19 +3,21 @@
 /* jshint maxstatements: 50*/
 
 define(function () {
-    /*jshint ignore:start*/
     var data = {
         "sem_sessions": [
             {
                 "start": "2016-06-06T12:08:30Z",
                 "end": "2016-06-06T20:08:30Z",
                 "session": {
-                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
+                    "url": 
+                    "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
                     "id": 1,
                     "pull_request": {
-                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/",
+                        "url": 
+                        "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/",
                         "repository": {
-                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/",
+                            "url": 
+                            "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/",
                             "owner": "thervh70",
                             "name": "ContextProject_RDD",
                             "platform": "GitHub"
@@ -33,12 +35,15 @@ define(function () {
                 "start": "2016-06-05T12:08:30Z",
                 "end": "2016-06-05T20:08:30Z",
                 "session": {
-                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
+                    "url": 
+                    "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
                     "id": 2,
                     "pull_request": {
-                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/",
+                        "url": 
+                        "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/",
                         "repository": {
-                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/",
+                            "url": 
+                            "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/",
                             "owner": "thervh70",
                             "name": "ContextProject_RDD",
                             "platform": "GitHub"
@@ -61,6 +66,7 @@ define(function () {
     // look at code
     // look at commits tab
 
+    /*jshint ignore:start*/
     var semdata = [
         {
             "view_conversation": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
@@ -473,6 +479,28 @@ define(function () {
                 g.call(tip2);
 
                 var y = h;
+
+                function clickOnRect(d) {
+                    var url = 'https://';
+                    if (d.session.pull_request.repository.platform === 'GitHub') {
+                        url += 'github.com/' +
+                            d.session.pull_request.repository.owner + '/' +
+                            d.session.pull_request.repository.name + '/pull/' +
+                            d.session.pull_request.pull_request_number;
+                    }
+                    window.open(url);
+                }
+
+                function mouseHoverRect(d) {
+                    d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
+                    tip2.show(d);
+                }
+
+                function mouseOutRect() {
+                    d3.select(this).style('fill', 'rgba(77, 136, 255, 1.00)');
+                    tip2.hide();
+                }
+
                 for (i = 0; i < selectedSessions.length; ++i) {
                     y += 20;
                     g.data([selectedSessions[i]]).append('rect')
@@ -481,24 +509,9 @@ define(function () {
                         .attr('width', 500)
                         .attr('x', margin.left)
                         .attr('y', y)
-                        .on('click', function (d) {
-                            var url = 'https://';
-                            if (d.session.pull_request.repository.platform === 'GitHub') {
-                                url += 'github.com/' +
-                                    d.session.pull_request.repository.owner + '/' +
-                                    d.session.pull_request.repository.name + '/pull/' +
-                                    d.session.pull_request.pull_request_number;
-                            }
-                            window.open(url);
-                        })
-                        .on('mousehover', function (d) {
-                            d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
-                            tip2.show(d);
-                        })
-                        .on('mouseout', function () {
-                            d3.select(this).style('fill', 'rgba(77, 136, 255, 1.00)');
-                            tip2.hide();
-                        })
+                        .on('click', clickOnRect)
+                        .on('mousehover',  mouseHoverRect)
+                        .on('mouseout', mouseOutRect)
                         .style('cursor', 'pointer');
                     y += 20;
                 }
