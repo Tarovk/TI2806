@@ -78,7 +78,7 @@ define(function () {
         }
     ];
     /*jshint ignore:end*/
-    var margin = { left: 50, right: 50, top: 10, bottom: 70 };
+    var margin = { left: 75, right: 50, top: 10, bottom: 70 };
     var w = 1440;
     var h = 350;
 
@@ -133,7 +133,6 @@ define(function () {
         },
         yAxisScale: function () {
             return d3.svg.axis()
-                .ticks(7)
                 .tickFormat(function (d, i) {
                     if ((d + today + 1) % 7 === today) {
                         return 'Today';
@@ -141,7 +140,10 @@ define(function () {
                     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
                             'Thursday', 'Friday', 'Saturday'][(d + today + 1) % 7];
                 })
-                .scale(yScale.copy());
+                .scale(d3.scale.ordinal()
+                    .domain([0, 1, 2, 3, 4, 5, 6])
+                    .rangePoints([0, h - margin.bottom - margin.top])
+                );
         },
         xAxisFitFunction: false,
         yAxisFitFunction: false,

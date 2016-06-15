@@ -26,10 +26,10 @@ function SvgCreator() {
             if ((axis = octopeerHelper.getSafeModuleValue(module,"yAxisScale")()) === "fit") {
                 axis = d3.svg.axis().scale(d3.scale.linear().domain([0,100]).nice());
             }
-
-            axis.orient("left")
-                .scale().range([svgSize.h- margin.bottom - margin.top, 0]);
-
+            axis.orient("left");
+            if (octopeerHelper.getScaleType(axis.scale()) === "linear") {
+                axis.scale().range([svgSize.h- margin.bottom - margin.top, 0]);
+            }
             if(octopeerHelper.getSafeModuleValue(module,"yAxisTicks")) {
                 axis.tickSize(-svgSize.w + margin.left + margin.right);
             }
@@ -66,9 +66,11 @@ function SvgCreator() {
             if ((axis = octopeerHelper.getSafeModuleValue(module,"yRightAxisScale")()) === "fit") {
                 axis = d3.svg.axis().scale(d3.scale.linear().domain([0,100]).nice());
             }
-
-            axis.orient("right")
-                .scale().range([svgSize.h - margin.bottom - margin.top, 0]);
+            
+            axis.orient("right");
+            if (octopeerHelper.getScaleType(axis.scale()) === "linear") {
+                axis.scale().range([svgSize.h- margin.bottom - margin.top, 0]);
+            }
 
             if(octopeerHelper.getSafeModuleValue(module,"yRightAxisTicks")) {
                 axis.tickSize(svgSize.w - margin.bottom - margin.top);
