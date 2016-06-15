@@ -46,9 +46,7 @@ define([// Array of non-visualisation modules
 
         //PERSONAL
         'modules/time-and-pr-size',
-        'modules/time-spent-on-pr',
         'modules/average-comment-size-compared',
-        'modules/average-comment-size-yours',
         'modules/punch-card',
 
         //BEHAVIOUR
@@ -56,7 +54,6 @@ define([// Array of non-visualisation modules
         'modules/super-punch-card',
 
         //PROJECT
-    	'modules/pr-size',
     	'modules/average-comment-size-total',
         'modules/no-of-pr-per-comment-sizes.js',
         'modules/session-duration-per-pr.js',

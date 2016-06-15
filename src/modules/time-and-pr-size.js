@@ -12,25 +12,26 @@ define(function () {
         yAxisLabel: "Time spent on pr",
         yRightAxisLabel: "Number of lines changed",
         xAxisTicks: false,
+        yAxisTicks:false,
         xAxisLabelRotation: 65,
         xAxisFitFunction: function (data) {
             var axisScale = d3.scale.ordinal()
                 .domain(data[0].timeSpent.map(function (pr) {
-                    return pr.x;
+                    return parseInt(pr.x)+1;
                 }))
-                .rangePoints([0.35 * 50, 720 - 2.3 * 50]);
+                .rangePoints([12.5, 720 - 50 - 50 - 12.5]);
             return d3.svg.axis().scale(axisScale);
         },
         yAxisFitFunction: function (data) {
             var timeData = data[0].timeSpent;
-            return d3.svg.axis()
+            return d3.svg.axis().ticks(10)
                 .scale(d3.scale.linear()
                     .domain([0, Math.max.apply(Math, timeData.map(function (o) { return o.y; }))])
             );
         },
         yRightAxisFitFunction: function (data) {
             var sizeData = data[0].sizeData;
-            return d3.svg.axis().scale(
+            return d3.svg.axis().ticks(10).scale(
                 d3.scale.linear()
                 .domain([0, Math.max.apply(Math, sizeData.map(function (o) { return o.y; }))])
             );
@@ -61,14 +62,14 @@ define(function () {
                 sizeData = data[0].sizeData;
 
             var xTimeScale = d3.scale.linear()
-                .domain([0, timeData.length])
-                .range([pad, w - pad]),
+                .domain([0, timeData.length-1])
+                .range([pad, w - pad - 25]).nice(),
             xSizeScale = d3.scale.linear()
-                .domain([0, sizeData.length])
-                .range([pad, w - pad]),
+                .domain([0, sizeData.length-1])
+                .range([pad + 12.5, w - pad - 12.5]).nice(),
             yTimeScale = d3.scale.linear()
                 .domain([0, Math.max.apply(Math, timeData.map(function (o) { return o.y; }))])
-                .range([0, h - padBottom - padTop])
+                .range([3, h - padBottom - padTop])
                 .nice(),
             ySizeScale = d3.scale.linear()
                 .domain([Math.max.apply(Math, sizeData.map(function (o) { return o.y; })), 0])
@@ -77,6 +78,7 @@ define(function () {
 
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
             var tip = d3.tip()
+                .attr("class","d3-tip")
                 .direction("e")
                 .offset([0, 5])
                 .html(function (d) {
@@ -87,9 +89,9 @@ define(function () {
             g.selectAll("rect").data(timeData).enter()
                 .append("rect")
                 .attr("class", "time-and-pr-size-time-spent")
-                .attr("x", function (d) { return xTimeScale(d.x) + 9; })
+                .attr("x", function (d) { return xTimeScale(d.x); })
                 .attr("y", h - padBottom)
-                .attr("width", function () { return (w / (timeData.length - 1)) - 20; })
+                .attr("width", 25)
                 .attr("height", function (d) {
                 return yTimeScale(d.y); })
                 .attr("style", "fill:rgb(77, 136, 255);")
@@ -105,15 +107,11 @@ define(function () {
                     .transition()
                     .attr("y", function (d) { return h - padBottom - yTimeScale(d.y); });
 
-            var tempSizeData = [{ "x": -0.5, "y": 0 }]
-                .concat(sizeData)
-                .concat([{ "x": sizeData.length - 0.5, "y": 0 }]);
-
             g.append("path")
                 .attr("id", "time-and-pr-size-lines-changed")
                 .attr("d",
                     octopeerHelper.line(
-                        tempSizeData, "cardinal-open", function (x) { return xSizeScale(x + 0.5); }, ySizeScale
+                        sizeData, "cardinal", function (x) { return xSizeScale(x); }, ySizeScale
                         )
                     )
                 .attr("style", "stroke:rgb(212, 51, 51);fill:none;stroke-width: 3px;");
@@ -124,7 +122,7 @@ define(function () {
             g.selectAll("circle").data(sizeData).enter()
                 .append("circle")
                 .attr("class", "time-and-pr-size-lines-changed-circle")
-                .attr("cx", function (d) { return xSizeScale(d.x + 0.5); })
+                .attr("cx", function (d) { return xSizeScale(d.x); })
                 .attr("cy", function (d) { return ySizeScale(d.y); })
                 .attr("r", DATA_POINT_RADIUS_DEFAULT)
                 .attr("style", "fill:rgb(212, 51, 51);stroke-width: 3px;")
