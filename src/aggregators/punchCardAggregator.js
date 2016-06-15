@@ -4,58 +4,56 @@
 /*jshint unused: false*/
 function PunchCardAggregator(userName) {
     "use strict";
-    var promise, pullRequestResolver = new PullRequestResolver();
+    var promise, pullRequestResolver = new PullRequestResolver(), prInfos = {};
+    
+    function getPullRequest(pullRequest) {
+        console.log(pullRequest);
+        if (prInfos.hasOwnProperty(pullRequest.url)) {
+            pullRequest.prInfo = prInfos[pullRequest.url];
+        } else {
+            pullRequestResolver.resolveSinglePullRequest(pullRequest).then(function (pr) {
+                prInfos[pullRequest.url] = pr;
+            });
+        }
+    }
     
     function getEndEvents(startEvents) {
         return octopeerService.getSemanticEventsFromUser(userName, 402)
             .then(function (endEvents) {
-                return {
-                    "startEvents": startEvents,
-                    "endEvents": endEvents
-                };
+                return startEvents.concat(endEvents);
             });
     }
     
-    function orderEvents(startEndEvents) {
-        startEndEvents.startEvents = startEndEvents.startEvents.sort(function (a, b) {
+    function orderEvents(events) {
+        return events.sort(function (a, b) {
             return new Date(a.created_at) - new Date(b.created_at);
         });
-        startEndEvents.endEvents = startEndEvents.endEvents.sort(function (a, b) {
-            return new Date(a.created_at) - new Date(b.created_at);
-        });
-        return startEndEvents;
     }
     
-    function createGraphObject(startEndEvents) {
-        var graphObject = [],
-            counter = 0,
-            obj,
-            sessionStartId,
-            endEvent,
-            sessionEndId,
-            i;
-        graphObject = startEndEvents.startEvents.map(function (se) {
-            obj = {
-                "start": se.created_at,
-                "end": se.created_at,
-                "session": se.session
-            };
-            sessionStartId = se.session.id;
-            
-            for (i = 0; i < startEndEvents.endEvents.length; i += 1) {
-                endEvent = startEndEvents.endEvents[i];
-                sessionEndId = endEvent.session.id;
-                if (sessionStartId === sessionEndId) {
-                    if(new Date(endEvent.created_at) > new Date(se.created_at)) {
-                        obj.end = endEvent.created_at;
-                    }
-                    startEndEvents.endEvents.splice(i, 1);
-                    break;
+    function createGraphObject(events) {
+        var semanticEvents = [],
+            filling = false,
+            sessionEvent;
+        events.forEach(function (event) {
+            /*jshint maxcomplexity:1000 */
+            if (event.event_type === 401 && !filling) {
+                filling = true;
+                getPullRequest(event.session.pull_request);
+                semanticEvents.push({
+                    "start": event.created_at,
+                    "end": event.created_at,
+                    "session": event.session
+                });
+            } else if (event.event_type === 402) {
+                filling = false;
+                sessionEvent = semanticEvents[semanticEvents.length - 1];
+                if (semanticEvents.length > 0) {
+                    semanticEvents[semanticEvents.length - 1].end = new Date(event.created_at);
                 }
             }
-            return obj;
         });
-        return graphObject;
+        console.log(semanticEvents);
+        return semanticEvents;
     }
     
     promise = new RSVP.Promise(function (fulfill) {
