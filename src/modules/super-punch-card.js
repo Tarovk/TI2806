@@ -7,23 +7,51 @@ define(function () {
     var data = {
         "sem_sessions": [
             {
-                "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z", "session": {
-                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": {
-                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
-                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
-                        }, "pull_request_number": 7
-                    }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" }
+                "start": "2016-06-06T12:08:30Z",
+                "end": "2016-06-06T20:08:30Z",
+                "session": {
+                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
+                    "id": 1,
+                    "pull_request": {
+                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/",
+                        "repository": {
+                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/",
+                            "owner": "thervh70",
+                            "name": "ContextProject_RDD",
+                            "platform": "GitHub"
+                        },
+                        "pull_request_number": 7
+                    },
+                    "user": {
+                        "url": "http://146.185.128.124/api/users/Travis/",
+                        "id": 1,
+                        "username": "Travis"
+                    }
                 }
             },
             {
-                "start": "2016-06-05T12:08:30Z", "end": "2016-06-05T20:08:30Z", "session": {
-                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 2, "pull_request": {
-                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
-                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
-                        }, "pull_request_number": 9
-                    }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" }
+                "start": "2016-06-05T12:08:30Z",
+                "end": "2016-06-05T20:08:30Z",
+                "session": {
+                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
+                    "id": 2,
+                    "pull_request": {
+                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/",
+                        "repository": {
+                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/",
+                            "owner": "thervh70",
+                            "name": "ContextProject_RDD",
+                            "platform": "GitHub"
+                        },
+                        "pull_request_number": 9
+                    },
+                    "user": {
+                        "url": "http://146.185.128.124/api/users/Travis/",
+                        "id": 1,
+                        "username": "Travis"
+                    }
                 }
-            },
+            }
         ]
     };
 
@@ -34,15 +62,15 @@ define(function () {
     // look at commits tab
 
     var semdata = [
-                        {
+        {
             "view_conversation": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "write_comment": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "write_inline_comment": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "view_code": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "view_commits": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "session_id": 1
-                        }
-                  ];
+        }
+    ];
     /*jshint ignore:end*/
     var margin = { left: 50, right: 50, top: 10, bottom: 50 };
     var w = 1440;
@@ -441,6 +469,26 @@ define(function () {
                     }
                 }
 
+                var tip2 = d3.tip()
+                .attr('class', 'd3-tip')
+                .html(function (d) {
+                    return "<div><a style='color:black;font-size:small'" +
+                    " href='http://www.github.com/" + getPr(d.origin).repository.owner + "/" +
+                        getPr(d.origin).repository.name + "/pull/" +
+                        getPrNumber(d.origin) + "'>#" + getPrNumber(d.origin) +
+                        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
+                        "</div>" +
+                        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                        //getPrInfo(d.origin).author + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
+                        formatDate(d.start) + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
+                        formatDate(d.end) + "</span></a></div>" +
+                        "<div class='arrow-down'></div></div>";
+                })
+                .offset([-20, 0]);
+                g.call(tip2);
+
                 var y = h;
                 for (var i = 0; i < selectedPRs.length; ++i) {
                     y += 20;
@@ -455,9 +503,11 @@ define(function () {
                         })
                         .on('mousehover', function () {
                             d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
+                            tip2.show(d);
                         })
                         .on('mouseout', function () {
                             d3.select(this).style('fill', 'rgba(77, 136, 255, 1.00)');
+                            tip2.hide();
                         })
                         .style('cursor', 'pointer');
                     y += 20;
@@ -466,7 +516,7 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 
-            drawDay('Tuesday');
+            drawDay('Wednesday');
             return g;
         }
     };
