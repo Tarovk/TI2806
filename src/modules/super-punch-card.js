@@ -82,7 +82,7 @@ define(function () {
     var w = 1440;
     var h = 350;
 
-    var xScale = d3.scale.linear().domain([0, 24]).range([margin.left, w - margin.right]);
+    var xScale = d3.scale.linear().domain([0, 24]).range([margin.left, w - margin.right - margin.left]);
     var yScale = d3.scale.linear().domain([6, 0]).range([margin.top, h - margin.bottom]);
     var minuteScale = d3.scale.linear().domain([0, 60]).range([0, 1]);
 
@@ -132,6 +132,7 @@ define(function () {
                 .scale(xScale.copy());
         },
         yAxisScale: function () {
+            d3.select('#super-punch-card').select('.yAxis').style('transform', 'translate(' + margin.left + 'px, 10px)')
             return d3.svg.axis()
                 .tickFormat(function (d, i) {
                     if ((d + today + 1) % 7 === today) {
