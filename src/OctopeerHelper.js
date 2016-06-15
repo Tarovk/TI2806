@@ -17,7 +17,7 @@ function OctopeerHelper() {
     this.getScaleType = function(scale) {
         if (typeof scale.rangePoints === "function") {
             return "ordinal";
-        } else if (typeof scale.domain === "function") {
+        } else if (scale.domain()[0] instanceof Date) {
             return "time";
         } else {
             return "linear";
