@@ -437,18 +437,17 @@ define(function () {
                 return getColor(d);
             });
 
-            console.log(d3.selectAll(".clickable"));
-
             d3.selectAll(".clickable")
-            .on("click", function (d) { console.log(d); })
+            .on("click", function (d) { drawDay(d); })
             .style("cursor", "pointer");
 
             g.selectAll(".clickable")
-            .on("click", function (d) { console.log(d); })
+            .on("click", function (d) { drawDay(d); })
             .style("cursor", "pointer");
 
             var module = this;
             function drawDay(daysAgo) {
+                g.selectAll('.prPerDay').remove();
                 var day = timeHelper.getNameOfDaysAgo(daysAgo);
                 var selectedSessions = [];
                 for (var i = 0; i < data.sem_sessions.length; ++i) {
@@ -504,6 +503,7 @@ define(function () {
                 for (i = 0; i < selectedSessions.length; ++i) {
                     y += 20;
                     g.data([selectedSessions[i]]).append('rect')
+                        .attr('class', 'prPerDay')
                         .attr('style', 'fill: rgba(77, 136, 255, 1.00);')
                         .attr('height', 10)
                         .attr('width', 500)
@@ -519,7 +519,7 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 
-            drawDay(0);
+            //drawDay(0);
             return g;
         }
     };
