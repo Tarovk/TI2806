@@ -48,7 +48,7 @@ define([// Array of non-visualisation modules
         'modules/time-spent-on-pr',
         'modules/average-comment-size-compared',
         'modules/average-comment-size-yours',
-        //'modules/punch-card',
+        'modules/punch-card',
 
         //BEHAVIOUR
         'modules/behaviour-m4-modules',
