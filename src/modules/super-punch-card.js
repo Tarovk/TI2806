@@ -493,7 +493,7 @@ define(function () {
 
                 function mouseOverRect(d) {
                     d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
-                    tip2.show(d);
+                    return tip2.show(d);
                 }
 
                 function mouseOutRect() {
