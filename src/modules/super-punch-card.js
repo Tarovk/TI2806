@@ -351,23 +351,7 @@ define(function () {
             })
             .style("fill", function (d) { return color(getColor(d)); });
             //.style("fill", function (d) { return c10(getPrNumber(d)); });
-
-
-            //g.selectAll(".same")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
-            //.attr("r", RADIUS_DEFAULT)
-            //.attr("class", "circle-start")
-            //.style("fill", function (d, i) { return c10(i); });
-
-            //g.selectAll(".same")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.end)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.end.getDay())); })
-            //.attr("r", RADIUS_DEFAULT)
-            //.attr("class", "circle-end");
-
+            
             // draw full lines on the same day
             g.selectAll(".same")
             .append("line")
@@ -377,19 +361,6 @@ define(function () {
             .attr("x2", function (d) { return xScale(getHoursAndMinutes(d.end)); })
             .attr("y2", function (d) { return yScale(transformDay(d.end.getDay())); })
             .attr("stroke-width", STROKE_WIDTH_DEFAULT);
-
-            g.selectAll(".diff")
-            .append("circle")
-            .attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
-            .attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
-            .attr("r", RADIUS_DEFAULT)
-            .attr("class", "circle-start");
-
-            //g.selectAll(".diff")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.end)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.end.getDay())); })
-            //.attr("r", RADIUS_DEFAULT);
 
             // draw lines for code review up to midnight
             g.selectAll(".diff")
@@ -407,21 +378,6 @@ define(function () {
             .attr("x2", function (d) { return xScale(getHoursAndMinutes(d.end)); })
             .attr("y2", function (d) { return yScale(transformDay(d.end.getDay())); })
             .attr("stroke-width", STROKE_WIDTH_DEFAULT);
-
-            g.selectAll("g")
-            //.style("fill", "green")
-            .style("stroke", "black")
-            .on("mouseover", function (d) {
-                d3.select(this).selectAll("circle").attr("r", RADIUS_HOVER);
-                d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_HOVER);
-                var svg = d3.select(this).select(".circle-start");
-                tip.show(d, svg.node());
-            })
-            .on("mouseout", function (d) {
-                d3.select(this).selectAll("circle").attr("r", RADIUS_DEFAULT);
-                d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_DEFAULT);
-                tip.hide();
-            });
 
             g.selectAll("line")
             .style("stroke", function (d) {
