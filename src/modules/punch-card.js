@@ -80,7 +80,6 @@ define(function () {
                                             new Date("2016-06-05T20:08:30Z"),
                                             new Date("2016-06-20T20:08:30Z"))
                 .then(function(a) {
-                    console.log(a);
                 });
             // given a day gets the amount of days that have passed since then.
             function transformDay(day) {

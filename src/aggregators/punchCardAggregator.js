@@ -7,7 +7,6 @@ function PunchCardAggregator(userName) {
     var promise, pullRequestResolver = new PullRequestResolver(), prInfos = {};
     
     function getPullRequest(pullRequest) {
-        console.log(pullRequest);
         if (prInfos.hasOwnProperty(pullRequest.url)) {
             pullRequest.prInfo = prInfos[pullRequest.url];
         } else {
@@ -52,7 +51,6 @@ function PunchCardAggregator(userName) {
                 }
             }
         });
-        console.log(semanticEvents);
         return semanticEvents;
     }
     
