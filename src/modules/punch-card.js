@@ -157,10 +157,10 @@ define(function () {
                     " href='http://www.github.com/" + getPr(d.origin).repository.owner + "/" +
                         getPr(d.origin).repository.name + "/pull/" +
                         getPrNumber(d.origin) + "'>#" + getPrNumber(d.origin) +
-                        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
+                        " <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a>" +
                         "</div>" +
-                        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
-                        //getPrInfo(d.origin).author + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                        getPrInfo(d.origin).author + "</span></a></div>" +
                         "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
                         formatDate(d.start) + "</span></a></div>" +
                         "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
