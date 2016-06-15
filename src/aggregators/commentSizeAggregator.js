@@ -16,11 +16,13 @@ function CommentSizeAggregator(userName, platform) {
     }
     
     function keystrokesFromUser(sessionKeyStrokes) {
+        console.log(sessionKeyStrokes);
         var object = {
             "sessionKeyStrokes": sessionKeyStrokes.reduce(function (a, b) {
                 return a.concat(b);
             })
         };
+        console.log(object);
         return octopeerService.getKeyStrokesFromUser(userName)
             .then(function (keystrokes) {
                 object.userKeyStrokes = keystrokes;
@@ -32,6 +34,7 @@ function CommentSizeAggregator(userName, platform) {
         var pullRequests = [],
             dictionary = {},
             counter = 0;
+        console.log(userSessionStrokes);
         userSessionStrokes.sessionKeyStrokes.forEach(function (stroke) {
             if (!dictionary.hasOwnProperty(stroke.session.pull_request.url)) {
                 dictionary[stroke.session.pull_request.url] = counter;
@@ -50,6 +53,7 @@ function CommentSizeAggregator(userName, platform) {
             }
             pullRequests[dictionary[stroke.session.pull_request.url]].strokes.push(stroke);
         });
+        console.log(pullRequests);
         return pullRequests;
     }
     
@@ -62,26 +66,29 @@ function CommentSizeAggregator(userName, platform) {
                 + pr.repository.owner + "/"
                 + pr.repository.name + "/"
                 + pr.pull_request_number;
-            
+            console.log(pr);
             promises.push(octopeerService.
                           getSemanticEventsOfPullRequest(userName,
                                                          pr.repository.owner,
-                                                         pr.resository.name,
+                                                         pr.repository.name,
                                                          pr.pull_request_number, {
                         event_type: 201,
                         element_type: 104
                     })
-                          );
+            );
+            console.log(pr);
             promises.push(octopeerService.
                           getSemanticEventsOfPullRequest(userName,
                                                          pr.repository.owner,
-                                                         pr.resository.name,
+                                                         pr.repository.name,
                                                          pr.pull_request_number, {
                         event_type: 201,
                         element_type: 113
                     })
-                          );
+            );
+            console.log(promises);
             RSVP.all(promises).then(function (events) {
+                console.log(events);
                 pr.commentCount = events[0].length + events[1].length;
                 var userEventsCount = events[0].filter(function (event) {
                     return event.session.user.username === userName;
@@ -90,14 +97,23 @@ function CommentSizeAggregator(userName, platform) {
                     return event.session.user.username === userName;
                 }).length;
                 pr.userCommentCount = userEventsCount;
+                console.log(pr);
             });
         });
+        console.log(pullRequests);
         return pullRequests;
     }
     
     function transformGraphObject(pullRequests) {
         console.log(pullRequests);
         return pullRequests.map(function (pr) {
+            console.log(pr);
+            console.log(pr.strokes.length);
+            console.log(pr.commentCount);
+            console.log(pr.strokes.filter(function (stroke) {
+                        return stroke.session.user.username === userName;
+                    }).length);
+            console.log(pr.userCommentCount);
             return {
                 "total": {
                     x: pr.pull_request_number,
@@ -121,7 +137,8 @@ function CommentSizeAggregator(userName, platform) {
             .then(pullRequestsFromStrokes)
             .then(getCommentCount)
             .then(prResolver.resolvePullRequests)
-            .then(transformGraphObject);
+            .then(transformGraphObject)
+            .then(fulfill);
     });
     return promise;
 }

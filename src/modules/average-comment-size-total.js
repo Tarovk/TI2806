@@ -62,7 +62,8 @@ define(function () {
             "serviceCall": function () { return new CommentSizeAggregator(globalUserName, globalPlatform); },
             "required": true
         }],
-        body: function () {
+        body: function (res) {
+            console.log(res[0]);
             var w = 720,
                 h = 350,
                 pad = 50,
