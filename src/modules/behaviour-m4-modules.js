@@ -253,7 +253,8 @@ define(function () {
             var ret = d3.select(document.createElement('div'))
                 .attr("class","row")
                 .style("margin-left","-0.75em")
-                .style("margin-right", "-0.75em");
+                .style("margin-right", "-0.75em")
+                .style("margin-bottom","0px");
 
                 generalActions = createCard(ret, 'behaviour-m4-module-sessions-generalActions');
                 definitiveClicks = createCard(ret, 'behaviour-m4-module-sessions-definitiveClicks');

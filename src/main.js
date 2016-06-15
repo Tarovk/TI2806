@@ -40,13 +40,13 @@ define(['modules/moduleList'], function (dynModules) {
                     case "line":
                         legend.append("line")
                             .attr("x1", 635)
-                            .attr("y1", 20 + i * 25)
+                            .attr("y1", -30 + i * 25)
                             .attr("x2", 665)
-                            .attr("y2", 20 + i * 25)
+                            .attr("y2", -30 + i * 25)
                             .attr("style", legendData[i].style);
                         legend.append("text")
                             .attr("x", 630)
-                            .attr("y", 25 + i * 25)
+                            .attr("y", -25 + i * 25)
                             .attr("text-anchor", "end")
                             .text(legendData[i].text);
                         break;
@@ -54,13 +54,13 @@ define(['modules/moduleList'], function (dynModules) {
                     case "rect":
                         legend.append("rect")
                             .attr("x", 635)
-                            .attr("y", 10 + i * 25)
+                            .attr("y", -40 + i * 25)
                             .attr("width", 30)
                             .attr("height", 20)
                             .attr("style", legendData[i].style);
                         legend.append("text")
                             .attr("x", 630)
-                            .attr("y", 25 + i * 25)
+                            .attr("y", -25 + i * 25)
                             .attr("text-anchor", "end")
                             .text(legendData[i].text);
                         break;

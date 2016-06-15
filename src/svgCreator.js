@@ -8,7 +8,7 @@ function SvgCreator() {
         var svg = d3.select(document.createElementNS(d3.ns.prefix.svg, 'svg'))
             	.attr("width", '100%')
                 .attr("height", '100%')
-                .attr("viewBox", "0 0 "+w+" "+h);
+                .attr("viewBox", "0 -50 "+w+" "+(h+50));
         return svg;
     }
 
