@@ -7,8 +7,8 @@ define(function () {
     var data = {
         "sem_sessions": [
             {
-                "start": "2016-06-06T12:08:30Z",
-                "end": "2016-06-06T20:08:30Z",
+                "start": "2016-06-15T12:08:30Z",
+                "end": "2016-06-15T20:08:30Z",
                 "session": {
                     "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
                     "id": 1,
@@ -30,8 +30,8 @@ define(function () {
                 }
             },
             {
-                "start": "2016-06-05T12:08:30Z",
-                "end": "2016-06-05T20:08:30Z",
+                "start": "2016-06-15T12:08:30Z",
+                "end": "2016-06-15T20:08:30Z",
                 "session": {
                     "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
                     "id": 2,
@@ -442,41 +442,40 @@ define(function () {
             .style("cursor", "pointer");
 
             var module = this;
-            function drawDay(day) {
-                console.log(data.sem_sessions.length);
+            function drawDay(daysAgo) {
+                var day = timeHelper.getNameOfDaysAgo(daysAgo);
                 var selectedSessions = [];
                 for (var i = 0; i < data.sem_sessions.length; ++i) {
-                    console.log(data.sem_sessions[i]);
-                    if (timeHelper.getDayOfTimestamp(data.sem_sessions[i].start) === day ||
-                        timeHelper.getDayOfTimestamp(data.sem_sessions[i].end) === day) {
+                    if (timeHelper.getDayOfTimestamp(new Date(data.sem_sessions[i].start)) === day ||
+                        timeHelper.getDayOfTimestamp(new Date(data.sem_sessions[i].end)) === day) {
                         selectedSessions.push(data.sem_sessions[i]);
                     }
                 }
-                /*var tip2 = d3.tip()
-                .attr('class', 'd3-tip')
-                .html(function (d) {
-                    return "<div><a style='color:black;font-size:small'" +
-                    " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
-                        d.session.pull_request.repository.name + "/pull/" +
-                        d.session.pull_request.pull_request_number + "'>#" +
-                        d.session.pull_request.pull_request_number +
-                        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
-                        "</div>" +
-                        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
-                        //getPrInfo(d.origin).author + "</span></a></div>" +
-                        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
-                        formatDate(d.start) + "</span></a></div>" +
-                        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
-                        formatDate(d.end) + "</span></a></div>" +
-                        "<div class='arrow-down'></div></div>";
-                })
-                .offset([-20, 0]);
-                g.call(tip2);*/
+                var tip2 = d3.tip()
+                    .attr('class', 'd3-tip')
+                    .html(function (d) {
+                        return "<div><a style='color:black;font-size:small'" +
+                        " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
+                            d.session.pull_request.repository.name + "/pull/" +
+                            d.session.pull_request.pull_request_number + "'>#" +
+                            d.session.pull_request.pull_request_number +
+                            //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
+                            "</div>" +
+                            //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                            //getPrInfo(d.origin).author + "</span></a></div>" +
+                            "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
+                            formatDate(d.start) + "</span></a></div>" +
+                            "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
+                            formatDate(d.end) + "</span></a></div>" +
+                            "<div class='arrow-down'></div></div>";
+                    })
+                    .offset([-20, 0]);
+                g.call(tip2);
 
                 var y = h;
                 for (i = 0; i < selectedSessions.length; ++i) {
                     y += 20;
-                    /*g.data([selectedSessions[i]]).append('rect')
+                    g.data([selectedSessions[i]]).append('rect')
                         .attr('style', 'fill: rgba(77, 136, 255, 1.00);')
                         .attr('height', 10)
                         .attr('width', 500)
@@ -494,20 +493,20 @@ define(function () {
                         })
                         .on('mousehover', function (d) {
                             d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
-                            //tip2.show(d);
+                            tip2.show(d);
                         })
                         .on('mouseout', function () {
                             d3.select(this).style('fill', 'rgba(77, 136, 255, 1.00)');
-                            //tip2.hide();
+                            tip2.hide();
                         })
-                        .style('cursor', 'pointer');*/
+                        .style('cursor', 'pointer');
                     y += 20;
                 }
                 y += margin.top;
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 
-            drawDay('Wednesday');
+            drawDay(0);
             return g;
         }
     };
