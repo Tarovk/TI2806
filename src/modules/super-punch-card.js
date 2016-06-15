@@ -6,8 +6,8 @@ define(function () {
     var data = {
         "sem_sessions": [
             {
-                "start": "2016-06-15T12:08:30Z",
-                "end": "2016-06-15T20:08:30Z",
+                "start": "2016-06-14T12:08:30Z",
+                "end": "2016-06-14T20:08:30Z",
                 "session": {
                     "url": 
                     "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
