@@ -442,37 +442,23 @@ define(function () {
             .style("cursor", "pointer");
 
             var module = this;
-            /*function drawDay(nrpr) {
-                var y = h;
-                for (var i = 0; i < nrpr; ++i) {
-                    y += 20;
-                    g.insert('rect')
-                        .attr("style", "display: block; fill: rgb(77, 136, 255);")
-                        .attr('height', 10)
-                        .attr('width', 500)
-                        .attr('x', margin.left)
-                        .attr('y', y);
-                    y += 20;
-                }
-                y += margin.top;
-                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
-            }*/
+            var dat = data;
             function drawDay(day) {
                 var selectedSessions = [];
-                for (var i = 0; i < data.sem_sessions.length; ++i) {
-                    if (timeHelper.getDayOfTimestamp(data.sem_sessions[i].start) === day ||
-                        timeHelper.getDayOfTimestamp(data.sem_sessions[i].end) === day) {
-                        selectedSessions.push(data.sem_sessions[i]);
+                for (var i = 0; i < dat.sem_sessions.length; ++i) {
+                    if (timeHelper.getDayOfTimestamp(dat.sem_sessions[i].start) === day ||
+                        timeHelper.getDayOfTimestamp(dat.sem_sessions[i].end) === day) {
+                        selectedSessions.push(dat.sem_sessions[i]);
                     }
                 }
-
                 var tip2 = d3.tip()
                 .attr('class', 'd3-tip')
                 .html(function (d) {
                     return "<div><a style='color:black;font-size:small'" +
                     " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
                         d.session.pull_request.repository.name + "/pull/" +
-                        d.session.pull_request.pull_request_number + "'>#" + d.session.pull_request.pull_request_number +
+                        d.session.pull_request.pull_request_number + "'>#" +
+                        d.session.pull_request.pull_request_number +
                         //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
                         "</div>" +
                         //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
