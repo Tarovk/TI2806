@@ -179,11 +179,6 @@ function OctopeerHelper() {
                     scaleAxis(module, objects, "x");
                 }
                 if(this.getSafeModuleValue(module,"yAxis")){
-                    console.log("module: " + module)
-                    console.log(module)
-
-
-                    console.log(this.getSafeModuleValue(module,"yAxis"))
                     scaleAxis(module, objects, "y");
                 }
                 if(this.getSafeModuleValue(module,"yRightAxis")){
