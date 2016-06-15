@@ -5,6 +5,7 @@ define([// Array of non-visualisation modules
         'apicallers',
         'pullrequestTransformer',
         'OctopeerHelper',
+        'TimeHelper',
         'resolvers/objectResolver',
         'services/OctopeerAPI',
         'services/OctopeerService',
@@ -52,6 +53,8 @@ define([// Array of non-visualisation modules
 
         //BEHAVIOUR
         'modules/behaviour-m4-modules',
+        'modules/super-punch-card',
+
         //PROJECT
     	'modules/pr-size',
     	'modules/average-comment-size-total',
