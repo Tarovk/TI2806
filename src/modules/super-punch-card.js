@@ -6,8 +6,8 @@ define(function () {
     var data = {
         "sem_sessions": [
             {
-                "start": "2016-06-06T12:08:30Z",
-                "end": "2016-06-06T20:08:30Z",
+                "start": "2016-06-15T12:08:30Z",
+                "end": "2016-06-15T20:08:30Z",
                 "session": {
                     "url": 
                     "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
@@ -32,8 +32,8 @@ define(function () {
                 }
             },
             {
-                "start": "2016-06-05T12:08:30Z",
-                "end": "2016-06-05T20:08:30Z",
+                "start": "2016-06-15T12:08:30Z",
+                "end": "2016-06-15T20:08:30Z",
                 "session": {
                     "url": 
                     "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
@@ -448,34 +448,34 @@ define(function () {
             .style("cursor", "pointer");
 
             var module = this;
-            var dat = data;
-            function drawDay(day) {
+            function drawDay(daysAgo) {
+                var day = timeHelper.getNameOfDaysAgo(daysAgo);
                 var selectedSessions = [];
-                for (var i = 0; i < dat.sem_sessions.length; ++i) {
-                    if (timeHelper.getDayOfTimestamp(dat.sem_sessions[i].start) === day ||
-                        timeHelper.getDayOfTimestamp(dat.sem_sessions[i].end) === day) {
-                        selectedSessions.push(dat.sem_sessions[i]);
+                for (var i = 0; i < data.sem_sessions.length; ++i) {
+                    if (timeHelper.getDayOfTimestamp(new Date(data.sem_sessions[i].start)) === day ||
+                        timeHelper.getDayOfTimestamp(new Date(data.sem_sessions[i].end)) === day) {
+                        selectedSessions.push(data.sem_sessions[i]);
                     }
                 }
                 var tip2 = d3.tip()
-                .attr('class', 'd3-tip')
-                .html(function (d) {
-                    return "<div><a style='color:black;font-size:small'" +
-                    " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
-                        d.session.pull_request.repository.name + "/pull/" +
-                        d.session.pull_request.pull_request_number + "'>#" +
-                        d.session.pull_request.pull_request_number +
-                        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
-                        "</div>" +
-                        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
-                        //getPrInfo(d.origin).author + "</span></a></div>" +
-                        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
-                        formatDate(d.start) + "</span></a></div>" +
-                        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
-                        formatDate(d.end) + "</span></a></div>" +
-                        "<div class='arrow-down'></div></div>";
-                })
-                .offset([-20, 0]);
+                    .attr('class', 'd3-tip')
+                    .html(function (d) {
+                        return "<div><a style='color:black;font-size:small'" +
+                        " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
+                            d.session.pull_request.repository.name + "/pull/" +
+                            d.session.pull_request.pull_request_number + "'>#" +
+                            d.session.pull_request.pull_request_number +
+                            //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
+                            "</div>" +
+                            //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                            //getPrInfo(d.origin).author + "</span></a></div>" +
+                            "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
+                            formatDate(d.start) + "</span></a></div>" +
+                            "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
+                            formatDate(d.end) + "</span></a></div>" +
+                            "<div class='arrow-down'></div></div>";
+                    })
+                    .offset([-20, 0]);
                 g.call(tip2);
 
                 var y = h;
@@ -519,7 +519,7 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 
-            drawDay('Wednesday');
+            drawDay(0);
             return g;
         }
     };
