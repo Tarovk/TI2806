@@ -7,7 +7,16 @@ define(function () {
     var data = {
         "sem_sessions": [
             {
-                "start": "2016-06-13T12:08:30Z", "end": "2016-06-13T20:08:30Z", "session": {
+                "start": "2016-06-13T12:08:30Z", "end": "2016-06-13T18:08:30Z", "session": {
+                    "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": {
+                        "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
+                            "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
+                        }, "pull_request_number": 7
+                    }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" }
+                }
+            },
+            {
+                "start": "2016-06-13T20:08:30Z", "end": "2016-06-13T21:08:30Z", "session": {
                     "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": {
                         "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": {
                             "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub"
@@ -128,6 +137,26 @@ define(function () {
                     }
                 }
                 return res;
+            }
+
+            function getDetailedSessionsOfDay(nrDaysAgo) {
+                var res = [];
+                var name = timeHelper.getNameOfDaysAgo(nrDaysAgo);
+                for (var i = 0; i < semdata.length; i++) {
+                    var item = semdata[i];
+                    
+                    
+                }
+                return res;
+            }
+
+            function getPrFromSessionNumber(snr) {
+                for (var i = 0; i < sem_sessions.length; i++) {
+                    var item = sem_sessions[i];
+                    if (item.id == snr) {
+                        return item.pull_request;
+                    }
+                }
             }
 
             function getPrNumbers(array) {
@@ -352,13 +381,6 @@ define(function () {
             .attr("y2", function (d) { return yScale(transformDay(d.end.getDay())); })
             .attr("stroke-width", STROKE_WIDTH_DEFAULT);
 
-            g.selectAll(".diff")
-            .append("circle")
-            .attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
-            .attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
-            .attr("r", RADIUS_DEFAULT)
-            .attr("class", "circle-start");
-
             // draw lines for code review up to midnight
             g.selectAll(".diff")
             .append("line")
@@ -375,21 +397,6 @@ define(function () {
             .attr("x2", function (d) { return xScale(getHoursAndMinutes(d.end)); })
             .attr("y2", function (d) { return yScale(transformDay(d.end.getDay())); })
             .attr("stroke-width", STROKE_WIDTH_DEFAULT);
-
-            g.selectAll("g")
-            //.style("fill", "green")
-            .style("stroke", "black")
-            .on("mouseover", function (d) {
-                d3.select(this).selectAll("circle").attr("r", RADIUS_HOVER);
-                d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_HOVER);
-                var svg = d3.select(this).select(".circle-start");
-                tip.show(d, svg.node());
-            })
-            .on("mouseout", function (d) {
-                d3.select(this).selectAll("circle").attr("r", RADIUS_DEFAULT);
-                d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_DEFAULT);
-                tip.hide();
-            });
 
             g.selectAll("line")
             .style("stroke", function (d) {
@@ -412,16 +419,18 @@ define(function () {
                 var sessions = getSessionsOfDay(daysAgo);
                 console.log(sessions);
                 var y = h;
-                g.selectAll('day')
+                g.selectAll('#pr-bar').remove();
+                g.selectAll('#pr-bar')
                 .data(sessions)
                 .enter()
                 .append('line')
+                .attr('id', 'pr-bar')
                 .attr('x1', xScale(0))
                 .attr('x2', function (d) {
                     return xScale(getHoursAndMinutes(new Date(d.end)) - getHoursAndMinutes(new Date(d.start)));
                 })
-                .attr('y1', y + 10)
-                .attr('y2', y + 10)
+                .attr('y1', function (d, i) { return y + i * 30; })
+                .attr('y2', function (d, i) { return y + i * 30; })
                 .style("stroke", function (d) {
                     var id = d.session.pull_request.pull_request_number;
                     return color(prNumbers.indexOf(id));
@@ -429,22 +438,12 @@ define(function () {
                 .attr('stroke-width', 20)
                 .attr('stroke', 'black');
                 console.log("drawn")
+                getDetailedSessionsOfDay(2);
 
-                //for (var i = 0; i < nrpr; ++i) {
-                //    y += 20;
-                //    g.insert('rect')
-                //        .attr("style", "display: block; fill: rgb(77, 136, 255);")
-                //        .attr('height', 10)
-                //        .attr('width', 500)
-                //        .attr('x', margin.left)
-                //        .attr('y', y);
-                //    y += 20;
-                //}
                 var vbHeight = y + 20 * sessions.length + margin.top;
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + vbHeight);
             }
 
-            //drawDay(3);
             return g;
         }
     };
