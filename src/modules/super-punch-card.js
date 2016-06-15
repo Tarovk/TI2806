@@ -83,7 +83,7 @@ define(function () {
     var h = 350;
 
     var xScale = d3.scale.linear().domain([0, 24]).range([margin.left, w - margin.right]);
-    var yScale = d3.scale.linear().domain([6, 0]).range([margin.top, h - margin.bottom]);
+    var yScale = d3.scale.linear().domain([6, 0]).range([margin.top, h - margin.bottom - 20]);
     var minuteScale = d3.scale.linear().domain([0, 60]).range([0, 1]);
 
     var today = new Date().getDay();
@@ -141,7 +141,7 @@ define(function () {
                     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
                             'Thursday', 'Friday', 'Saturday'][(d + today + 1) % 7];
                 })
-                .scale(yScale.copy());
+                .scale(d3.scale.linear().domain([6, 0]));
         },
         xAxisFitFunction: false,
         yAxisFitFunction: false,
