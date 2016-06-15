@@ -78,12 +78,12 @@ define(function () {
         }
     ];
     /*jshint ignore:end*/
-    var margin = { left: 75, right: 50, top: 10, bottom: 70 };
+    var margin = { left: 75, right: 50, top: 10, bottom: 50 };
     var w = 1440;
     var h = 350;
 
-    var xScale = d3.scale.linear().domain([0, 24]).range([margin.left, w - margin.right - margin.left]);
-    var yScale = d3.scale.linear().domain([6, 0]).range([margin.top, h - margin.bottom]);
+    var xScale = d3.scale.linear().domain([0, 24]).range([margin.left, w - margin.right]);
+    var yScale = d3.scale.linear().domain([6, 0]).range([margin.top, h - margin.bottom - 20]);
     var minuteScale = d3.scale.linear().domain([0, 60]).range([0, 1]);
 
     var today = new Date().getDay();
@@ -112,6 +112,7 @@ define(function () {
         parentSelector: "#behaviour-modules",
         size: "m12",
         customSVGSize: { h: h, w: w },
+        margin: margin,
         xAxis: true,
         yAxis: true,
         xAxisLine: false,
@@ -119,11 +120,7 @@ define(function () {
         xAxisTicks: false,
         yAxisTicks: false,
         xAxisScale: function () {
-            d3.select('#super-punch-card').select('.xAxis')
-                .style('transform',
-                    'translate(' + margin.left + 'px, ' + (h - margin.bottom + 20) + 'px)');
             return d3.svg.axis()
-                .ticks(24 * 2)
                 .tickValues(generateTickValues())
                 .tickFormat(function (d, i) {
                     if (isInt(d)) {
@@ -135,8 +132,6 @@ define(function () {
                 .scale(xScale.copy());
         },
         yAxisScale: function () {
-            d3.select('#super-punch-card').select('.yAxis')
-                .style('transform', 'translate(' + margin.left + 'px, 10px)');
             return d3.svg.axis()
                 .tickFormat(function (d, i) {
                     if ((d + today + 1) % 7 === today) {
@@ -147,11 +142,9 @@ define(function () {
                 })
                 .scale(d3.scale.ordinal()
                     .domain([0, 1, 2, 3, 4, 5, 6])
-                    .rangePoints([0, h - margin.bottom - margin.top])
+                    .rangePoints([0, h - margin.bottom - margin.top - 20])
                 );
         },
-        xAxisFitFunction: false,
-        yAxisFitFunction: false,
         data: [{
             "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
             "required": true
@@ -325,7 +318,7 @@ define(function () {
             .attr("y", function (d) { return yScale(d) - rectHeight / 2; })
             .attr("x", xScale(0))
             .attr("height", rectHeight)
-            .attr("width", xScale(24))
+            .attr("width", xScale(24)-xScale(0))
             .attr("rx", 6)
             .attr("ry", 6)
             .attr("fill", "white")

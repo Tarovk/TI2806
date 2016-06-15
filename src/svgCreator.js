@@ -37,7 +37,7 @@ function SvgCreator() {
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
 
             var axisContainer = g.append("g")
-                .attr("transform", "translate("+ margin.bottom +"," + margin.top + ")")
+                .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
                 .attr("class","yAxis noAxis visibleTicks").call(axis);
 
             var degrees;
@@ -79,7 +79,7 @@ function SvgCreator() {
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
 
             var axisContainer = g.append("g")
-                .attr("transform", "translate("+(720-50)+"," + 10 + ")")
+                .attr("transform", "translate(" + (svgSize.w - margin.right) + ", " + margin.top + ")")
                 .attr("class","yRightAxis noAxis visibleTicks").call(axis);
 
             var degrees;
@@ -114,6 +114,8 @@ function SvgCreator() {
 
         function createXAxis(module) {
             var axis;
+            var svgSize = octopeerHelper.getSafeModuleValue(module, "customSVGSize");
+            var margin = octopeerHelper.getSafeModuleValue(module, "margin");
             if ((axis = octopeerHelper.getSafeModuleValue(module,"xAxisScale")()) === "fit") {
                 axis = d3.svg.axis().scale(d3.scale.linear().domain([0,100]).nice());
             }
@@ -126,7 +128,7 @@ function SvgCreator() {
             var g = d3.select(document.createElementNS(d3.ns.prefix.svg, "g"));
 
             var axisContainer = g.append("g")
-                .attr("transform", "translate("+50+"," + 300 + ")")
+                .attr("transform", "translate(" + margin.left + ", " + (svgSize.h - margin.bottom) + ")")
                 .attr("class","xAxis noAxis visibleTicks").call(axis);
 
             var degrees;
