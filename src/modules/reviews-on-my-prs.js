@@ -4,6 +4,7 @@ define(function () {
         height = 755;
 
     var yTransform = 0;
+    var yScrollTransform = 0;
 
     var container;
 
@@ -159,6 +160,31 @@ define(function () {
         }
     }
 
+    function addScrollbar(p,d) {
+        if(d.length > 5) {
+            p.append('rect')
+                .attr('x',715)
+                .attr('y',10)
+                .attr('width',6)
+                .attr('height',735)
+                .style('fill','lightgray');
+
+            p.append('rect')
+                .attr('class','reviews-on-my-prs-scroll-handle')
+                .attr('x',715)
+                .attr('y',10)
+                .attr('width',6)
+                .attr('height', function () {
+                    if(d.length>5) {
+                        return 5+730*Math.pow(0.5,0.2*d.length-1);
+                    } else {
+                        return 735;
+                    }
+                })
+                .style('fill','gray');
+            }
+    }
+
     return {
         name: 'reviews-on-my-prs',
         title: 'Reviews on your PRs',
@@ -191,15 +217,28 @@ define(function () {
 
             function scroll(event) {
                 var delta = -event.originalEvent.wheelDelta;
-                if(delta < 0 && yTransform === 0 || delta > 0 && yTransform <= -100*data.length) {
+                if(data.length < 6 ||
+                    delta < 0 && yTransform === 0 ||
+                    delta > 0 && yTransform <= -150*(data.length-5)) {
                     return;
                 }
+
+                var scrollhandle = g.selectAll('.reviews-on-my-prs-scroll-handle');
+                var scrollhandleheight = parseInt(scrollhandle.attr('height'));
+                var scrolltransition = scrollhandle.transition().duration(100);
+                var scrolldistance = 735-scrollhandleheight;
+                var scrolldelta = -delta*(scrolldistance/(755-150*data.length));
+                yScrollTransform+=scrolldelta;
+
                 if(delta < 0 && yTransform-delta > 0) {
                     yTransform = 0;
-                } else if(delta > 0 && yTransform-delta > 100*data.length){
-                    yTransform = -100*data.length;
+                    scrolltransition.attr('y',10);
+                } else if(delta > 0 && yTransform-delta > 150*(data.length-5)){
+                    yTransform = -150*(data.length-5);
+                    scrolltransition.attr('y',745-scrollhandleheight);
                 } else {
                     yTransform -= delta;
+                    scrolltransition.attr('y',yScrollTransform);
                 }
                 container.transition()
                     .duration(300)
@@ -211,6 +250,7 @@ define(function () {
 
 
             addPrs(container,data);
+            addScrollbar(g,data);
 
             return g;
         }

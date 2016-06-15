@@ -31,7 +31,7 @@ define(function () {
         .offset([0, 15])
         .html(function(d) {
             return "<div><a style='color:black;font-size:small'"+
-                    " href='http://www.github.com/"+d.repo+"/pull/"+d.id+"'>#" + d.id +
+                    " href='"+d.prurl+"'>#" + d.id +
                     " <span style='color:gray'>"+d.name+"</span></a></div>"+
                 "<div style='margin-top:-5px;'><a style='color:lightgray;font-size:smaller;'"+
                     " href='http://www.github.com/"+d.repo+"'>" + d.repo + "</a></div>"+
