@@ -477,7 +477,6 @@ define(function () {
                     .offset([-20, 0]);
                 g.call(tip2);
 
-                var y = h;
 
                 function clickOnRect(d) {
                     var url = 'https://';
@@ -500,6 +499,7 @@ define(function () {
                     tip2.hide();
                 }
 
+                var y = h;
                 for (i = 0; i < selectedSessions.length; ++i) {
                     y += 20;
                     g.data([selectedSessions[i]]).append('rect')
@@ -513,13 +513,17 @@ define(function () {
                         .on('mouseover',  mouseOverRect)
                         .on('mouseout', mouseOutRect)
                         .style('cursor', 'pointer');
+                    g.data([selectedSessions[i]]).append('text')
+                        .attr('class', 'prPerDay')
+                        .attr('x', margin.left - 20)
+                        .attr('y', y + 10)
+                        .text(function (d) { return '#' + d.session.pull_request.pull_request_number; });
                     y += 20;
                 }
                 y += margin.top;
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 
-            //drawDay(0);
             return g;
         }
     };
