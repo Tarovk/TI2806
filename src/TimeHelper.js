@@ -32,6 +32,7 @@ function TimeHelper() {
 
     this.getDayOfTimestamp = function (timestamp) {
         for (var i = 0; i < weekday.length; ++i) {
+            var timestamp = new Date(timestamp);
             var timespan = this.getTimespanOfDay(weekday[i]);
             if (timespan.start.getTime() <= timestamp.getTime() &&
                 timestamp.getTime() <= timespan.end.getTime()) {

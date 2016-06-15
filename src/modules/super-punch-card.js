@@ -1,4 +1,4 @@
-/* globals define, PunchCardAggregator, globalUserName*/
+/* globals define, PunchCardAggregator, globalUserName, timeHelper */
 /* jshint unused : vars*/
 /* jshint maxstatements: 50*/
 
@@ -32,7 +32,7 @@ define(function () {
                         }, "pull_request_number": 9
                     }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" }
                 }
-            },
+            }
         ]
     };
 
@@ -43,15 +43,15 @@ define(function () {
     // look at commits tab
 
     var semdata = [
-                        {
+        {
             "view_conversation": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "write_comment": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "write_inline_comment": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "view_code": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "view_commits": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
             "session_id": 1
-                        }
-                  ];
+        }
+    ];
     /*jshint ignore:end*/
     var margin = { left: 50, right: 50, top: 10, bottom: 50 };
     var w = 1440;
@@ -415,6 +415,30 @@ define(function () {
 
             var module = this;
             function drawDay(daysAgo) {
+                
+                var dat = data;
+                var selectedSessions = [];
+                
+                var tip2 = d3.tip()
+                .attr('class', 'd3-tip')
+                .html(function (d) {
+                    return "<div><a style='color:black;font-size:small'" +
+                    " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
+                        d.session.pull_request.repository.name + "/pull/" +
+                        d.session.pull_request.pull_request_number + "'>#" +
+                        d.session.pull_request.pull_request_number +
+                        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
+                        "</div>" +
+                        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                        //getPrInfo(d.origin).author + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
+                        formatDate(d.start) + "</span></a></div>" +
+                        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
+                        formatDate(d.end) + "</span></a></div>" +
+                        "<div class='arrow-down'></div></div>";
+                })
+                .offset([-20, 0]);
+                g.call(tip2);
                 console.log("check");
                 var sessions = getSessionsOfDay(daysAgo);
                 console.log(sessions);
