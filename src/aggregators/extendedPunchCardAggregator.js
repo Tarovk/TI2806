@@ -1,16 +1,11 @@
-/*exported Graph1Aggregator*/
-/*globals octopeerService, RSVP, PunchCardAggregator, PullRequestResolver, DataAggregatorHelperFunctions, UserResolver */
+/*exported ExtendedPunchCardAggregator*/
+/*globals octopeerService, RSVP, PullRequestResolver, DataAggregatorHelperFunctions, UserResolver */
 /*jshint unused: false*/
 function ExtendedPunchCardAggregator(userName, platform, from, to) {
     "use strict";
     var promise,
         prResolver = new PullRequestResolver(),
         userResolver = new UserResolver(platform);
-    
-    console.log(userName);
-    console.log(platform);
-    console.log(from);
-    console.log(to);
     
     //1. Get semantic events user x
     //2. filter op datum (from, to) x
@@ -20,7 +15,6 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
     //6. sla start en end op, en 
     
     function filterEventsOnDate(events) {
-        console.log(events);
         return events.filter(function (event) {
             return new Date(event.created_at) > from &&
                 new Date(event.created_at) < to;
@@ -46,10 +40,7 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
     }
     
     function endArrayIfAble(array, endDate) {
-        console.log(array, endDate);
         if (array.length > 0 && !array[array.length - 1].hasOwnProperty("end")) {
-            console.log(array, endDate);
-            console.log(array[array.length - 1], endDate);
             array[array.length - 1].end = endDate;
         }
     }
@@ -59,6 +50,7 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
             filling = false,
             sessionEvent;
         events.forEach(function (event) {
+            /*jshint maxcomplexity:1000 */
             if (event.event_type === 401 && !filling) {
                 filling = true;
                 semanticEvents.push({
@@ -105,8 +97,8 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
                            event.element_type === 115) && event.event_type === 201) {
                     endArrayIfAble(sessionEvent.write_comment, new Date(event.created_at));
                 }
-                if ((event.element_type === 502 || event.element_type === 105)
-                        && event.event_type === 201) { //start inline commenting
+                if ((event.element_type === 502 || event.element_type === 105) &&
+                        event.event_type === 201) { //start inline commenting
                     startArrayIfAble(sessionEvent.write_inline_comment, new Date(event.created_at));
                 } else if ((event.element_type === 103 || event.element_type === 104) &&
                            event.event_type === 201) {
@@ -114,7 +106,6 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
                 }
             }
         });
-        console.log(semanticEvents);
         return semanticEvents;
     }
     
