@@ -119,6 +119,7 @@ define(function () {
         xAxisTicks: false,
         yAxisTicks: false,
         xAxisScale: function () {
+            d3.select('#super-punch-card').select('.xAxis').style('transform', 'translate(' + margin.left + 'px, ' + (h - margin.bottom + 20) + 'px)');
             return d3.svg.axis()
                 .ticks(24 * 2)
                 .tickValues(generateTickValues())
@@ -132,7 +133,7 @@ define(function () {
                 .scale(xScale.copy());
         },
         yAxisScale: function () {
-            d3.select('#super-punch-card').select('.yAxis').style('transform', 'translate(' + margin.left + 'px, 10px)')
+            d3.select('#super-punch-card').select('.yAxis').style('transform', 'translate(' + margin.left + 'px, 10px)');
             return d3.svg.axis()
                 .tickFormat(function (d, i) {
                     if ((d + today + 1) % 7 === today) {
