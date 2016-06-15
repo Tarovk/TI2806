@@ -1,5 +1,5 @@
 /*exported ReviewOnYourPrsAggregator*/
-/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver, UserResolver*/
+/*globals octopeerService, RSVP, ObjectResolver, PullRequestResolver, UserResolver, DataAggregatorHelperFunctions*/
 /*jshint unused: false*/
 function ReviewOnYourPrsAggregator(userName, platform) {
     "use strict";
@@ -75,6 +75,7 @@ function ReviewOnYourPrsAggregator(userName, platform) {
             return {
                 "pr": us.pull_request.pull_request_number,
                 "pr_url": us.pull_request.prInfo.url,
+                "rep_url": DataAggregatorHelperFunctions.getRepoUrl(us.pull_request.repository),
                 "repo": us.pull_request.repository.name,
                 "reviews": us.peerReviewers.map(function (prv) {
                     return {

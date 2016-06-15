@@ -123,7 +123,7 @@ define(function () {
 
             g.selectAll(".repo")
                 .append("a")
-                    .attr("xlink:href", function(d) { return "http://www.github.com/"+d.title; })
+                    .attr("xlink:href", function(d) { return d.rep_url; })
                 .append("rect")
                     .attr("x", -40)
                     .attr("y", -14)

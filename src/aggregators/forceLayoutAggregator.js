@@ -51,7 +51,8 @@ function ForceLayoutAggregator(userName, platform) {
             graphObject.nodes.push({
                 "name": repo.owner,
                 "type": "repo",
-                "title": repo.name
+                "title": repo.name,
+                "rep_url": DataAggregatorHelperFunctions.getRepoUrl(repo)
             });
             graphObject.links.push({
                 "source": repoCounter,

@@ -9,7 +9,6 @@ define(function () {
     var container;
 
     function addText(p, d) {
-        console.log(d);
         p.append('a')
             .attr('href',d.pr_url)
             .append('text')
@@ -17,10 +16,10 @@ define(function () {
                 .attr('y',80)
                 .style('font-size','3em')
                 .style('font-weight','500')
-                .text(d.pr)
+                .text(d.pr);
 
         p.append('a')
-            .attr('href','http://www.github.com/'+d.repo)
+            .attr('href',d.rep_url)
             .append('text')
                 .attr('x',0)
                 .attr('y',110)

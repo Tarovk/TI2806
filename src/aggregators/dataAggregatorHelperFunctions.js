@@ -69,5 +69,13 @@ var DataAggregatorHelperFunctions = {
             pr.totalDuration = Math.ceil(pr.totalDuration / 1000 / 60);
         });
         return pullRequests;
+    },
+    
+    "getRepoUrl": function (repository) {
+        if (repository.platform.toLowerCase() === "bitbucket") {
+            return 'https://bitbucket.org/' + repository.owner + '/' + repository.name;
+        } else if (repository.platform.toLowerCase() === "github") {
+            return 'https://github.com/' + repository.owner + '/' + repository.name;
+        }
     }
 };
