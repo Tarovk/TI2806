@@ -442,16 +442,17 @@ define(function () {
             .style("cursor", "pointer");
 
             var module = this;
-            var dat = data;
             function drawDay(day) {
+                console.log(data.sem_sessions.length);
                 var selectedSessions = [];
-                for (var i = 0; i < dat.sem_sessions.length; ++i) {
-                    if (timeHelper.getDayOfTimestamp(dat.sem_sessions[i].start) === day ||
-                        timeHelper.getDayOfTimestamp(dat.sem_sessions[i].end) === day) {
-                        selectedSessions.push(dat.sem_sessions[i]);
+                for (var i = 0; i < data.sem_sessions.length; ++i) {
+                    console.log(data.sem_sessions[i]);
+                    if (timeHelper.getDayOfTimestamp(data.sem_sessions[i].start) === day ||
+                        timeHelper.getDayOfTimestamp(data.sem_sessions[i].end) === day) {
+                        selectedSessions.push(data.sem_sessions[i]);
                     }
                 }
-                var tip2 = d3.tip()
+                /*var tip2 = d3.tip()
                 .attr('class', 'd3-tip')
                 .html(function (d) {
                     return "<div><a style='color:black;font-size:small'" +
@@ -470,12 +471,12 @@ define(function () {
                         "<div class='arrow-down'></div></div>";
                 })
                 .offset([-20, 0]);
-                g.call(tip2);
+                g.call(tip2);*/
 
                 var y = h;
                 for (i = 0; i < selectedSessions.length; ++i) {
                     y += 20;
-                    g.data([selectedSessions[i]]).append('rect')
+                    /*g.data([selectedSessions[i]]).append('rect')
                         .attr('style', 'fill: rgba(77, 136, 255, 1.00);')
                         .attr('height', 10)
                         .attr('width', 500)
@@ -493,13 +494,13 @@ define(function () {
                         })
                         .on('mousehover', function (d) {
                             d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
-                            tip2.show(d);
+                            //tip2.show(d);
                         })
                         .on('mouseout', function () {
                             d3.select(this).style('fill', 'rgba(77, 136, 255, 1.00)');
-                            tip2.hide();
+                            //tip2.hide();
                         })
-                        .style('cursor', 'pointer');
+                        .style('cursor', 'pointer');*/
                     y += 20;
                 }
                 y += margin.top;
