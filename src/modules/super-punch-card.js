@@ -491,7 +491,7 @@ define(function () {
                     window.open(url);
                 }
 
-                function mouseHoverRect(d) {
+                function mouseOverRect(d) {
                     d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
                     tip2.show(d);
                 }
@@ -510,7 +510,7 @@ define(function () {
                         .attr('x', margin.left)
                         .attr('y', y)
                         .on('click', clickOnRect)
-                        .on('mousehover',  mouseHoverRect)
+                        .on('mouseover',  mouseOverRect)
                         .on('mouseout', mouseOutRect)
                         .style('cursor', 'pointer');
                     y += 20;
