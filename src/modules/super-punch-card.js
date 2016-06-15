@@ -513,6 +513,10 @@ define(function () {
                         .on('mouseover',  mouseOverRect)
                         .on('mouseout', mouseOutRect)
                         .style('cursor', 'pointer');
+                    g.data([selectedSessions[i]]).append('span')
+                        .attr('class', 'prPerDay')
+                        .attr('style', 'left: ' + (margin.left - 20) + 'px; position: absolute; top: ' + y + 'px;')
+                        .text(function (d) { return '#' + d.session.pull_request.pull_request_number; });
                     y += 20;
                 }
                 y += margin.top;
