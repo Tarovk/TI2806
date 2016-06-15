@@ -111,7 +111,7 @@ function OctopeerHelper() {
             function setStandardAxisValues(module,axisname,axis) {
                 var svgSize = octopeerHelper.getSafeModuleValue(module, "customSVGSize");
                 var margin = octopeerHelper.getSafeModuleValue(module, "margin");
-                axis.scale().range([svgSize.h - 80 - margin.top, 0]).nice();
+                axis.scale().range([svgSize.h - margin.bottom - margin.top, 0]).nice();
                 if (axisname === "x") {
 
                     axis.orient("bottom");
@@ -179,6 +179,11 @@ function OctopeerHelper() {
                     scaleAxis(module, objects, "x");
                 }
                 if(this.getSafeModuleValue(module,"yAxis")){
+                    console.log("module: " + module)
+                    console.log(module)
+
+
+                    console.log(this.getSafeModuleValue(module,"yAxis"))
                     scaleAxis(module, objects, "y");
                 }
                 if(this.getSafeModuleValue(module,"yRightAxis")){
