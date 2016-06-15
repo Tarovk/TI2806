@@ -6,7 +6,7 @@ define(function () {
     var data = {
         "sem_sessions": [
             {
-                "start": "2016-06-14T12:08:30Z",
+                "start": "2016-06-14T00:00:00Z",
                 "end": "2016-06-14T20:08:30Z",
                 "session": {
                     "url": 
@@ -33,7 +33,7 @@ define(function () {
             },
             {
                 "start": "2016-06-15T12:08:30Z",
-                "end": "2016-06-15T20:08:30Z",
+                "end": "2016-06-15T23:59:00Z",
                 "session": {
                     "url": 
                     "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
@@ -78,7 +78,7 @@ define(function () {
         }
     ];
     /*jshint ignore:end*/
-    var margin = { left: 50, right: 50, top: 10, bottom: 50 };
+    var margin = { left: 75, right: 50, top: 10, bottom: 50 };
     var w = 1440;
     var h = 350;
 
@@ -112,6 +112,7 @@ define(function () {
         parentSelector: "#behaviour-modules",
         size: "m12",
         customSVGSize: { h: h, w: w },
+        margin: margin,
         xAxis: true,
         yAxis: true,
         xAxisLine: false,
@@ -120,7 +121,6 @@ define(function () {
         yAxisTicks: false,
         xAxisScale: function () {
             return d3.svg.axis()
-                .ticks(24 * 2)
                 .tickValues(generateTickValues())
                 .tickFormat(function (d, i) {
                     if (isInt(d)) {
@@ -133,7 +133,6 @@ define(function () {
         },
         yAxisScale: function () {
             return d3.svg.axis()
-                .ticks(7)
                 .tickFormat(function (d, i) {
                     if ((d + today + 1) % 7 === today) {
                         return 'Today';
@@ -141,10 +140,11 @@ define(function () {
                     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
                             'Thursday', 'Friday', 'Saturday'][(d + today + 1) % 7];
                 })
-                .scale(d3.scale.linear().domain([6, 0]));
+                .scale(d3.scale.ordinal()
+                    .domain([0, 1, 2, 3, 4, 5, 6])
+                    .rangePoints([0, h - margin.bottom - margin.top - 20])
+                );
         },
-        xAxisFitFunction: false,
-        yAxisFitFunction: false,
         data: [{
             "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
             "required": true
@@ -318,7 +318,7 @@ define(function () {
             .attr("y", function (d) { return yScale(d) - rectHeight / 2; })
             .attr("x", xScale(0))
             .attr("height", rectHeight)
-            .attr("width", xScale(24))
+            .attr("width", xScale(24)-xScale(0))
             .attr("rx", 6)
             .attr("ry", 6)
             .attr("fill", "white")
@@ -423,8 +423,7 @@ define(function () {
             .on("mouseover", function (d) {
                 d3.select(this).selectAll("circle").attr("r", RADIUS_HOVER);
                 d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_HOVER);
-                var svg = d3.select(this).select(".circle-start");
-                tip.show(d, svg.node());
+                tip.show(d);
             })
             .on("mouseout", function (d) {
                 d3.select(this).selectAll("circle").attr("r", RADIUS_DEFAULT);
