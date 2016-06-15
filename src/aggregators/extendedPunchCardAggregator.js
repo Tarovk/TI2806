@@ -109,11 +109,65 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
         return semanticEvents;
     }
     
+    function transformToGraphObject(semanticEvents) {
+        return semanticEvents.map(function (se) {
+            var conversationViewEvents = se.view_conversation.map(function (e) {
+                return {
+                    "start": e.start,
+                    "end": e.end,
+                    "type": "view_conversation"
+                };
+            });
+            var codeViewEvents = se.view_code.map(function (e) {
+                return {
+                    "start": e.start,
+                    "end": e.end,
+                    "type": "view_code"
+                };
+            });
+            var commitViewEvents = se.view_commits.map(function (e) {
+                return {
+                    "start": e.start,
+                    "end": e.end,
+                    "type": "view_commits"
+                };
+            });
+            var writeComments = se.write_comment.map(function (e) {
+                return {
+                    "start": e.start,
+                    "end": e.end,
+                    "type": "write_comment"
+                };
+            });
+            var writeInlineComments = se.write_inline_comment.map(function (e) {
+                return {
+                    "start": e.start,
+                    "end": e.end,
+                    "type": "write_inline_comment"
+                };
+            });
+
+            var viewConcatinated = conversationViewEvents.concat(codeViewEvents).concat(commitViewEvents);
+            var writeConcatinated = writeComments.concat(writeInlineComments);
+            var earliest = conversationViewEvents.sort(function (a, b) {
+                return a - b;
+            })[0].start;
+            
+            return {
+                viewData: viewConcatinated,
+                writeData: writeConcatinated,
+                session_id: se.session_id,
+                earliest: earliest
+            };
+        });
+    }
+    
     return new RSVP.Promise(function (fulfill, reject) {
         octopeerService.getSemanticEventsFromUser(userName)
             .then(filterEventsOnDate)
             .then(orderEvents)
             .then(findSemanticSessions)
+            .then(transformToGraphObject)
             .then(fulfill);
     });
 }
