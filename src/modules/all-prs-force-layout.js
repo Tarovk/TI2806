@@ -34,7 +34,7 @@ define(function () {
                     " href='"+d.prurl+"'>#" + d.id +
                     " <span style='color:gray'>"+d.name+"</span></a></div>"+
                 "<div style='margin-top:-5px;'><a style='color:lightgray;font-size:smaller;'"+
-                    " href='http://www.github.com/"+d.repo+"'>" + d.repo + "</a></div>"+
+                    " href='"+d.rep_url+"'>" + d.repo + "</a></div>"+
                 "<div style='margin-top:5px;''><strong>Review duration : </strong> " + d.size+ 
                     " minutes</span></div>"+
                 "<div style='margin-top:5px;''><strong>Status : </strong> " + statusHTML(d.status) +
