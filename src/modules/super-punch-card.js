@@ -423,8 +423,7 @@ define(function () {
             .on("mouseover", function (d) {
                 d3.select(this).selectAll("circle").attr("r", RADIUS_HOVER);
                 d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_HOVER);
-                var svg = d3.select(this).select(".circle-start");
-                tip.show(d, svg.node());
+                tip.show(d);
             })
             .on("mouseout", function (d) {
                 d3.select(this).selectAll("circle").attr("r", RADIUS_DEFAULT);
