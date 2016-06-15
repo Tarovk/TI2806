@@ -6,7 +6,7 @@ define(function () {
     var data = {
         "sem_sessions": [
             {
-                "start": "2016-06-14T12:08:30Z",
+                "start": "2016-06-14T00:00:00Z",
                 "end": "2016-06-14T20:08:30Z",
                 "session": {
                     "url": 
@@ -33,7 +33,7 @@ define(function () {
             },
             {
                 "start": "2016-06-15T12:08:30Z",
-                "end": "2016-06-15T20:08:30Z",
+                "end": "2016-06-15T23:59:00Z",
                 "session": {
                     "url": 
                     "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
@@ -119,7 +119,9 @@ define(function () {
         xAxisTicks: false,
         yAxisTicks: false,
         xAxisScale: function () {
-            d3.select('#super-punch-card').select('.xAxis').style('transform', 'translate(' + margin.left + 'px, ' + (h - margin.bottom + 20) + 'px)');
+            d3.select('#super-punch-card').select('.xAxis')
+                .style('transform',
+                    'translate(' + margin.left + 'px, ' + (h - margin.bottom + 20) + 'px)');
             return d3.svg.axis()
                 .ticks(24 * 2)
                 .tickValues(generateTickValues())
@@ -133,7 +135,8 @@ define(function () {
                 .scale(xScale.copy());
         },
         yAxisScale: function () {
-            d3.select('#super-punch-card').select('.yAxis').style('transform', 'translate(' + margin.left + 'px, 10px)');
+            d3.select('#super-punch-card').select('.yAxis')
+                .style('transform', 'translate(' + margin.left + 'px, 10px)');
             return d3.svg.axis()
                 .tickFormat(function (d, i) {
                     if ((d + today + 1) % 7 === today) {
