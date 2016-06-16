@@ -40,7 +40,6 @@ define(function () {
         }
         for (i = 0; i < data.length; ++i) {
             buckets[devide(data[i].y)] += 1;
-            console.log(devide(data[i].x));
         }
         sizeData = [];
         for (i = 0; i < buckets.length; ++i) {
@@ -48,9 +47,6 @@ define(function () {
         }
         maxValue = Math.max.apply(Math, sizeData.map(function (o) { return o.y; }));
         ySizeScale.domain([0, maxValue]);
-
-        console.log(data);
-        console.log(sizeData);
     }
 
     return {
