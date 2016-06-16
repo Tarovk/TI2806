@@ -558,6 +558,7 @@ define(function () {
             var dayXScale;
 
             var a;
+            var map = new Map();
 
             function drawDay(daysAgo) {
                 d3.select('#' + module.name).select('svg')
@@ -570,13 +571,10 @@ define(function () {
 
                 var timespan = timeHelper.getTimespanOfDay(timeHelper.getNameOfDaysAgo(daysAgo));
                 g.selectAll('.day').remove();
+                g.selectAll('.removeAxis').remove();
 
-                //DUMMY DATA
-                //a = eventData;
 
-                // REAL DATA
-                new ExtendedPunchCardAggregator(globalUserName, globalPlatform, timespan.start, timespan.end)
-                    .then(function (a) {
+                function drawEverything(a) {
                     var latest = getLatestTimestamp(a);
                     var earliest = getEarliestTimestamp(a);
                     dayXScale = d3.scale.linear()
@@ -590,33 +588,17 @@ define(function () {
                     drawWriteEvents(getAllWriteData(a), a);
                     drawNewAxis(getAllWriteData(a), uBound);
                     spinner.addClass('hidden');
-                });
+                }
 
-                /*jshint ignore: start*/
-                var dummy = {"viewData":[{"start":"2016-06-15T07:34:47.965Z","end":"2016-06-15T07:41:38.806Z","type":"view_conversation"}],
-                             "writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"}
-                /*jshint ignore:end*/
-                //var tip2 = d3.tip()
-                //    .attr('class', 'd3-tip')
-                //    .html(function (d) {
-                //        return "<div><a style='color:black;font-size:small'" +
-                //        " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
-                //        d.session.pull_request.repository.name + "/pull/" +
-                //        d.session.pull_request.pull_request_number + "'>#" +
-                //        d.session.pull_request.pull_request_number +
-                //        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
-                //        "</div>" +
-                //        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
-                //        //getPrInfo(d.origin).author + "</span></a></div>" +
-                //        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
-                //        formatDate(d.start) + "</span></a></div>" +
-                //        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
-                //        formatDate(d.end) + "</span></a></div>" +
-                //        "<div class='arrow-down'></div></div>";
-                //    })
-                //    .offset([-20, 0]);
-                //g.call(tip2);
-
+                if (!map.get(daysAgo)) {
+                    new ExtendedPunchCardAggregator(globalUserName, 'GitHub', timespan.start, timespan.end)
+                        .then(function (a) {
+                            drawEverything(a);
+                            map.set(daysAgo, a);
+                        });
+                } else {
+                    drawEverything(map.get(daysAgo));
+                }
                 
             }
 
@@ -631,7 +613,7 @@ define(function () {
                     })
                     .scale(dayXScale);
                 g.append("g")
-                    .attr("class", "visibleTicks noAxis")
+                    .attr("class", "visibleTicks noAxis removeAxis")
                     .attr("transform", "translate(0," + (y + 30 * sessionNumbers.length + 40) +")")
                     .call(dayXAxis);
             }
