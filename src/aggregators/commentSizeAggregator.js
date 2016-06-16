@@ -7,6 +7,12 @@ function CommentSizeAggregator(userName, platform) {
         prResolver = new PullRequestResolver(),
         api = new OctopeerAPI();
     
+    function flatten(arr) {
+        return arr.reduce(function (flat, toFlatten) {
+            return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+        }, []);
+    }
+    
     function keystrokesFromSessions(sessions) {
         var promises = [];
         sessions.forEach(function (session) {
@@ -15,27 +21,12 @@ function CommentSizeAggregator(userName, platform) {
         return RSVP.all(promises);
     }
     
-    function keystrokesFromUser(sessionKeyStrokes) {
-        console.log(sessionKeyStrokes);
-        var object = {
-            "sessionKeyStrokes": sessionKeyStrokes.reduce(function (a, b) {
-                return a.concat(b);
-            })
-        };
-        console.log(object);
-        return octopeerService.getKeyStrokesFromUser(userName)
-            .then(function (keystrokes) {
-                object.userKeyStrokes = keystrokes;
-                return object;
-            });
-    }
-    
-    function pullRequestsFromStrokes(userSessionStrokes) {
+    function pullRequestsFromStrokes(strokes) {
         var pullRequests = [],
             dictionary = {},
             counter = 0;
-        console.log(userSessionStrokes);
-        userSessionStrokes.sessionKeyStrokes.forEach(function (stroke) {
+        strokes = flatten(strokes);
+        strokes.forEach(function (stroke) {
             if (!dictionary.hasOwnProperty(stroke.session.pull_request.url)) {
                 dictionary[stroke.session.pull_request.url] = counter;
                 pullRequests.push(stroke.session.pull_request);
@@ -44,86 +35,54 @@ function CommentSizeAggregator(userName, platform) {
             }
             pullRequests[dictionary[stroke.session.pull_request.url]].strokes.push(stroke);
         });
-        userSessionStrokes.userKeyStrokes.forEach(function (stroke) {
-            if (!dictionary.hasOwnProperty(stroke.session.pull_request.url)) {
-                dictionary[stroke.session.pull_request.url] = counter;
-                pullRequests.push(stroke.session.pull_request);
-                pullRequests[dictionary[stroke.session.pull_request.url]].strokes = [];
-                counter += 1;
-            }
-            pullRequests[dictionary[stroke.session.pull_request.url]].strokes.push(stroke);
-        });
-        console.log(pullRequests);
         return pullRequests;
     }
     
     function getCommentCount(pullRequests) {
-        var userEventsCount;
+        var userEventsCount,
+            promises = [];
         pullRequests.forEach(function (pr) {
-            var promises = [];
             var endpoint = api.endpoints.semanticEvents + "/"
                 + userName + "/"
                 + pr.repository.owner + "/"
                 + pr.repository.name + "/"
                 + pr.pull_request_number;
-            console.log(pr);
-            promises.push(octopeerService.
-                          getSemanticEventsOfPullRequest(userName,
-                                                         pr.repository.owner,
-                                                         pr.repository.name,
-                                                         pr.pull_request_number, {
-                        event_type: 201,
-                        element_type: 104
-                    })
-            );
-            console.log(pr);
-            promises.push(octopeerService.
-                          getSemanticEventsOfPullRequest(userName,
-                                                         pr.repository.owner,
-                                                         pr.repository.name,
-                                                         pr.pull_request_number, {
-                        event_type: 201,
-                        element_type: 113
-                    })
-            );
-            console.log(promises);
-            RSVP.all(promises).then(function (events) {
-                console.log(events);
-                pr.commentCount = events[0].length + events[1].length;
-                var userEventsCount = events[0].filter(function (event) {
-                    return event.session.user.username === userName;
-                }).length;
-                userEventsCount += events[1].filter(function (event) {
-                    return event.session.user.username === userName;
-                }).length;
-                pr.userCommentCount = userEventsCount;
-                console.log(pr);
-            });
+            pr.commentCount = 1;
+            pr.userCommentCount = 1;
+            
+            var a = octopeerService.getSemanticEventsOfPullRequest(userName, pr.repository.owner, pr.repository.name, pr.pull_request_number);
+            promises.push(a);
         });
-        console.log(pullRequests);
-        return pullRequests;
+        return RSVP.all(promises).then(function (res) {
+            res.forEach(function (re) {
+                re = re.filter(function (r) { return ((r.element_type === 104 || r.element_type === 113) && r.event_type === 201); });
+                if(re.length > 0) {
+                    if (pullRequests.filter(function (pr) { return pr.pull_request_number === re[0].session.pull_request.pull_request_number; }).length > 0) {
+                        var pullRequest = pullRequests.filter(function (pr) { return pr.pull_request_number === re[0].session.pull_request.pull_request_number; })[0];
+                        pullRequest.commentCount += re.length;
+                    }
+                }
+            });
+            return pullRequests;
+        });
     }
     
     function transformGraphObject(pullRequests) {
-        console.log(pullRequests);
+        var counter = -1;
         return pullRequests.map(function (pr) {
-            console.log(pr);
-            console.log(pr.strokes.length);
-            console.log(pr.commentCount);
-            console.log(pr.strokes.filter(function (stroke) {
-                        return stroke.session.user.username === userName;
-                    }).length);
-            console.log(pr.userCommentCount);
+            counter += 1;
             return {
                 "total": {
-                    x: pr.pull_request_number,
-                    y: pr.strokes.length / pr.commentCount
+                    x: counter,
+                    y: pr.strokes.length / pr.commentCount,
+                    pr: pr
                 },
                 "user": {
-                    x: pr.pull_request_number,
+                    x: counter,
                     y: pr.strokes.filter(function (stroke) {
                         return stroke.session.user.username === userName;
-                    }).length / pr.userCommentCount
+                    }).length / pr.userCommentCount,
+                    pr: pr
                 }
             };
         });
@@ -133,7 +92,6 @@ function CommentSizeAggregator(userName, platform) {
         octopeerService
             .getSessionsFromUser(userName)
             .then(keystrokesFromSessions)
-            .then(keystrokesFromUser)
             .then(pullRequestsFromStrokes)
             .then(getCommentCount)
             .then(prResolver.resolvePullRequests)
