@@ -4,7 +4,7 @@
 
 define(function () {
 
-    var margin = { left: 50, right: 50, top: 10, bottom: 50 };
+    var margin = { left: 75, right: 50, top: 10, bottom: 50 };
     var w = 1440;
     var h = 350;
 
@@ -38,6 +38,7 @@ define(function () {
         parentSelector: "#personal-modules",
         size: "m12",
         customSVGSize: { h: h, w: w },
+        margin: margin,
         xAxis: true,
         yAxis: true,
         xAxisLine: false,
