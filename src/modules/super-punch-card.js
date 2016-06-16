@@ -590,7 +590,7 @@ define(function () {
                     var amountOfSessions = getSessionIdList(getAllViewData(a)).length;
                     g.append("g")
                         .attr("class", "visibleTicks noAxis")
-                        .attr("transform", "translate(0," + 30 * amountOfSessions + 20 +")")
+                        .attr("transform", "translate(0," + (30 * amountOfSessions + h) +")")
                         .call(dayXAxis);
                     drawViewEvents(getAllViewData(a), a);
                     drawWriteEvents(getAllWriteData(a), a);
