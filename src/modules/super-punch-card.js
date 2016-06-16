@@ -480,33 +480,85 @@ define(function () {
             .on("click", function (d) { drawDay(d); })
             .style("cursor", "pointer");
 
+            function getLatestTimestamp(data) {
+                var latest = new Date().setFullYear(2000);
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i]
+                    for (var j = 0; j < item.viewData.length; j++) {
+                        var date = new Date(item.viewData[j].end);
+                        if (date > latest) {
+                            latest = date;
+                        }
+                    }
+                }
+                return latest;
+            }
+
+
+            function getEarliestTimestamp(data) {
+                console.log(data);
+                var earliest = new Date();
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    for (var j = 0; j < item.viewData.length; j++) {
+                        var date = new Date(item.viewData[j].end);
+                        if (date < earliest) {
+                            earliest = date;
+                        }
+                    }
+                }
+                return earliest;
+            }
+
+            function getEarliestTimestampOfSessionId(data, sid) {
+                var earliest = new Date();
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    var date = new Date(item.earliest);
+                    if (date < earliest && item.session_id === sid) {
+                        earliest = date;
+                    }
+                }
+                return earliest;
+            }
+
             function dateDiff(d1, d2) {
                 return Math.abs(getHoursAndMinutes(new Date(d1)) - getHoursAndMinutes(new Date(d2)));
             }
 
             var module = this;
+            var dayXScale;
+
+            var a;
+
             function drawDay(daysAgo) {
 
                 var timespan = timeHelper.getTimespanOfDay(timeHelper.getNameOfDaysAgo(daysAgo));
                 g.selectAll('.day').remove();
 
+                a = eventData;
                 // REAL DATA
-                var epca = new ExtendedPunchCardAggregator('Travis', 'GitHub', timespan.start, timespan.end).then(function (a) {
+                //var epca = new ExtendedPunchCardAggregator('Travis', 'GitHub', timespan.start, timespan.end).then(function (a) {
+                    var latest = getLatestTimestamp(a);
+                    var earliest = getEarliestTimestamp(a);
+
+                    dayXScale = d3.scale.linear().domain([0, dateDiff(earliest, latest)]).range([margin.left, w - margin.right]);
+                    var dayXAxis = d3.svg.axis()
+                        .orient("bottom")
+                        .scale(dayXScale);
+                    g.append("g")
+                        .attr("transform", "translate(0, 450)")
+                        .call(dayXAxis);
                     drawViewEvents(getAllViewData(a));
                     drawWriteEvents(getAllWriteData(a));
-                });
+                //});
 
-                // DATA AS CACHED ABOVE
-                //drawViewEvents(getAllViewData(eventData));
-                //drawWriteEvents(getAllWriteData(eventData));
 
                 var y = h;
                 var day = timeHelper.getNameOfDaysAgo(daysAgo);
                 var dummy = {"viewData":[{"start":"2016-06-15T07:34:47.965Z","end":"2016-06-15T07:41:38.806Z","type":"view_conversation"}],
                              "writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"}
-
-                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + (y + 2000 * dummy.viewData.length));
-
+                
                 //var tip2 = d3.tip()
                 //    .attr('class', 'd3-tip')
                 //    .html(function (d) {
@@ -543,17 +595,16 @@ define(function () {
                 .attr('class', 'day')
                 .attr('x1', xScale(0))
                 .attr('x2', function (d, i) {
-                    console.log(d);
-                    console.log(i);
-
-                    return xScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
+                    return dayXScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
                 })
-                .attr('y1', function (d, i) { return y + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
-                .attr('y2', function (d, i) { return y + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
+                .attr('y1', function (d, i) { return h + sessionNumbers.indexOf(d.session_id) * 30; })
+                .attr('y2', function (d, i) { return h + sessionNumbers.indexOf(d.session_id) * 30; })
                 .style("stroke", function (d) {
                     return color(EVENT_TYPES.indexOf(d.type));
                 })
                 .attr('stroke-width', 20);
+
+                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + (y + 400 * sessionNumbers.length));
             }
 
             function drawWriteEvents(wdata) {
@@ -569,20 +620,15 @@ define(function () {
                 .attr('class', 'day')
                 .attr('x1', xScale(0))
                 .attr('x2', function (d, i) {
-                    console.log(d);
-                    console.log(i);
-
-                    return xScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
+                    return dayXScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
                 })
-                .attr('y1', function (d, i) { return y + 5 + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
-                .attr('y2', function (d, i) { return y + 5 + i * 30 })//sessionNumbers.indexOf(d.session_id) * 30; })
+                .attr('y1', function (d, i) { return h + 5 + sessionNumbers.indexOf(d.session_id) * 30; })
+                .attr('y2', function (d, i) { return h + 5 + sessionNumbers.indexOf(d.session_id) * 30; })
                 .style("stroke", function (d) {
                     return color(EVENT_TYPES.indexOf(d.type));
                 })
                 .attr('stroke-width', 10);
-
             }
-
             return g;
         }
     };
