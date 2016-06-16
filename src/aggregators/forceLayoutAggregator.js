@@ -97,7 +97,7 @@ function ForceLayoutAggregator(userName, platform) {
                 }
             })
             .then(prResolver.resolvePullRequests)
-            .then(DataAggregatorHelperFunctions.orderEvents)
+            .then(DataAggregatorHelperFunctions.orderEventsInPullRequests)
             .then(DataAggregatorHelperFunctions.sumDurationPullRequests)
             .then(preProcessPullRequests)
             .then(userResolver.resolveSingleUser)

@@ -15,6 +15,10 @@ function UserResolver(platform) {
                 });
             } else {
                 //Bitbucket requires authentication, nogo here
+                user.userInfo = {
+                    "picture": '../resources/anonymous.png',
+                    "url": user.url
+                };
                 fulfill(user);
             }
         });
