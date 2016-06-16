@@ -17,12 +17,9 @@ var DataAggregatorHelperFunctions = {
             pullRequests[dictionary[event.session.pull_request.url]].sessionStarts.push(event);
         });
         endEvents.forEach(function (event) {
-            if (!dictionary.hasOwnProperty(event.session.pull_request.url)) {
-                dictionary[event.session.pull_request.url] = counter;
-                pullRequests.push(event.session.pull_request);
-                counter += 1;
+            if (dictionary.hasOwnProperty(event.session.pull_request.url)) {
+                pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
             }
-            pullRequests[dictionary[event.session.pull_request.url]].sessionEnds.push(event);
         });
         return pullRequests;
     },
