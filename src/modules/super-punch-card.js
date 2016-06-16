@@ -3,20 +3,20 @@
 /* jshint maxstatements: 50*/
 
 define(function () {
-    var data = {
+    var sessions_data = {
         "sem_sessions": [
             {
                 "start": "2016-06-14T00:00:00Z",
                 "end": "2016-06-14T20:08:30Z",
                 "session": {
-                    "url": 
+                    "url":
                     "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
                     "id": 1,
                     "pull_request": {
-                        "url": 
+                        "url":
                         "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/",
                         "repository": {
-                            "url": 
+                            "url":
                             "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/",
                             "owner": "thervh70",
                             "name": "ContextProject_RDD",
@@ -35,14 +35,14 @@ define(function () {
                 "start": "2016-06-15T12:08:30Z",
                 "end": "2016-06-15T23:59:00Z",
                 "session": {
-                    "url": 
+                    "url":
                     "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/",
                     "id": 2,
                     "pull_request": {
-                        "url": 
+                        "url":
                         "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/",
                         "repository": {
-                            "url": 
+                            "url":
                             "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/",
                             "owner": "thervh70",
                             "name": "ContextProject_RDD",
@@ -67,16 +67,7 @@ define(function () {
     // look at commits tab
 
     /*jshint ignore:start*/
-    var semdata = [
-        {
-            "view_conversation": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
-            "write_comment": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
-            "write_inline_comment": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
-            "view_code": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
-            "view_commits": [{ "start": "2016-06-06T12:08:30Z", "end": "2016-06-06T20:08:30Z" }],
-            "session_id": 1
-        }
-    ];
+    var data = [{"viewData":[{"start":"2016-06-15T07:34:47.965Z","end":"2016-06-15T07:41:38.806Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"},{"viewData":[{"start":"2016-06-15T07:42:38.598Z","end":"2016-06-15T07:49:35.681Z","type":"view_conversation"},{"start":"2016-06-15T07:49:48.005Z","end":"2016-06-15T07:53:49.171Z","type":"view_conversation"},{"start":"2016-06-15T07:49:35.681Z","end":"2016-06-15T07:49:43.912Z","type":"view_code"},{"start":"2016-06-15T07:49:43.912Z","end":"2016-06-15T07:49:48.005Z","type":"view_commits"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T07:42:38.598Z"},{"viewData":[{"start":"2016-06-15T07:56:31.609Z","end":"2016-06-15T08:08:43.809Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T07:56:31.609Z"},{"viewData":[{"start":"2016-06-15T08:08:48.738Z","end":"2016-06-15T08:09:32.268Z","type":"view_conversation"},{"start":"2016-06-15T08:09:32.268Z","end":"2016-06-15T08:10:27.085Z","type":"view_code"}],"writeData":[{"start":"2016-06-15T08:09:42.373Z","end":"2016-06-15T08:09:48.235Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T08:08:48.738Z"},{"viewData":[{"start":"2016-06-15T08:10:31.155Z","end":"2016-06-15T08:13:36.806Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T08:10:34.549Z","end":"2016-06-15T08:10:36.131Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T08:10:31.155Z"},{"viewData":[{"start":"2016-06-15T08:26:39.245Z","end":"2016-06-15T08:26:42.728Z","type":"view_conversation"},{"start":"2016-06-15T08:26:42.728Z","end":"2016-06-15T08:38:18.260Z","type":"view_code"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T08:26:39.245Z"},{"viewData":[{"start":"2016-06-15T08:44:05.849Z","end":"2016-06-15T08:44:10.308Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T08:44:05.849Z"},{"viewData":[{"start":"2016-06-15T08:44:10.972Z","end":"2016-06-15T08:44:13.098Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T08:44:10.972Z"},{"viewData":[{"start":"2016-06-15T08:45:11.093Z","end":"2016-06-15T08:46:49.985Z","type":"view_conversation"}],"writeData":[],"session_id":2,"earliest":"2016-06-15T08:45:11.093Z"},{"viewData":[{"start":"2016-06-15T08:52:57.915Z","end":"2016-06-15T08:52:59.057Z","type":"view_conversation"},{"start":"2016-06-15T08:52:59.057Z","end":"2016-06-15T08:53:02.619Z","type":"view_code"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T08:52:57.915Z"},{"viewData":[{"start":"2016-06-15T09:44:36.491Z","end":"2016-06-15T09:44:46.299Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:44:36.491Z"},{"viewData":[{"start":"2016-06-15T09:45:19.009Z","end":"2016-06-15T09:46:07.250Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T09:45:23.925Z","end":"2016-06-15T09:46:07.250Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T09:45:19.009Z"},{"viewData":[{"start":"2016-06-15T09:46:35.235Z","end":"2016-06-15T09:47:38.100Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:46:35.235Z"},{"viewData":[{"start":"2016-06-15T09:47:57.413Z","end":"2016-06-15T10:00:48.340Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:47:57.413Z"},{"viewData":[{"start":"2016-06-15T10:28:53.760Z","end":"2016-06-15T10:29:46.005Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T10:28:53.760Z"},{"viewData":[{"start":"2016-06-15T10:52:12.292Z","end":"2016-06-15T10:54:52.564Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T10:52:28.208Z","end":"2016-06-15T10:52:30.564Z","type":"write_inline_comment"},{"start":"2016-06-15T10:52:49.950Z","end":"2016-06-15T10:54:52.564Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T10:52:12.292Z"},{"viewData":[{"start":"2016-06-15T11:00:44.042Z","end":"2016-06-15T11:05:55.269Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T11:00:44.042Z"},{"viewData":[{"start":"2016-06-15T11:20:15.267Z","end":"2016-06-15T11:36:33.730Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T11:20:15.267Z"}]
     /*jshint ignore:end*/
     var margin = { left: 75, right: 50, top: 10, bottom: 50 };
     var w = 1440;
@@ -149,7 +140,7 @@ define(function () {
             "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
             "required": true
         }],
-        body: function (res) { 
+        body: function (res) {
 
             function getPrNumbers(array) {
                 var numbers = [];
@@ -329,7 +320,7 @@ define(function () {
                 .selectAll('text')[0][i];
                 setTextHoverState(d3.select(selection));
                 setRectHoverState(d3.select(this));
-                
+
             })
             .on("mouseout", function (d, i) {
                 var selection = d3.select('#super-punch-card')
@@ -360,23 +351,7 @@ define(function () {
             })
             .style("fill", function (d) { return color(getColor(d)); });
             //.style("fill", function (d) { return c10(getPrNumber(d)); });
-
-
-            //g.selectAll(".same")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
-            //.attr("r", RADIUS_DEFAULT)
-            //.attr("class", "circle-start")
-            //.style("fill", function (d, i) { return c10(i); });
-
-            //g.selectAll(".same")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.end)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.end.getDay())); })
-            //.attr("r", RADIUS_DEFAULT)
-            //.attr("class", "circle-end");
-
+            
             // draw full lines on the same day
             g.selectAll(".same")
             .append("line")
@@ -386,19 +361,6 @@ define(function () {
             .attr("x2", function (d) { return xScale(getHoursAndMinutes(d.end)); })
             .attr("y2", function (d) { return yScale(transformDay(d.end.getDay())); })
             .attr("stroke-width", STROKE_WIDTH_DEFAULT);
-
-            g.selectAll(".diff")
-            .append("circle")
-            .attr("cx", function (d) { return xScale(getHoursAndMinutes(d.start)); })
-            .attr("cy", function (d) { return yScale(transformDay(d.start.getDay())); })
-            .attr("r", RADIUS_DEFAULT)
-            .attr("class", "circle-start");
-
-            //g.selectAll(".diff")
-            //.append("circle")
-            //.attr("cx", function (d) { return xScale(getHoursAndMinutes(d.end)); })
-            //.attr("cy", function (d) { return yScale(transformDay(d.end.getDay())); })
-            //.attr("r", RADIUS_DEFAULT);
 
             // draw lines for code review up to midnight
             g.selectAll(".diff")
@@ -421,12 +383,10 @@ define(function () {
             //.style("fill", "green")
             .style("stroke", "black")
             .on("mouseover", function (d) {
-                d3.select(this).selectAll("circle").attr("r", RADIUS_HOVER);
                 d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_HOVER);
                 tip.show(d);
             })
             .on("mouseout", function (d) {
-                d3.select(this).selectAll("circle").attr("r", RADIUS_DEFAULT);
                 d3.select(this).selectAll("line").attr("stroke-width", STROKE_WIDTH_DEFAULT);
                 tip.hide();
             });
@@ -444,17 +404,38 @@ define(function () {
             .on("click", function (d) { drawDay(d); })
             .style("cursor", "pointer");
 
+            function dateDiff(d1, d2) {
+                return Math.abs(getHoursAndMinutes(new Date(d1)) - getHoursAndMinutes(new Date(d2)));
+            }
+
             var module = this;
             function drawDay(daysAgo) {
-                g.selectAll('.prPerDay').remove();
+                var timespan = timeHelper.getTimespanOfDay(timeHelper.getNameOfDaysAgo(daysAgo));
+                var epca = new ExtendedPunchCardAggregator('Travis', 'GitHub', timespan.start, timespan.end).then(function (a) { console.log(JSON.stringify(a)); });
+                var y = h;
                 var day = timeHelper.getNameOfDaysAgo(daysAgo);
-                var selectedSessions = [];
-                for (var i = 0; i < data.sem_sessions.length; ++i) {
-                    if (timeHelper.getDayOfTimestamp(new Date(data.sem_sessions[i].start)) === day ||
-                        timeHelper.getDayOfTimestamp(new Date(data.sem_sessions[i].end)) === day) {
-                        selectedSessions.push(data.sem_sessions[i]);
-                    }
-                }
+                g.selectAll('#pr-bar').remove();
+                g.selectAll('#pr-bar')
+                //{"viewData":[{"start":"2016-06-15T07:34:47.965Z","end":"2016-06-15T07:41:38.806Z","type":"view_conversation"}],
+                // "writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"}
+                .data(data)
+                .enter()
+                .append('line')
+                .attr('id', 'pr-bar')
+                .attr('x1', xScale(0))
+                .attr('x2', function (d) {
+                    console.log(dateDiff(d.viewData.start, d.earliest));
+                    return xScale(dateDiff(d.viewData.start, d.earliest));
+                })
+                .attr('y1', function (d, i) { return y + i * 30; })
+                .attr('y2', function (d, i) { return y + i * 30; })
+                .style("stroke", function (d) {
+                    var id = d.session.pull_request.pull_request_number;
+                    return color(prNumbers.indexOf(id));
+                })
+                .attr('stroke-width', 20)
+                .attr('stroke', 'black');
+
                 var tip2 = d3.tip()
                     .attr('class', 'd3-tip')
                     .html(function (d) {
@@ -476,50 +457,6 @@ define(function () {
                     .offset([-20, 0]);
                 g.call(tip2);
 
-
-                function clickOnRect(d) {
-                    var url = 'https://';
-                    if (d.session.pull_request.repository.platform === 'GitHub') {
-                        url += 'github.com/' +
-                            d.session.pull_request.repository.owner + '/' +
-                            d.session.pull_request.repository.name + '/pull/' +
-                            d.session.pull_request.pull_request_number;
-                    }
-                    window.open(url);
-                }
-
-                function mouseOverRect(d) {
-                    d3.select(this).style('fill', 'rgba(154, 272, 255, 1.00)');
-                    return tip2.show(d);
-                }
-
-                function mouseOutRect() {
-                    d3.select(this).style('fill', 'rgba(77, 136, 255, 1.00)');
-                    tip2.hide();
-                }
-
-                var y = h;
-                for (i = 0; i < selectedSessions.length; ++i) {
-                    y += 20;
-                    g.data([selectedSessions[i]]).append('rect')
-                        .attr('class', 'prPerDay')
-                        .attr('style', 'fill: rgba(77, 136, 255, 1.00);')
-                        .attr('height', 10)
-                        .attr('width', 500)
-                        .attr('x', margin.left)
-                        .attr('y', y)
-                        .on('click', clickOnRect)
-                        .on('mouseover',  mouseOverRect)
-                        .on('mouseout', mouseOutRect)
-                        .style('cursor', 'pointer');
-                    g.data([selectedSessions[i]]).append('text')
-                        .attr('class', 'prPerDay')
-                        .attr('x', margin.left - 20)
-                        .attr('y', y + 10)
-                        .text(function (d) { return '#' + d.session.pull_request.pull_request_number; });
-                    y += 20;
-                }
-                y += margin.top;
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + y);
             }
 

@@ -6,7 +6,7 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
     var promise,
         prResolver = new PullRequestResolver(),
         userResolver = new UserResolver(platform);
-    
+
     //1. Get semantic events user x
     //2. filter op datum (from, to) x
     //3. order op datum van vroeg naar laat x
@@ -152,7 +152,6 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
             var earliest = conversationViewEvents.sort(function (a, b) {
                 return a - b;
             })[0].start;
-            
             return {
                 viewData: viewConcatinated,
                 writeData: writeConcatinated,
