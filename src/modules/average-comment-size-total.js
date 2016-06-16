@@ -1,4 +1,4 @@
-/* globals define, octopeerHelper */
+/* globals define, octopeerHelper, CommentSizeAggregator, globalUserName, globalPlatform */
 define(function () {
     return {
     	name: "average-comment-size-total",
@@ -23,29 +23,13 @@ define(function () {
                 .rangePoints([0, 720-2*50]);
             return d3.svg.axis().scale(axisScale);
         },
-        yAxisFitFunction: function() {
-            var sizeData = [
-                    {"x":0, "y":4.61},
-                    {"x":1, "y":3},
-                    {"x":2, "y":4.3},
-                    {"x":3, "y":3.42},
-                    {"x":4, "y":64.52},
-                    {"x":5, "y":5},
-                    {"x":6, "y":6.4},
-                    {"x":7, "y":41.2},
-                    {"x":8, "y":7.62},
-                    {"x":9, "y":34.2},
-                    {"x":10, "y":15.21},
-                    {"x":11, "y":3.12},
-                    {"x":12, "y":45.4},
-                    {"x":13, "y":6.42},
-                    {"x":14, "y":15.42},
-                    {"x":15, "y":17.52},
-                    {"x":16, "y":24.2},
-                    {"x":17, "y":14.2},
-                    {"x":18, "y":7.17},
-                    {"x":19, "y":47.72}
-                ];
+        yAxisFitFunction: function(data) {
+            var sizeData = data[0].map(function (pr) {
+                    return {
+                        "x": pr.total.x,
+                        "y": pr.total.y
+                    };
+                });
             return d3.svg.axis().scale(
                 d3.scale.linear()
                 .domain([0,Math.max.apply(Math,sizeData.map(function(o){return o.y;}))])
@@ -58,34 +42,23 @@ define(function () {
                 "text":"Total average comment sizes"
             }
         ],
-        body: function () {
+        data: [{
+            "serviceCall": function () { return new CommentSizeAggregator(globalUserName, globalPlatform); },
+            "required": true
+        }],
+        body: function (res) {
             var w = 720,
                 h = 350,
                 pad = 50,
                 padTop = 10,
                 padBottom = 50,
-                sizeData2 = [
-                    {"x":0, "y":4.61},
-                    {"x":1, "y":3},
-                    {"x":2, "y":4.3},
-                    {"x":3, "y":3.42},
-                    {"x":4, "y":64.52},
-                    {"x":5, "y":5},
-                    {"x":6, "y":6.4},
-                    {"x":7, "y":41.2},
-                    {"x":8, "y":7.62},
-                    {"x":9, "y":34.2},
-                    {"x":10, "y":15.21},
-                    {"x":11, "y":3.12},
-                    {"x":12, "y":45.4},
-                    {"x":13, "y":6.42},
-                    {"x":14, "y":15.42},
-                    {"x":15, "y":17.52},
-                    {"x":16, "y":24.2},
-                    {"x":17, "y":14.2},
-                    {"x":18, "y":7.17},
-                    {"x":19, "y":47.72}
-                ];
+                sizeData2 = res[0].map(function (pr) {
+                    return {
+                        "x": pr.total.x,
+                        "y": pr.total.y,
+                        "prInfo": pr.pr
+                    };
+                });
 
             var maxValue = Math.max.apply(Math,sizeData2.map(function(o){return o.y;}));
 

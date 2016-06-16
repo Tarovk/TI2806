@@ -94,9 +94,8 @@ function OctopeerService() {
         return promise;
     };
     
-    this.getPullRequests = function () {//userId) {
+    this.getPullRequests = function () {
         var promise, url;
-        //url = api.urlBuilder(api.endpoints.users + userId + '/pullrequests/', {});
         url = api.urlBuilder(api.endpoints.pullRequests, {});
         
         promise = new RSVP.Promise(function (fulfill, reject) {
@@ -127,7 +126,7 @@ function OctopeerService() {
         
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (sessions) {
-                fulfill(sessions.results);
+                getAllPages(sessions).then(fulfill);
             }, function (error) {
                 reject(error);
             });
@@ -213,7 +212,22 @@ function OctopeerService() {
                                 prNr);
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (events) {
-                fulfill(events.results);
+                getAllPages(events).then(fulfill);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
+    
+    this.getSemanticEventsCountOfPullRequest = function (userName, owner, repo, prNr, params) {
+        var url = api.urlBuilder(api.endpoints.semanticEvents + '/' +
+                                userName + '/' +
+                                owner + '/' +
+                                repo + '/' +
+                                prNr, params);
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (events) {
+                fulfill(events.count);
             }, function (error) {
                 reject(error);
             });
@@ -221,10 +235,35 @@ function OctopeerService() {
     };
     
     this.getCountOfEndpoint = function (endPoint, parameters) {
-         var url = api.urlBuilder(endPoint, parameters);
+        var url = api.urlBuilder(endPoint, parameters);
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (items) {
                 fulfill(items.count);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
+    
+    this.getKeyStrokesFromSession = function (sessionId) {
+        var url = api.urlBuilder(api.endpoints.keyStrokeEvents, {
+            "session_id": sessionId
+        });
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (strokes) {
+                getAllPages(strokes).then(fulfill);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    };
+    
+    this.getKeyStrokesFromUser = function (userName) {
+        var url = api.urlBuilder(api.endpoints.keyStrokeEvents + '/' +
+                                userName);
+        return new RSVP.Promise(function (fulfill, reject) {
+            getJSON(url, function (strokes) {
+                getAllPages(strokes).then(fulfill);
             }, function (error) {
                 reject(error);
             });
