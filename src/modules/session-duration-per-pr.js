@@ -2,9 +2,13 @@
 define(function () {
     var w = 720,
     h = 350,
-    pad = 50,
-    padTop = 10,
-    padBottom = 50,
+    colWidth = 50,
+    margin = {
+        bottom: 50,
+        left: 50,
+        right: 50,
+        top: 10
+    },
     maxNumberOfSessions = 0,
 
     matrix = [],
@@ -17,13 +21,13 @@ define(function () {
     stacked = d3.layout.stack()(remapped),
     x = d3.scale.ordinal()
         .domain(stacked[0].map(function (d) { return d.x; }))
-        .rangeRoundBands([pad, w - pad]),
+        .rangePoints([0, w - margin.right - margin.left]),
     y = d3.scale.linear()
         .domain([0, d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; })])
-        .range([0, h - padBottom - padTop]),
+        .range([0, h - margin.bottom - margin.top]),
     yAxisRange = d3.scale.linear()
         .domain([d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; }), 0])
-        .range([0, h - padBottom - padTop]),
+        .range([0, h - margin.bottom - margin.top]),
     z = d3.scale.ordinal().range([
         'rgba(51, 125, 212, 0.50)',
         'rgba(212, 51, 51, 0.50)'
@@ -65,6 +69,7 @@ define(function () {
     return {
         name: 'session-duration-per-pr',
         title: 'Session durations per pull-request',
+        margin: margin,
         xAxisLabel: 'Pull-requests',
         yAxisLabel: 'Sessions and session duration',
         parentSelector: '#project-modules',
@@ -73,7 +78,7 @@ define(function () {
             'required': true
         }],
         xAxisFitFunction: function (res) {
-            return d3.svg.axis().scale(x).tickValues(res[0].map(function (d) { return d[0]; }));
+            return d3.svg.axis().scale(x).tickValues(res[0].map(function (d) { return '#' + d[0]; }));
         },
         yAxisFitFunction: function () {
             return d3.svg.axis().scale(y);
@@ -95,14 +100,14 @@ define(function () {
             valgroup.selectAll('rect')
             .data(function (d) { return d; })
             .enter().append('svg:rect')
-            .attr('x', function (d) { return x(d.x); })
+            .attr('x', function (d) { return x(d.x) + margin.left; })
             .attr('y', function (d) { 
-                return h - padBottom - y(d.y0) - y(d.y); 
+                return h - margin.bottom - y(d.y0) - y(d.y); 
             })
             .attr('height', function (d) { 
                 return y(d.y); 
             })
-            .attr('width', 50);
+            .attr('width', colWidth);
 
             return g;
         }
