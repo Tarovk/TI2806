@@ -102,6 +102,7 @@ define(function () {
                 .attr("style", "fill: rgba(51, 125, 212, 0.5);")
                 .on('mouseover', function(d) { return tip.show(d);})
                 .on('mouseout', tip.hide)
+                .style('cursor', 'pointer')
                 .transition()
                 .attr("y", function (d) { return h - padBottom - ySizeScale(d.y); });
 
