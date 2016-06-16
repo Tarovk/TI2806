@@ -25,34 +25,29 @@ define(function () {
         .domain([d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; }), 0])
         .range([0, h - padBottom - padTop]),
     z = d3.scale.ordinal().range([
-        'rgba(51, 125, 212, 1.00)',
-        'rgba(255, 0, 0, 1.00)',
-        'rgba(51, 125, 212, 1.00)'
-    ]),
-    zBorder = d3.scale.ordinal().range([
-        'rgba(0, 0, 0, 1)'
+        'rgba(51, 125, 212, 0.50)',
+        'rgba(212, 51, 51, 0.50)'
     ]);
 
     function updateData(data) {
-        matrix = data;
         var mapping = [];
-        for (var i = 0; i < matrix.length; ++i) {
-            if (matrix[i].length - 1 > maxNumberOfSessions - 1) {
-                maxNumberOfSessions = matrix[i].length - 1;
+        for (var i = 0; i < data.length; ++i) {
+            if (data[i].length - 1 > maxNumberOfSessions - 1) {
+                maxNumberOfSessions = data[i].length - 1;
             }
         }
         for (i = 1; i <= maxNumberOfSessions; ++i) {
             mapping.push('c' + i);
         }
-        for (i = 0; i < matrix.length; ++i) {
+        for (i = 0; i < data.length; ++i) {
             var sum = 0;
-            for (var j = 1; j < matrix[i].length; ++j) {
-                sum += matrix[i][j];
+            for (var j = 1; j < data[i].length; ++j) {
+                sum += data[i][j];
             }
             maxY = Math.max(maxY, sum);
         }
         remapped = mapping.map(function (dat, i) {
-            return matrix.map(function (d, ii) {
+            return data.map(function (d, ii) {
                 var yval = d[i + 1];
                 if(yval === undefined){
                     yval = 0;
@@ -61,15 +56,10 @@ define(function () {
             });
         });
         stacked = d3.layout.stack()(remapped);
-        x = d3.scale.ordinal()
-            .domain(stacked[0].map(function (d) { return d.x; }))
-            .rangeRoundBands([pad, w - pad]);
-        y = d3.scale.linear()
-            .domain([0, maxY])
-            .range([0, h - padBottom - padTop]);
-        yAxisRange = d3.scale.linear()
-            .domain([0, d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; })])
-            .range([0, h - padBottom - padTop]);
+        x.domain(stacked[0].map(function (d) { return d.x; }));
+        y.domain([0, maxY]);
+        yAxisRange.domain([0, d3.max(stacked[stacked.length - 1],
+            function (d) { return d.y0 + d.y; })]);
     }
 
     return {
@@ -99,8 +89,7 @@ define(function () {
             .data(stacked)
             .enter().append('svg:g')
             .attr('class', 'valgroup')
-            .style('fill', function (d, i) { return z(i); })
-            .style('stroke', function (d, i) { return zBorder(i); });
+            .style('fill', function (d, i) { return z(i); });
 
             // Add a rect for each date.
             valgroup.selectAll('rect')
