@@ -299,7 +299,6 @@ define(function () {
             function getPrFromSessionId(sid) {
                 for (var i = 0; i < transformedData.length; i++) {
                     var item = transformedData[i];
-                    console.log(item);
                     if (item.origin.session.id === sid) {
                         return item.origin.session.pull_request.pull_request_number;
                     }
@@ -544,25 +543,28 @@ define(function () {
 
             function drawDay(daysAgo) {
 
+                var spinner = $(d3.select("#super-punch-card").node()).find('.spinner');
+                console.log(spinner);
+                spinner.removeClass('hidden');
+
                 var timespan = timeHelper.getTimespanOfDay(timeHelper.getNameOfDaysAgo(daysAgo));
                 g.selectAll('.day').remove();
 
-                a = eventData;
+                //DUMMY DATA
+                //a = eventData;
+
                 // REAL DATA
-                //var epca = new ExtendedPunchCardAggregator('Travis', 'GitHub', timespan.start, timespan.end).then(function (a) {
+                var epca = new ExtendedPunchCardAggregator(globalUserName, globalPlatform, timespan.start, timespan.end).then(function (a) {
+                    console.log(a);
                     var latest = getLatestTimestamp(a);
                     var earliest = getEarliestTimestamp(a);
-
                     dayXScale = d3.scale.linear().domain([0, dateDiff(earliest, latest)]).range([margin.left, w - margin.right]);
-                    var dayXAxis = d3.svg.axis()
-                        .orient("bottom")
-                        .scale(dayXScale);
-                    g.append("g")
-                        .attr("transform", "translate(0, 450)")
-                        .call(dayXAxis);
+
                     drawViewEvents(getAllViewData(a), a);
                     drawWriteEvents(getAllWriteData(a), a);
-                //});
+                    drawNewAxis(getAllWriteData(a));
+                    spinner.addClass('hidden');
+                });
 
 
                 var y = h;
@@ -594,6 +596,17 @@ define(function () {
                 
             }
 
+            function drawNewAxis(vdata) {
+                var sessionNumbers = getSessionIdList(vdata);
+                var y = h;
+                var dayXAxis = d3.svg.axis()
+                    .orient("bottom")
+                    .scale(dayXScale);
+                g.append("g")
+                    .attr("transform", "translate(0, "+(y + 30 * sessionNumbers.length + 40)+")")
+                    .call(dayXAxis);
+            }
+
             function drawViewEvents(vdata, alldata) {
                 var sessionNumbers = getSessionIdList(vdata);
                 var y = h;
@@ -606,13 +619,22 @@ define(function () {
                 .attr('class', 'day')
                 .attr('x1', function (d) {
                     var earliest = getEarliestTimestampOfSessionId(alldata, d.session_id);
-                    console.log(d)
-                    console.log(xScale(dateDiff(earliest, d.start)));
                     return xScale(dateDiff(earliest, d.start))
                     //return xScale(0);
                 })
                 .attr('x2', function (d, i) {
-                    return dayXScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
+                    var diff1 = dateDiff(d.end, d.start),
+                        diff2 = dateDiff(d.start, d.earliest);
+                    console.log(" ");
+                    console.log("##### "+i+" #####");
+                    console.log(d.end);
+                    console.log(d.start);
+                    console.log(diff1);
+                    console.log(diff2);
+                    console.log(diff1 + diff2);
+                    console.log(dayXScale( diff1 + diff2));
+                    console.log(" ");
+                    return dayXScale( diff1 + diff2);
                 })
                 .attr('y1', function (d, i) { return h + sessionNumbers.indexOf(d.session_id) * 30; })
                 .attr('y2', function (d, i) { return h + sessionNumbers.indexOf(d.session_id) * 30; })
@@ -643,7 +665,7 @@ define(function () {
                     .offset([-20, 0]);
                 g.call(tip2);
 
-                d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + (y + 400 * sessionNumbers.length));
+                d3.select('#' + module.name).select('svg').transition().duration(300).attr('viewBox', '0 0 1440 ' + (y + 30 * sessionNumbers.length + 50));
             }
 
             function drawWriteEvents(wdata, alldata) {
