@@ -13,8 +13,6 @@ define(function () {
     ];
     /* jshint ignore:end*/
 
-    var globalUserName = 'Travis';
-
     /*jshint ignore: start*/
     var sessions_data = {
         "sem_sessions": [
@@ -225,12 +223,16 @@ define(function () {
                     .rangePoints([0, h - margin.bottom - margin.top - 20])
                 );
         },
-        //data: [{
-        //    "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
-        //    "required": true
-        //}],
+        data: [{
+            "serviceCall": function () { return new PunchCardAggregator(globalUserName, 20); },
+            "required": true
+        }],
         body: function (res) {
-
+            var module = this;
+            d3.select('#' + module.name).select('svg')
+                .transition()
+                .duration(300)
+                    .attr('viewBox', '0 0 1440 ' + h);
             function getPrNumbers(array) { /*jshint ignore:line*/
                 var numbers = [];
                 for (var i = 0; i < array.length; i++) {
@@ -325,7 +327,7 @@ define(function () {
                 color = d3.scale.category20();
             }
 
-            var transformedData = punchData[0].map(function (item) {  /*jshint ignore:line*/
+            var transformedData = res[0].map(function (item) {  /*jshint ignore:line*/
                 return { start: new Date(item.start), end: new Date(item.end), origin: item };
             });
 
@@ -553,15 +555,17 @@ define(function () {
                 return res;
             }
 
-            var module = this;
             var dayXScale;
 
             var a;
 
             function drawDay(daysAgo) {
+                d3.select('#' + module.name).select('svg')
+                    .transition()
+                    .duration(300)
+                        .attr('viewBox', '0 0 1440 ' + h);
 
                 var spinner = $(d3.select("#super-punch-card").node()).find('.spinner');
-                console.log(spinner);
                 spinner.removeClass('hidden');
 
                 var timespan = timeHelper.getTimespanOfDay(timeHelper.getNameOfDaysAgo(daysAgo));
@@ -649,15 +653,7 @@ define(function () {
                 .attr('x2', function (d, i) {
                     var diff1 = dateDiff(d.end, d.start),
                         diff2 = dateDiff(d.start, d.earliest);
-                    console.log(" ");
-                    console.log("##### "+i+" #####");
-                    console.log(d.end);
-                    console.log(d.start);
-                    console.log(diff1);
-                    console.log(diff2);
-                    console.log(diff1 + diff2);
-                    console.log(dayXScale( diff1 + diff2));
-                    console.log(" ");
+                     
                     return dayXScale( diff1 + diff2);
                 })
                 .attr('y1', function (d, i) { return h + sessionNumbers.indexOf(d.session_id) * 30; })
