@@ -54,6 +54,7 @@ define(function () {
     function addPieChartText(g, data, piedata) {
         g.append('text')
             .attr('y','10')
+            .attr("class","dashboard-m4-modules-center-num")
             .style('text-anchor','middle')
             .style('font-size','5em')
             .style('font-weight','700')
@@ -62,6 +63,7 @@ define(function () {
 
         g.append('text')
             .attr('y','35')
+            .attr("class","dashboard-m4-modules-center-text")
             .style('text-anchor','middle')
             .style('font-size','1.6em')
             .style('fill','#484848')
@@ -110,9 +112,11 @@ define(function () {
                 .attr('y2',"-40")
                 .style("stroke-width","3px")
                 .style("stroke","gray");
+            var mcentery = -130;
+            if(piearcdata[2].startAngle > 1.5*Math.PI) { 
+                mcentery = Math.sin((2*Math.PI-piearcdata[2].startAngle)*2)*-130;
+            }
 
-            var mcentery = -130*Math.sin((2*Math.PI-piearcdata[2].endAngle));
-            
             g.append('line')
                 .attr('x1',"-170")
                 .attr('y1',"-40")
@@ -140,8 +144,15 @@ define(function () {
                 .style("stroke-width","3px")
                 .style("stroke","gray");
 
-            var ccenterx = 130*Math.sin(piearcdata[0].endAngle/2),
+            var ccenterx = 0,
+                ccentery = -130;
+            if(piearcdata[0].endAngle < Math.PI) {
+                ccenterx = 130*Math.sin(piearcdata[0].endAngle/2);
                 ccentery = -130*Math.cos(piearcdata[0].endAngle/2); 
+            } else {
+                ccenterx = 130;
+                ccentery = 0;
+            }
 
             g.append('line')
                 .attr('x1',"140")
@@ -151,6 +162,7 @@ define(function () {
                 .style("stroke-width","3px")
                 .style("stroke","gray");
         }
+
     }
 
     function drawPieChart(svg, data){
@@ -159,18 +171,40 @@ define(function () {
         var piedata = createPieData(data);
         var piearcdata = pieLayout(piedata);
 
+        var total = data.sessions.length;
+
         var arcs = g.selectAll(".arc")
             .data(piearcdata)
             .enter().append("g")
             .attr("class", "arc")
             .style("transition","transform 0.2s ease")
-            .on("mouseover",function(){
+            .on("mouseover",function(d,i){
                 d3.select(this)
                     .style("transform","scale(1.05)");
+                g.selectAll('.dashboard-m4-modules-center-num')
+                    .text(d.value);
+                switch(i) {
+                    case 0 : 
+                        g.selectAll('.dashboard-m4-modules-center-text')
+                        .text("Closed");
+                        break;
+                    case 1 : 
+                        g.selectAll('.dashboard-m4-modules-center-text')
+                        .text("Open");
+                        break;
+                    case 2 : 
+                        g.selectAll('.dashboard-m4-modules-center-text')
+                        .text("Merged");
+                        break;
+                }
             })
             .on("mouseout",function() {
                 d3.select(this)
                     .style("transform","scale(1)");
+                g.selectAll('.dashboard-m4-modules-center-num')
+                    .text(total);
+                g.selectAll('.dashboard-m4-modules-center-text')
+                    .text("Peer reviews");
             });
 
         arcs.append("path")
@@ -206,20 +240,44 @@ define(function () {
             .attr("height","260")
             .style("fill","rgb(210, 210, 210)");
 
-        svg.append("rect")
-            .attr("x","50")
-            .attr("y",310-yscale(mby))
-            .attr("width","100")
-            .attr("height",yscale(mby))
-            .style("fill","rgb(97, 179, 97)");
-
-        svg.append("text")
+        var txt = svg.append("text")
             .attr("x","300")
             .attr("y","180")
             .style("text-anchor","end")
             .style("font-size","6em")
             .style("font-weight","700")
+            .style("transition","font-size 0.2s ease")
             .text(mby);
+            
+        var ypos = 310-yscale(mby);
+        var h = yscale(mby);
+        
+        svg.append("rect")
+            .attr("x","50")
+            .attr("y",ypos)
+            .attr("width","100")
+            .attr("height",h)
+            .style("fill","rgb(97, 179, 97)")
+            .on('mouseover', function() {
+                var ths = d3.select(this);
+                ths.transition()
+                .duration(300)
+                    .attr('x',47)
+                    .attr('y',ypos-3)
+                    .attr('width',106)
+                    .attr('height',h+6);
+                txt.style('font-size','6.5em');
+            })
+            .on('mouseout', function() {
+                var ths = d3.select(this);
+                ths.transition()
+                .duration(300)
+                    .attr('x',50)
+                    .attr('y',ypos)
+                    .attr('width',100)
+                    .attr('height',h);
+                txt.style('font-size','6em');
+            });
 
         svg.append("text")
             .attr("x","305")
@@ -262,20 +320,46 @@ define(function () {
             .attr("height","260")
             .style("fill","rgb(210, 210, 210)");
 
-        svg.append("rect")
-            .attr("x","50")
-            .attr("y",310-yscale(cby))
-            .attr("width","100")
-            .attr("height",yscale(cby))
-            .style("fill","rgb(228, 74, 74)");
-
-        svg.append("text")
+        var txt = svg.append("text")
             .attr("x","300")
             .attr("y","180")
             .style("text-anchor","end")
             .style("font-size","6em")
             .style("font-weight","700")
+            .style("transition","font-size 0.2s ease")
             .text(cby);
+
+   
+        var ypos = 310-yscale(cby);
+        var h = yscale(cby);
+
+        svg.append("rect")
+            .attr("x","50")
+            .attr("y",ypos)
+            .attr("width","100")
+            .attr("height",h)
+            .style("fill","rgb(228, 74, 74)")
+            .style("transition","font-size 0.3s ease")
+            .on('mouseover', function() {
+                var ths = d3.select(this);
+                ths.transition()
+                .duration(300)
+                    .attr('x',47)
+                    .attr('y',ypos-3)
+                    .attr('width',106)
+                    .attr('height',h+6);
+                txt.style('font-size','6.5em');
+            })
+            .on('mouseout', function() {
+                var ths = d3.select(this);
+                ths.transition()
+                .duration(300)
+                    .attr('x',50)
+                    .attr('y',ypos)
+                    .attr('width',100)
+                    .attr('height',h);
+                txt.style('font-size','6em');
+            });
 
         svg.append("text")
             .attr("x","305")
@@ -350,8 +434,17 @@ define(function () {
             .attr('y1',yscale(avgtime))
             .attr('x2',"100")
             .attr('y2',yscale(avgtime))
+            .style("transition","stroke-width 0.2s ease")
             .style("stroke-width","3px")
-            .style("stroke","red");   
+            .style("stroke","red")
+            .on('mouseover', function() {
+                d3.select(this)
+                    .style('stroke-width','6px');
+            })
+            .on('mouseout', function() {
+                d3.select(this)
+                    .style('stroke-width','3px');
+            });   
 
         svg.append("text")
             .attr("x","120")
@@ -372,7 +465,7 @@ define(function () {
             .attr("y","200")
             .style("font-size","8em")
             .style("font-weight","500")
-            .text(avgtime); 
+            .text(Math.round(avgtime)); 
 
         svg.append("text")
             .attr("x","140")
@@ -411,19 +504,39 @@ define(function () {
         if(numeric_array[1]) { b = numeric_array[1].length; brepo = numeric_array[1][0].repo;}
         if(numeric_array[2]) { c = numeric_array[2].length; crepo = numeric_array[2][0].repo;}
 
+        var yposc = 310-yscale(c),
+            yposb = 310-yscale(b),
+            yposa = 310-yscale(a),
+            hc = yscale(c),
+            hb = yscale(b),
+            ha = yscale(a);
+
         svg.append('rect')
             .attr('x',"60")
-            .attr('y',310-yscale(c))
+            .attr('y',yposc)
             .attr('width',"60")
-            .attr('height',yscale(c))
+            .attr('height',hc)
             .style('fill',"rgb(77, 136, 255)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(70, 129, 246)');
+                d3.select(this).style('fill','rgb(70, 129, 246)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',57)
+                        .attr('y',yposc-3)
+                        .attr('width',66)
+                        .attr('height',hc+6);
                 svg.selectAll(".dashboard-m4-modules-review-bar-text-num").text(c); 
                 svg.selectAll(".dashboard-m4-modules-review-bar-text-repo").text(crepo); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(77, 136, 255)');
+                d3.select(this).style('fill','rgb(77, 136, 255)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',60)
+                        .attr('y',yposc)
+                        .attr('width',60)
+                        .attr('height',hc);
                 svg.selectAll(".dashboard-m4-modules-review-bar-text-num").text(a); 
                 svg.selectAll(".dashboard-m4-modules-review-bar-text-repo").text(arepo); 
             });
@@ -434,13 +547,26 @@ define(function () {
             .attr('width',"60")
             .attr('height',yscale(b))
             .style('fill',"rgb(77, 136, 255)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(70, 129, 246)');
+                d3.select(this).style('fill','rgb(70, 129, 246)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',137)
+                        .attr('y',yposb-3)
+                        .attr('width',66)
+                        .attr('height',hb+6);
                 svg.selectAll(".dashboard-m4-modules-review-bar-text-num").text(b); 
                 svg.selectAll(".dashboard-m4-modules-review-bar-text-repo").text(brepo); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(77, 136, 255)');
+                d3.select(this).style('fill','rgb(77, 136, 255)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',140)
+                        .attr('y',yposb)
+                        .attr('width',60)
+                        .attr('height',hb);
                 svg.selectAll(".dashboard-m4-modules-review-bar-text-num").text(a); 
                 svg.selectAll(".dashboard-m4-modules-review-bar-text-repo").text(arepo); 
             });
@@ -451,11 +577,26 @@ define(function () {
             .attr('width',"60")
             .attr('height',yscale(a))
             .style('fill',"rgb(77, 136, 255)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(70, 129, 246)');
+                d3.select(this).style('fill','rgb(70, 129, 246)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',217)
+                        .attr('y',yposa-3)
+                        .attr('width',66)
+                        .attr('height',ha+6);
+                svg.selectAll(".dashboard-m4-modules-review-bar-text-num").text(a); 
+                svg.selectAll(".dashboard-m4-modules-review-bar-text-repo").text(arepo); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(77, 136, 255)');
+                d3.select(this).style('fill','rgb(77, 136, 255)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',220)
+                        .attr('y',yposa)
+                        .attr('width',60)
+                        .attr('height',ha);
             });
     
         
@@ -547,18 +688,36 @@ define(function () {
                 svg.selectAll(".dashboard-m4-modules-action-bar-text-repo").text(repo);
         }
 
+        var yposm2 = 310-yscale(m2)-yscale(c2),
+            hm2 = yscale(m2),
+            yposc2 = 310-yscale(c2),
+            hc2 = yscale(c2);
+
         svg.append('rect')
             .attr('x',"60")
-            .attr('y',310-yscale(m2+c2))
+            .attr('y',yposm2)
             .attr('width',"60")
-            .attr('height',yscale(m2))
+            .attr('height',hm2)
             .style('fill',"rgb(97, 179, 97)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(87, 169, 87)');
+                d3.select(this).style('fill','rgb(87, 169, 87)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',57)
+                        .attr('y',yposm2-3)
+                        .attr('width',66)
+                        .attr('height',hm2+6);
                 showInfo(m2,c2,repo2); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(97, 179, 97)');
+                d3.select(this).style('fill','rgb(97, 179, 97)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',60)
+                        .attr('y',yposm2)
+                        .attr('width',60)
+                        .attr('height',hm2);
                 showInfo(m0,c0,repo0);  
             });
         svg.append('rect')
@@ -567,12 +726,25 @@ define(function () {
             .attr('width',"60")
             .attr('height',yscale(c2))
             .style('fill',"rgb(228, 74, 74)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(218, 64, 64)');
+                d3.select(this).style('fill','rgb(218, 64, 64)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',57)
+                        .attr('y',yposc2-3)
+                        .attr('width',66)
+                        .attr('height',hc2+6);
                 showInfo(m2,c2,repo2); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(228, 74, 74)');
+                d3.select(this).style('fill','rgb(228, 74, 74)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',60)
+                        .attr('y',yposc2)
+                        .attr('width',60)
+                        .attr('height',hc2);
                 showInfo(m0,c0,repo0); 
             });
 
@@ -585,32 +757,64 @@ define(function () {
             }).length;
             repo1 = numeric_array[1][0].repo;
         }
+
+        var yposm1 = 310-yscale(m1)-yscale(c1),
+            hm1 = yscale(m1),
+            yposc1 = 310-yscale(c1),
+            hc1 = yscale(c1);
+
         svg.append('rect')
             .attr('x',"140")
-            .attr('y',310-yscale(m1+c1))
+            .attr('y',yposm1)
             .attr('width',"60")
-            .attr('height',yscale(m1))
+            .attr('height',hm1)
             .style('fill',"rgb(97, 179, 97)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(87, 169, 87)');
+                d3.select(this).style('fill','rgb(87, 169, 87)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',137)
+                        .attr('y',yposm1-3)
+                        .attr('width',66)
+                        .attr('height',hm1+6);
                 showInfo(m1,c1,repo1); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(97, 179, 97)');
+                d3.select(this).style('fill','rgb(97, 179, 97)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',140)
+                        .attr('y',yposm1)
+                        .attr('width',60)
+                        .attr('height',hm1);
                 showInfo(m0,c0,repo0);  
             });
         svg.append('rect')
             .attr('x',"140")
-            .attr('y',310-yscale(c1))
+            .attr('y',yposc1)
             .attr('width',"60")
-            .attr('height',yscale(c1))
+            .attr('height',hc1)
             .style('fill',"rgb(228, 74, 74)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(218, 64, 64)');
+                d3.select(this).style('fill','rgb(218, 64, 64)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',137)
+                        .attr('y',yposc1-3)
+                        .attr('width',66)
+                        .attr('height',hc1+6);
                 showInfo(m1,c1,repo1); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(228, 74, 74)');
+                d3.select(this).style('fill','rgb(228, 74, 74)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',140)
+                        .attr('y',yposc1)
+                        .attr('width',60)
+                        .attr('height',hc1);
                 showInfo(m0,c0,repo0); 
             });
 
@@ -623,18 +827,37 @@ define(function () {
             }).length;
             repo0 = numeric_array[0][0].repo;
         }    
+
+        var yposm0 = 310-yscale(m0)-yscale(c0),
+            hm0 = yscale(m0),
+            yposc0 = 310-yscale(c0),
+            hc0 = yscale(c0);
+        
         svg.append('rect')
             .attr('x',"220")
-            .attr('y',310-yscale(m0+c0))
+            .attr('y',yposm0)
             .attr('width',"60")
-            .attr('height',yscale(m0))
+            .attr('height',hm0)
             .style('fill',"rgb(97, 179, 97)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(87, 169, 87)');
+                d3.select(this).style('fill','rgb(87, 169, 87)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',217)
+                        .attr('y',yposm0-3)
+                        .attr('width',66)
+                        .attr('height',hm0+6);
                 showInfo(m0,c0,repo0); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(97, 179, 97)');
+                d3.select(this).style('fill','rgb(97, 179, 97)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',220)
+                        .attr('y',yposm0)
+                        .attr('width',60)
+                        .attr('height',hm0);
             });
         svg.append('rect')
             .attr('x',"220")
@@ -642,12 +865,25 @@ define(function () {
             .attr('width',"60")
             .attr('height',yscale(c0))
             .style('fill',"rgb(228, 74, 74)")
+            .style('transition','fill 0.3s ease')
             .on('mouseover',function(){ 
-                d3.select(this).style('fill','rgb(218, 64, 64)');
+                d3.select(this).style('fill','rgb(218, 64, 64)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',217)
+                        .attr('y',yposc0-3)
+                        .attr('width',66)
+                        .attr('height',hc0+6);
                 showInfo(m0,c0,repo0); 
             })
             .on('mouseout',function(){
-                d3.select(this).style('fill','rgb(228, 74, 74)');
+                d3.select(this).style('fill','rgb(228, 74, 74)')
+                    .transition()
+                    .duration(300)
+                        .attr('x',220)
+                        .attr('y',yposc0)
+                        .attr('width',60)
+                        .attr('height',hc0);
             });
 
 
