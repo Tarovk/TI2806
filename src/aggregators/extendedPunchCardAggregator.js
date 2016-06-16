@@ -106,6 +106,12 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
                 }
             }
         });
+        sessionEvent = semanticEvents[semanticEvents.length - 1];
+        endArrayIfAble(sessionEvent.view_conversation, new Date(event.created_at));
+        endArrayIfAble(sessionEvent.write_comment, new Date(event.created_at));
+        endArrayIfAble(sessionEvent.view_code, new Date(event.created_at));
+        endArrayIfAble(sessionEvent.view_commits, new Date(event.created_at));
+        endArrayIfAble(sessionEvent.write_inline_comment, new Date(event.created_at));
         return semanticEvents;
     }
     
