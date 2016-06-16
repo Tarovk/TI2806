@@ -1,4 +1,4 @@
-/* globals define, octopeerHelper */
+/* globals define, octopeerHelper, CommentSizeAggregator, globalUserName, globalPlatform */
 define(function () {
     return {
     	name: "average-comment-size-compared",

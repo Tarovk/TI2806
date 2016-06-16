@@ -1,4 +1,4 @@
-/* globals define, octopeerHelper */
+/* globals define, octopeerHelper, CommentSizeAggregator, globalUserName, globalPlatform */
 define(function () {
     return {
     	name: "average-comment-size-total",
@@ -28,8 +28,8 @@ define(function () {
                     return {
                         "x": pr.total.x,
                         "y": pr.total.y
-                    }
-                });;
+                    };
+                });
             return d3.svg.axis().scale(
                 d3.scale.linear()
                 .domain([0,Math.max.apply(Math,sizeData.map(function(o){return o.y;}))])
@@ -56,8 +56,8 @@ define(function () {
                     return {
                         "x": pr.total.x,
                         "y": pr.total.y,
-                        "info": pr.pr
-                    }
+                        "prInfo": pr.pr
+                    };
                 });
 
             var maxValue = Math.max.apply(Math,sizeData2.map(function(o){return o.y;}));
