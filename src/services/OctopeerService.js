@@ -204,12 +204,12 @@ function OctopeerService() {
         });
     };
     
-    this.getSemanticEventsOfPullRequest = function (userName, owner, repo, prNr, params) {
+    this.getSemanticEventsOfPullRequest = function (userName, owner, repo, prNr) {
         var url = api.urlBuilder(api.endpoints.semanticEvents + '/' +
                                 userName + '/' +
                                 owner + '/' +
                                 repo + '/' +
-                                prNr, params);
+                                prNr);
         return new RSVP.Promise(function (fulfill, reject) {
             getJSON(url, function (events) {
                 getAllPages(events).then(fulfill);
