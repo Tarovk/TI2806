@@ -40,7 +40,10 @@ function CommentSizeAggregator(userName, platform) {
     
     function getCommentCount(pullRequests) {
         var userEventsCount,
-            promises = [];
+            promises = [],
+            userRe,
+            filtered,
+            filteredByUser;
         pullRequests.forEach(function (pr) {
             var endpoint = api.endpoints.semanticEvents + "/"
                 + userName + "/"
@@ -50,16 +53,17 @@ function CommentSizeAggregator(userName, platform) {
             pr.commentCount = 1;
             pr.userCommentCount = 1;
             
-            var a = octopeerService.getSemanticEventsOfPullRequest(userName, pr.repository.owner, pr.repository.name, pr.pull_request_number);
-            promises.push(a);
+            promises.push(octopeerService.getSemanticEventsOfPullRequest(userName, pr.repository.owner, pr.repository.name, pr.pull_request_number));
         });
         return RSVP.all(promises).then(function (res) {
             res.forEach(function (re) {
-                re = re.filter(function (r) { return ((r.element_type === 104 || r.element_type === 113) && r.event_type === 201); });
-                if(re.length > 0) {
-                    if (pullRequests.filter(function (pr) { return pr.pull_request_number === re[0].session.pull_request.pull_request_number; }).length > 0) {
-                        var pullRequest = pullRequests.filter(function (pr) { return pr.pull_request_number === re[0].session.pull_request.pull_request_number; })[0];
-                        pullRequest.commentCount += re.length;
+                var filtered = re.filter(function (r) { return ((r.element_type === 104 || r.element_type === 113) && r.event_type === 201); });
+                var filteredByUser = filtered.filter(function (r) { return r.session.user.username === userName; });
+                if (filtered.length > 0) {
+                    if (pullRequests.filter(function (pr) { return pr.pull_request_number === filtered[0].session.pull_request.pull_request_number; }).length > 0) {
+                        var pullRequest = pullRequests.filter(function (pr) { return pr.pull_request_number === filtered[0].session.pull_request.pull_request_number; })[0];
+                        pullRequest.commentCount += filtered.length;
+                        pullRequest.userCommentCount += filteredByUser.length;
                     }
                 }
             });

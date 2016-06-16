@@ -94,9 +94,8 @@ function OctopeerService() {
         return promise;
     };
     
-    this.getPullRequests = function () {//userId) {
+    this.getPullRequests = function () {
         var promise, url;
-        //url = api.urlBuilder(api.endpoints.users + userId + '/pullrequests/', {});
         url = api.urlBuilder(api.endpoints.pullRequests, {});
         
         promise = new RSVP.Promise(function (fulfill, reject) {

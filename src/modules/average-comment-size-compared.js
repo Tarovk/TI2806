@@ -23,51 +23,19 @@ define(function () {
                 .rangePoints([0, 720-2*50]);
             return d3.svg.axis().scale(axisScale);
         },
-        yAxisFitFunction: function() {
-            var sizeData = [
-                {"x":0, "y":6.34},
-                {"x":1, "y":13},
-                {"x":2, "y":6.43},
-                {"x":3, "y":34.2},
-                {"x":4, "y":45.2},
-                {"x":5, "y":25},
-                {"x":6, "y":8.64},
-                {"x":7, "y":4.12},
-                {"x":8, "y":17.62},
-                {"x":9, "y":23.42},
-                {"x":10, "y":19.21},
-                {"x":11, "y":9.12},
-                {"x":12, "y":14.54},
-                {"x":13, "y":36.42},
-                {"x":14, "y":12.542},
-                {"x":15, "y":19.52},
-                {"x":16, "y":21.42},
-                {"x":17, "y":24.2},
-                {"x":18, "y":17.7},
-                {"x":19, "y":14.72}
-            ],
-            sizeData2 = [
-                {"x":0, "y":4.61},
-                {"x":1, "y":3},
-                {"x":2, "y":4.3},
-                {"x":3, "y":3.42},
-                {"x":4, "y":64.52},
-                {"x":5, "y":5},
-                {"x":6, "y":6.4},
-                {"x":7, "y":41.2},
-                {"x":8, "y":7.62},
-                {"x":9, "y":34.2},
-                {"x":10, "y":15.21},
-                {"x":11, "y":3.12},
-                {"x":12, "y":45.4},
-                {"x":13, "y":6.42},
-                {"x":14, "y":15.42},
-                {"x":15, "y":17.52},
-                {"x":16, "y":24.2},
-                {"x":17, "y":14.2},
-                {"x":18, "y":7.17},
-                {"x":19, "y":47.72}
-            ];
+        yAxisFitFunction: function(data) {
+            var sizeData = data[0].map(function (pr) {
+                    return {
+                        x: pr.user.x,
+                        y: pr.user.y
+                    };
+                }),
+                sizeData2 = data[0].map(function (pr) {
+                    return {
+                        x: pr.total.x,
+                        y: pr.total.y
+                    };
+                });
             var maxValue = Math.max ( 
                 Math.max.apply(Math,sizeData.map(function(o){return o.y;})),
                  Math.max.apply(Math,sizeData2.map(function(o){return o.y;})));
@@ -85,56 +53,30 @@ define(function () {
                 "text":"Total average comment sizes"
             }
         ],
-        body: function () {
+        data: [{
+            "serviceCall": function () { return new CommentSizeAggregator(globalUserName, globalPlatform); },
+            "required": true
+        }],
+        body: function (data) {
             var w = 720,
                 h = 350,
                 pad = 50,
                 padTop = 10,
                 padBottom = 50,
-                sizeData = [
-                    {"x":0, "y":6.34},
-                    {"x":1, "y":13},
-                    {"x":2, "y":6.43},
-                    {"x":3, "y":34.2},
-                    {"x":4, "y":45.2},
-                    {"x":5, "y":25},
-                    {"x":6, "y":8.64},
-                    {"x":7, "y":4.12},
-                    {"x":8, "y":17.62},
-                    {"x":9, "y":23.42},
-                    {"x":10, "y":19.21},
-                    {"x":11, "y":9.12},
-                    {"x":12, "y":14.54},
-                    {"x":13, "y":36.42},
-                    {"x":14, "y":12.542},
-                    {"x":15, "y":19.52},
-                    {"x":16, "y":21.42},
-                    {"x":17, "y":24.2},
-                    {"x":18, "y":17.7},
-                    {"x":19, "y":14.72}
-                ],
-                sizeData2 = [
-                    {"x":0, "y":4.61},
-                    {"x":1, "y":3},
-                    {"x":2, "y":4.3},
-                    {"x":3, "y":3.42},
-                    {"x":4, "y":64.52},
-                    {"x":5, "y":5},
-                    {"x":6, "y":6.4},
-                    {"x":7, "y":41.2},
-                    {"x":8, "y":7.62},
-                    {"x":9, "y":34.2},
-                    {"x":10, "y":15.21},
-                    {"x":11, "y":3.12},
-                    {"x":12, "y":45.4},
-                    {"x":13, "y":6.42},
-                    {"x":14, "y":15.42},
-                    {"x":15, "y":17.52},
-                    {"x":16, "y":24.2},
-                    {"x":17, "y":14.2},
-                    {"x":18, "y":7.17},
-                    {"x":19, "y":47.72}
-                ];
+                sizeData = data[0].map(function (pr) {
+                    return {
+                        x: pr.user.x,
+                        y: pr.user.y,
+                        prInfo: pr.pr
+                    };
+                }),
+                sizeData2 = data[0].map(function (pr) {
+                    return {
+                        x: pr.total.x,
+                        y: pr.total.y,
+                        prInfo: pr.pr
+                    };
+                });
 
             //var svg = createSvgContainer(); 
 
