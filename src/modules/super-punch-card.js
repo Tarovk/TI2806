@@ -558,16 +558,17 @@ define(function () {
             var dayXScale;
 
             var a;
+            var map = new Map();
 
             function drawDay(daysAgo) {
 
                 var timespan = timeHelper.getTimespanOfDay(timeHelper.getNameOfDaysAgo(daysAgo));
                 g.selectAll('.day').remove();
+                g.selectAll('.removeAxis').remove();
 
                 a = eventData;
-                // REAL DATA
-                new ExtendedPunchCardAggregator(globalUserName, 'GitHub', timespan.start, timespan.end)
-                    .then(function (a) {
+
+                function drawEverything(a) {
                     var latest = getLatestTimestamp(a);
                     var earliest = getEarliestTimestamp(a);
 
@@ -589,13 +590,22 @@ define(function () {
                         .scale(dayXScale);
                     var amountOfSessions = getSessionIdList(getAllViewData(a)).length;
                     g.append("g")
-                        .attr("class", "visibleTicks noAxis")
+                        .attr("class", "visibleTicks noAxis removeAxis")
                         .attr("transform", "translate(0," + (30 * amountOfSessions + h) +")")
                         .call(dayXAxis);
                     drawViewEvents(getAllViewData(a), a);
                     drawWriteEvents(getAllWriteData(a), a);
-                });
+                }
 
+                if (!map.get(daysAgo)) {
+                    new ExtendedPunchCardAggregator(globalUserName, 'GitHub', timespan.start, timespan.end)
+                        .then(function (a) {
+                            drawEverything(a);
+                            map.set(daysAgo, a);
+                        });
+                } else {
+                    drawEverything(map.get(daysAgo));
+                }
                 /*jshint ignore: start*/
                 var dummy = {"viewData":[{"start":"2016-06-15T07:34:47.965Z","end":"2016-06-15T07:41:38.806Z","type":"view_conversation"}],
                              "writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"}
