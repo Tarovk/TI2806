@@ -48,7 +48,8 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
     function findSemanticSessions(events) {
         var semanticEvents = [],
             filling = false,
-            sessionEvent;
+            sessionEvent,
+            lastEvent;
         events.forEach(function (event) {
             /*jshint maxcomplexity:1000 */
             if (event.event_type === 401 && !filling) {
@@ -106,12 +107,16 @@ function ExtendedPunchCardAggregator(userName, platform, from, to) {
                 }
             }
         });
-        sessionEvent = semanticEvents[semanticEvents.length - 1];
-        endArrayIfAble(sessionEvent.view_conversation, new Date(event.created_at));
-        endArrayIfAble(sessionEvent.write_comment, new Date(event.created_at));
-        endArrayIfAble(sessionEvent.view_code, new Date(event.created_at));
-        endArrayIfAble(sessionEvent.view_commits, new Date(event.created_at));
-        endArrayIfAble(sessionEvent.write_inline_comment, new Date(event.created_at));
+        if (events.length > 0 && semanticEvents.length > 0) {
+            sessionEvent = semanticEvents[semanticEvents.length - 1];
+            lastEvent = events[events.length - 1];
+            endArrayIfAble(sessionEvent.view_conversation, new Date(lastEvent.created_at));
+            endArrayIfAble(sessionEvent.write_comment, new Date(lastEvent.created_at));
+            endArrayIfAble(sessionEvent.view_code, new Date(lastEvent.created_at));
+            endArrayIfAble(sessionEvent.view_commits, new Date(lastEvent.created_at));
+            endArrayIfAble(sessionEvent.write_inline_comment, new Date(lastEvent.created_at));
+        }
+
         return semanticEvents;
     }
     
