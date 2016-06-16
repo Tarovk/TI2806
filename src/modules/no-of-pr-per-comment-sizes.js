@@ -80,7 +80,7 @@ define(function () {
         legend: [
             {
                 "type":"rect",
-                "style":"fill:rgb(77, 136, 255);",
+                "style": "fill: rgba(51, 125, 212, 0.5);",
                 "text":"Number of pull requests with x number of comments"
             }
         ],
@@ -99,7 +99,7 @@ define(function () {
                 .attr("y", h - padBottom)
                 .attr("width", function () { return (w / (domain.length)) - 40; })
                 .attr("height", function (d) { return ySizeScale(d.y); })
-                .attr("style", "fill: rgb(77, 136, 255);")
+                .attr("style", "fill: rgba(51, 125, 212, 0.5);")
                 .on('mouseover', function(d) { return tip.show(d);})
                 .on('mouseout', tip.hide)
                 .transition()
