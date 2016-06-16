@@ -1,9 +1,9 @@
-/* globals define, PunchCardAggregator, globalUserName, timeHelper */
+/* globals define, timeHelper, ExtendedPunchCardAggregator */
 /* jshint unused : vars*/
-/* jshint maxstatements: 50*/
+/* jshint maxstatements: 100*/
 
 define(function () {
-
+    /* jshint ignore:start*/
     var punchData = [
         [
             { "start": "2016-06-14T17:03:48.504Z", "end": "2016-06-14T17:31:13.537Z", "session": { "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/7/", "id": 1, "pull_request": { "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/7/", "repository": { "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub" }, "pull_request_number": 7 }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" } } },
@@ -11,7 +11,11 @@ define(function () {
             { "start": "2016-06-14T18:18:26.680Z", "end": "2016-06-14T18:19:52.754Z", "session": { "url": "http://146.185.128.124/api/sessions/Travis/thervh70/ContextProject_RDD/149/", "id": 2, "pull_request": { "url": "http://146.185.128.124/api/pull-requests/thervh70/ContextProject_RDD/149/", "repository": { "url": "http://146.185.128.124/api/repositories/thervh70/ContextProject_RDD/", "owner": "thervh70", "name": "ContextProject_RDD", "platform": "GitHub" }, "pull_request_number": 149 }, "user": { "url": "http://146.185.128.124/api/users/Travis/", "id": 1, "username": "Travis" } } },
         ]
     ];
+    /* jshint ignore:end*/
 
+    var globalUserName = 'Travis';
+
+    /*jshint ignore: start*/
     var sessions_data = {
         "sem_sessions": [
             {
@@ -68,15 +72,17 @@ define(function () {
             }
         ]
     };
+    /*jshint ignore: end*/
+
 
     // conversation
     // write comment
     // write inline comment
     // look at code
     // look at commits tab
-
+    var eventData;
     /*jshint ignore:start*/
-    var eventData = [{"viewData":[{"start":"2016-06-15T07:54:47.965Z","end":"2016-06-15T08:41:38.806Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"},{"viewData":[{"start":"2016-06-15T07:42:38.598Z","end":"2016-06-15T07:49:35.681Z","type":"view_conversation"},{"start":"2016-06-15T07:49:48.005Z","end":"2016-06-15T07:53:49.171Z","type":"view_conversation"},{"start":"2016-06-15T07:49:35.681Z","end":"2016-06-15T07:49:43.912Z","type":"view_code"},{"start":"2016-06-15T07:49:43.912Z","end":"2016-06-15T07:49:48.005Z","type":"view_commits"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T07:42:38.598Z"},{"viewData":[{"start":"2016-06-15T07:56:31.609Z","end":"2016-06-15T08:08:43.809Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T07:56:31.609Z"},{"viewData":[{"start":"2016-06-15T08:08:48.738Z","end":"2016-06-15T08:09:32.268Z","type":"view_conversation"},{"start":"2016-06-15T08:09:32.268Z","end":"2016-06-15T08:10:27.085Z","type":"view_code"}],"writeData":[{"start":"2016-06-15T08:09:42.373Z","end":"2016-06-15T08:09:48.235Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T08:08:48.738Z"},{"viewData":[{"start":"2016-06-15T08:10:31.155Z","end":"2016-06-15T08:13:36.806Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T08:10:34.549Z","end":"2016-06-15T08:10:36.131Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T08:10:31.155Z"},{"viewData":[{"start":"2016-06-15T08:26:39.245Z","end":"2016-06-15T08:26:42.728Z","type":"view_conversation"},{"start":"2016-06-15T08:26:42.728Z","end":"2016-06-15T08:38:18.260Z","type":"view_code"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T08:26:39.245Z"},{"viewData":[{"start":"2016-06-15T08:44:05.849Z","end":"2016-06-15T08:44:10.308Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T08:44:05.849Z"},{"viewData":[{"start":"2016-06-15T08:44:10.972Z","end":"2016-06-15T08:44:13.098Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T08:44:10.972Z"},{"viewData":[{"start":"2016-06-15T08:45:11.093Z","end":"2016-06-15T08:46:49.985Z","type":"view_conversation"}],"writeData":[],"session_id":2,"earliest":"2016-06-15T08:45:11.093Z"},{"viewData":[{"start":"2016-06-15T08:52:57.915Z","end":"2016-06-15T08:52:59.057Z","type":"view_conversation"},{"start":"2016-06-15T08:52:59.057Z","end":"2016-06-15T08:53:02.619Z","type":"view_code"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T08:52:57.915Z"},{"viewData":[{"start":"2016-06-15T09:44:36.491Z","end":"2016-06-15T09:44:46.299Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:44:36.491Z"},{"viewData":[{"start":"2016-06-15T09:45:19.009Z","end":"2016-06-15T09:46:07.250Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T09:45:23.925Z","end":"2016-06-15T09:46:07.250Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T09:45:19.009Z"},{"viewData":[{"start":"2016-06-15T09:46:35.235Z","end":"2016-06-15T09:47:38.100Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:46:35.235Z"},{"viewData":[{"start":"2016-06-15T09:47:57.413Z","end":"2016-06-15T10:00:48.340Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:47:57.413Z"},{"viewData":[{"start":"2016-06-15T10:28:53.760Z","end":"2016-06-15T10:29:46.005Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T10:28:53.760Z"},{"viewData":[{"start":"2016-06-15T10:52:12.292Z","end":"2016-06-15T10:54:52.564Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T10:52:28.208Z","end":"2016-06-15T10:52:30.564Z","type":"write_inline_comment"},{"start":"2016-06-15T10:52:49.950Z","end":"2016-06-15T10:54:52.564Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T10:52:12.292Z"},{"viewData":[{"start":"2016-06-15T11:00:44.042Z","end":"2016-06-15T11:05:55.269Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T11:00:44.042Z"},{"viewData":[{"start":"2016-06-15T11:20:15.267Z","end":"2016-06-15T11:36:33.730Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T11:20:15.267Z"}]
+    eventData = [{"viewData":[{"start":"2016-06-15T07:54:47.965Z","end":"2016-06-15T08:41:38.806Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"},{"viewData":[{"start":"2016-06-15T07:42:38.598Z","end":"2016-06-15T07:49:35.681Z","type":"view_conversation"},{"start":"2016-06-15T07:49:48.005Z","end":"2016-06-15T07:53:49.171Z","type":"view_conversation"},{"start":"2016-06-15T07:49:35.681Z","end":"2016-06-15T07:49:43.912Z","type":"view_code"},{"start":"2016-06-15T07:49:43.912Z","end":"2016-06-15T07:49:48.005Z","type":"view_commits"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T07:42:38.598Z"},{"viewData":[{"start":"2016-06-15T07:56:31.609Z","end":"2016-06-15T08:08:43.809Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T07:56:31.609Z"},{"viewData":[{"start":"2016-06-15T08:08:48.738Z","end":"2016-06-15T08:09:32.268Z","type":"view_conversation"},{"start":"2016-06-15T08:09:32.268Z","end":"2016-06-15T08:10:27.085Z","type":"view_code"}],"writeData":[{"start":"2016-06-15T08:09:42.373Z","end":"2016-06-15T08:09:48.235Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T08:08:48.738Z"},{"viewData":[{"start":"2016-06-15T08:10:31.155Z","end":"2016-06-15T08:13:36.806Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T08:10:34.549Z","end":"2016-06-15T08:10:36.131Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T08:10:31.155Z"},{"viewData":[{"start":"2016-06-15T08:26:39.245Z","end":"2016-06-15T08:26:42.728Z","type":"view_conversation"},{"start":"2016-06-15T08:26:42.728Z","end":"2016-06-15T08:38:18.260Z","type":"view_code"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T08:26:39.245Z"},{"viewData":[{"start":"2016-06-15T08:44:05.849Z","end":"2016-06-15T08:44:10.308Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T08:44:05.849Z"},{"viewData":[{"start":"2016-06-15T08:44:10.972Z","end":"2016-06-15T08:44:13.098Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T08:44:10.972Z"},{"viewData":[{"start":"2016-06-15T08:45:11.093Z","end":"2016-06-15T08:46:49.985Z","type":"view_conversation"}],"writeData":[],"session_id":2,"earliest":"2016-06-15T08:45:11.093Z"},{"viewData":[{"start":"2016-06-15T08:52:57.915Z","end":"2016-06-15T08:52:59.057Z","type":"view_conversation"},{"start":"2016-06-15T08:52:59.057Z","end":"2016-06-15T08:53:02.619Z","type":"view_code"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T08:52:57.915Z"},{"viewData":[{"start":"2016-06-15T09:44:36.491Z","end":"2016-06-15T09:44:46.299Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:44:36.491Z"},{"viewData":[{"start":"2016-06-15T09:45:19.009Z","end":"2016-06-15T09:46:07.250Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T09:45:23.925Z","end":"2016-06-15T09:46:07.250Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T09:45:19.009Z"},{"viewData":[{"start":"2016-06-15T09:46:35.235Z","end":"2016-06-15T09:47:38.100Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:46:35.235Z"},{"viewData":[{"start":"2016-06-15T09:47:57.413Z","end":"2016-06-15T10:00:48.340Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T09:47:57.413Z"},{"viewData":[{"start":"2016-06-15T10:28:53.760Z","end":"2016-06-15T10:29:46.005Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T10:28:53.760Z"},{"viewData":[{"start":"2016-06-15T10:52:12.292Z","end":"2016-06-15T10:54:52.564Z","type":"view_conversation"}],"writeData":[{"start":"2016-06-15T10:52:28.208Z","end":"2016-06-15T10:52:30.564Z","type":"write_inline_comment"},{"start":"2016-06-15T10:52:49.950Z","end":"2016-06-15T10:54:52.564Z","type":"write_inline_comment"}],"session_id":1,"earliest":"2016-06-15T10:52:12.292Z"},{"viewData":[{"start":"2016-06-15T11:00:44.042Z","end":"2016-06-15T11:05:55.269Z","type":"view_conversation"}],"writeData":[],"session_id":1,"earliest":"2016-06-15T11:00:44.042Z"},{"viewData":[{"start":"2016-06-15T11:20:15.267Z","end":"2016-06-15T11:36:33.730Z","type":"view_conversation"}],"writeData":[],"session_id":3,"earliest":"2016-06-15T11:20:15.267Z"}]
     /*jshint ignore:end*/
     var margin = { left: 75, right: 50, top: 10, bottom: 50 };
 
@@ -84,15 +90,19 @@ define(function () {
         var viewOnly = [];
         for (var i = 0; i < list.length; i++) {
             var item = list[i];
-            var session = item.session_id
+            var session = item.session_id;
             var earliest = item.earliest;
             if (item.session_id === sid) {
                 for (var j = 0; j < item.viewData.length; j++) {
-                    var vd = item.viewData[j]
+                    var vd = item.viewData[j];
                     var start = vd.start;
                     var end = vd.end;
                     var type = vd.type;
-                    viewOnly.push({ "start": start, "end": end, "type": type, "session_id": session, "earliest": earliest });
+                    viewOnly.push(
+                        {
+                            "start": start, "end": end, "type": type, "session_id": session, "earliest": earliest
+                        }
+                    );
                 }
             }
         }
@@ -103,15 +113,19 @@ define(function () {
         var writeOnly = [];
         for (var i = 0; i < list.length; i++) {
             var item = list[i];
-            var session = item.session_id
+            var session = item.session_id;
             var earliest = item.earliest;
             if (item.session_id === sid) {
                 for (var j = 0; j < item.writeData.length; j++) {
-                    var vd = item.writeData[j]
+                    var vd = item.writeData[j];
                     var start = vd.start;
                     var end = vd.end;
                     var type = vd.type;
-                    writeOnly.push({ "start": start, "end": end, "type": type, "session_id": session, "earliest": earliest });
+                    writeOnly.push(
+                        {
+                            "start": start, "end": end, "type": type, "session_id": session, "earliest": earliest
+                        }
+                    );
                 }
             }
         }
@@ -133,8 +147,7 @@ define(function () {
         var res = [];
         var sessions = getSessionIdList(list);
         for (var i = 0; i < sessions.length; i++) {
-            var id = 
-            res = res.concat(getViewDataFromSessionId(sessions[i], list));
+            res = res.concat(getViewDataFromSessionId(sessions[i], list)); /* jshint ignore:line*/
         }
         return res;
     }
@@ -143,8 +156,7 @@ define(function () {
         var res = [];
         var sessions = getSessionIdList(list);
         for (var i = 0; i < sessions.length; i++) {
-            var id =
-            res = res.concat(getWriteDataFromSessionId(sessions[i], list));
+            res = res.concat(getWriteDataFromSessionId(sessions[i], list)); /* jshint ignore:line*/
         }
         return res;
     }
@@ -156,9 +168,6 @@ define(function () {
     var minuteScale = d3.scale.linear().domain([0, 60]).range([0, 1]);
 
     var today = new Date().getDay();
-
-    var RADIUS_DEFAULT = 5;
-    var RADIUS_HOVER = 7;
 
     var STROKE_WIDTH_DEFAULT = 10;
     var STROKE_WIDTH_HOVER = 15;
@@ -222,7 +231,7 @@ define(function () {
         //}],
         body: function (res) {
 
-            function getPrNumbers(array) {
+            function getPrNumbers(array) { /*jshint ignore:line*/
                 var numbers = [];
                 for (var i = 0; i < array.length; i++) {
                     var pr = array[i];
@@ -296,7 +305,7 @@ define(function () {
                 return color(prNumbers.indexOf(id));
             }
 
-            function getPrFromSessionId(sid) {
+            function getPrFromSessionId(sid) { /*jshint ignore:line*/
                 for (var i = 0; i < transformedData.length; i++) {
                     var item = transformedData[i];
                     if (item.origin.session.id === sid) {
@@ -494,7 +503,7 @@ define(function () {
             function getLatestTimestamp(data) {
                 var latest = new Date().setFullYear(2000);
                 for (var i = 0; i < data.length; i++) {
-                    var item = data[i]
+                    var item = data[i];
                     for (var j = 0; j < item.viewData.length; j++) {
                         var date = new Date(item.viewData[j].end);
                         if (date > latest) {
@@ -536,6 +545,14 @@ define(function () {
                 return Math.abs(getHoursAndMinutes(new Date(d1)) - getHoursAndMinutes(new Date(d2)));
             }
 
+            function generateTicks(max) {
+                var res = [];
+                for (var i = 0; i <= max; i = i + 0.25) {
+                    res.push(i);
+                }
+                return res;
+            }
+
             var module = this;
             var dayXScale;
 
@@ -554,41 +571,44 @@ define(function () {
                 //a = eventData;
 
                 // REAL DATA
-                var epca = new ExtendedPunchCardAggregator(globalUserName, globalPlatform, timespan.start, timespan.end).then(function (a) {
-                    console.log(a);
+                new ExtendedPunchCardAggregator(globalUserName, globalPlatform, timespan.start, timespan.end)
+                    .then(function (a) {
                     var latest = getLatestTimestamp(a);
                     var earliest = getEarliestTimestamp(a);
-                    dayXScale = d3.scale.linear().domain([0, dateDiff(earliest, latest)]).range([margin.left, w - margin.right]);
+                    dayXScale = d3.scale.linear()
+                        .domain([0, dateDiff(earliest, latest)])
+                        .range([margin.left, w - margin.right])
+                        .nice();
+
+                    var uBound = Math.ceil(dateDiff(latest, earliest));
 
                     drawViewEvents(getAllViewData(a), a);
                     drawWriteEvents(getAllWriteData(a), a);
-                    drawNewAxis(getAllWriteData(a));
+                    drawNewAxis(getAllWriteData(a), uBound);
                     spinner.addClass('hidden');
                 });
 
-
-                var y = h;
-                var day = timeHelper.getNameOfDaysAgo(daysAgo);
+                /*jshint ignore: start*/
                 var dummy = {"viewData":[{"start":"2016-06-15T07:34:47.965Z","end":"2016-06-15T07:41:38.806Z","type":"view_conversation"}],
                              "writeData":[{"start":"2016-06-15T07:34:50.425Z","end":"2016-06-15T07:41:38.806Z","type":"write_comment"}],"session_id":3,"earliest":"2016-06-15T07:34:47.965Z"}
-                
+                /*jshint ignore:end*/
                 //var tip2 = d3.tip()
                 //    .attr('class', 'd3-tip')
                 //    .html(function (d) {
                 //        return "<div><a style='color:black;font-size:small'" +
                 //        " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
-                //            d.session.pull_request.repository.name + "/pull/" +
-                //            d.session.pull_request.pull_request_number + "'>#" +
-                //            d.session.pull_request.pull_request_number +
-                //            //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
-                //            "</div>" +
-                //            //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
-                //            //getPrInfo(d.origin).author + "</span></a></div>" +
-                //            "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
-                //            formatDate(d.start) + "</span></a></div>" +
-                //            "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
-                //            formatDate(d.end) + "</span></a></div>" +
-                //            "<div class='arrow-down'></div></div>";
+                //        d.session.pull_request.repository.name + "/pull/" +
+                //        d.session.pull_request.pull_request_number + "'>#" +
+                //        d.session.pull_request.pull_request_number +
+                //        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
+                //        "</div>" +
+                //        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                //        //getPrInfo(d.origin).author + "</span></a></div>" +
+                //        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
+                //        formatDate(d.start) + "</span></a></div>" +
+                //        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
+                //        formatDate(d.end) + "</span></a></div>" +
+                //        "<div class='arrow-down'></div></div>";
                 //    })
                 //    .offset([-20, 0]);
                 //g.call(tip2);
@@ -596,14 +616,19 @@ define(function () {
                 
             }
 
-            function drawNewAxis(vdata) {
+            function drawNewAxis(vdata, uBound) {
                 var sessionNumbers = getSessionIdList(vdata);
                 var y = h;
                 var dayXAxis = d3.svg.axis()
                     .orient("bottom")
+                    .tickValues(generateTicks(uBound))
+                    .tickFormat(function (d, i) {
+                        return d * 60;
+                    })
                     .scale(dayXScale);
                 g.append("g")
-                    .attr("transform", "translate(0, "+(y + 30 * sessionNumbers.length + 40)+")")
+                    .attr("class", "visibleTicks noAxis")
+                    .attr("transform", "translate(0," + (y + 30 * sessionNumbers.length + 40) +")")
                     .call(dayXAxis);
             }
 
@@ -620,7 +645,6 @@ define(function () {
                 .attr('x1', function (d) {
                     var earliest = getEarliestTimestampOfSessionId(alldata, d.session_id);
                     return xScale(dateDiff(earliest, d.start))
-                    //return xScale(0);
                 })
                 .attr('x2', function (d, i) {
                     var diff1 = dateDiff(d.end, d.start),
@@ -639,39 +663,41 @@ define(function () {
                 .attr('y1', function (d, i) { return h + sessionNumbers.indexOf(d.session_id) * 30; })
                 .attr('y2', function (d, i) { return h + sessionNumbers.indexOf(d.session_id) * 30; })
                 .style("stroke", function (d) {
-                    return color(EVENT_TYPES.indexOf(d.type));
-                })
-                .attr('stroke-width', 20)
-                .attr('stroke', 'black');
-
-                var tip2 = d3.tip()
-                    .attr('class', 'd3-tip')
-                    .html(function (d) {
-                        return "<div><a style='color:black;font-size:small'" +
-                        " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
-                            d.session.pull_request.repository.name + "/pull/" +
-                            d.session.pull_request.pull_request_number + "'>#" +
-                            d.session.pull_request.pull_request_number +
-                            //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
-                            "</div>" +
-                            //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
-                            //getPrInfo(d.origin).author + "</span></a></div>" +
-                            "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
-                            formatDate(d.start) + "</span></a></div>" +
-                            "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
-                            formatDate(d.end) + "</span></a></div>" +
-                            "<div class='arrow-down'></div></div>";
+                    return color(Math.floor((Math.random() * 10)));
+                    //return color(EVENT_TYPES.indexOf(d.type));
                     })
-                    .offset([-20, 0]);
-                g.call(tip2);
+                .attr('stroke-width', 20);
 
-                d3.select('#' + module.name).select('svg').transition().duration(300).attr('viewBox', '0 0 1440 ' + (y + 30 * sessionNumbers.length + 50));
+                d3.select('#' + module.name).select('svg')
+                    .transition()
+                    .duration(300)
+                        .attr('viewBox', '0 0 1440 ' + (y + 30 * sessionNumbers.length + 50));
+
+                //var tip2 = d3.tip()
+                //    .attr('class', 'd3-tip')
+                //    .html(function (d) {
+                //        return "<div><a style='color:black;font-size:small'" +
+                //        " href='http://www.github.com/" + d.session.pull_request.repository.owner + "/" +
+                //        d.session.pull_request.repository.name + "/pull/" +
+                //        d.session.pull_request.pull_request_number + "'>#" +
+                //        d.session.pull_request.pull_request_number +
+                //        //" <span style='color:gray'>" + getPrInfo(d.origin).title + "</span></a> +
+                //        "</div>" +
+                //        //"<div><a style='color:black;font-size:small''>Author: <span style='color:gray'>" +
+                //        //getPrInfo(d.origin).author + "</span></a></div>" +
+                //        "<div><a style='color:black;font-size:small''>Started watching: <span style='color:gray'>" +
+                //        formatDate(d.start) + "</span></a></div>" +
+                //        "<div><a style='color:black;font-size:small''>Stopped watching: <span style='color:gray'>" +
+                //        formatDate(d.end) + "</span></a></div>" +
+                //        "<div class='arrow-down'></div></div>";
+                //    })
+                //    .offset([-20, 0]);
+                //g.call(tip2);
             }
 
             function drawWriteEvents(wdata, alldata) {
 
                 var sessionNumbers = getSessionIdList(wdata);
-                var y = h;
 
                 //g.selectAll('#pr-bar').remove();
                 g.selectAll('#pr-bar-write')
