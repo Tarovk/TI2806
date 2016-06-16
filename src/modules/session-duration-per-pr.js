@@ -72,8 +72,8 @@ define(function () {
             'serviceCall': function () { return new Graph2Aggregator(globalUserName, 10); },
             'required': true
         }],
-        xAxisFitFunction: function () {
-            return d3.svg.axis().scale(x);
+        xAxisFitFunction: function (res) {
+            return d3.svg.axis().scale(x).tickValues(res[0].map(function (d) { return d[0]; }));
         },
         yAxisFitFunction: function () {
             return d3.svg.axis().scale(y);
