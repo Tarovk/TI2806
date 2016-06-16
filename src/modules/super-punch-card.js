@@ -560,8 +560,8 @@ define(function () {
                     g.append("g")
                         .attr("transform", "translate(0, 450)")
                         .call(dayXAxis);
-                    drawViewEvents(getAllViewData(a));
-                    drawWriteEvents(getAllWriteData(a));
+                    drawViewEvents(getAllViewData(a), a);
+                    drawWriteEvents(getAllWriteData(a), a);
                 //});
 
 
@@ -594,7 +594,7 @@ define(function () {
                 
             }
 
-            function drawViewEvents(vdata) {
+            function drawViewEvents(vdata, alldata) {
                 var sessionNumbers = getSessionIdList(vdata);
                 var y = h;
 
@@ -604,7 +604,13 @@ define(function () {
                 .enter()
                 .append('line')
                 .attr('class', 'day')
-                .attr('x1', xScale(0))
+                .attr('x1', function (d) {
+                    var earliest = getEarliestTimestampOfSessionId(alldata, d.session_id);
+                    console.log(d)
+                    console.log(xScale(dateDiff(earliest, d.start)));
+                    return xScale(dateDiff(earliest, d.start))
+                    //return xScale(0);
+                })
                 .attr('x2', function (d, i) {
                     return dayXScale(dateDiff(d.end, d.start) + dateDiff(d.start, d.earliest));
                 })
@@ -640,7 +646,7 @@ define(function () {
                 d3.select('#' + module.name).select('svg').attr('viewBox', '0 0 1440 ' + (y + 400 * sessionNumbers.length));
             }
 
-            function drawWriteEvents(wdata) {
+            function drawWriteEvents(wdata, alldata) {
 
                 var sessionNumbers = getSessionIdList(wdata);
                 var y = h;
